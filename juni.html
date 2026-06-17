@@ -125,7 +125,7 @@
         /* MODAL STYLES */
         .modal-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); z-index: 1000; justify-content: center; align-items: center; }
         .modal-content { 
-            background: var(--card-bg); width: 95%; max-width: 950px; 
+            background: var(--card-bg); width: 95%; max-width: 1100px; /* Diperlebar untuk layout 2 baris */
             max-height: 90vh; border-radius: var(--radius); overflow: hidden; 
             display: flex; flex-direction: column; animation: slideUp 0.3s ease; color: var(--text);
         }
@@ -252,11 +252,11 @@
         [data-theme="dark"] .slider { background-color: #475569; }
         [data-theme="dark"] .toggle-container { color: #cbd5e1; }
 
-        /* TOP 5 GRID LAYOUT */
+        /* TOP 5 GRID LAYOUT - 2 BARIS (KIRI & KANAN) */
         .top5-grid-container {
             display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 15px;
+            grid-template-columns: repeat(2, 1fr); /* 2 Kolom = 2 Baris Visual */
+            gap: 20px;
             padding: 20px;
             overflow-y: auto;
             max-height: calc(90vh - 150px);
@@ -362,7 +362,7 @@
             .btn-sort-trigger, .btn-export { flex: 1; justify-content: center; font-size: 0.75rem; padding: 8px 4px; }
             .btn-back-drill { width: 100%; justify-content: center; margin-top: 5px; }
 
-            /* Top 5 Mobile Adjustment */
+            /* Top 5 Mobile Adjustment: Kembali ke 1 kolom agar muat di layar kecil */
             .top5-grid-container { grid-template-columns: 1fr; }
         }
 
@@ -419,10 +419,10 @@
             <div class="modal-body">
                 <div class="ranking-tabs-wrapper">
                     <div class="ranking-controls">
-                        <button class="tab-btn active" id="tabAll" onclick="setRankingTab('all', this)">All Branch</button>
+                        <button class="tab-btn" id="tabAll" onclick="setRankingTab('all', this)">All Branch</button>
                         <button class="tab-btn" id="tabCo" onclick="setRankingTab('co', this)">All Co-Branch</button>
                         <!-- TAB BARU UNTUK TOP 5 -->
-                        <button class="tab-btn" id="tabTop5" onclick="setRankingTab('top5', this)">🏆 Top 5 Indicators</button>
+                        <button class="tab-btn active" id="tabTop5" onclick="setRankingTab('top5', this)">🏆 Top 5 Indicators</button>
                         
                         <div class="action-row">
                             <button class="btn-sort-trigger" onclick="openSortModal()">
@@ -485,7 +485,7 @@
         ];
 
         let rawData = [];
-        let currentRankingMode = 'all';
+        let currentRankingMode = 'top5'; // DEFAULT LANGSUNG KE TOP 5
         let drillDownCo = null; 
         let activeRankingMetrics = ['total'];
         let showActualValues = false; 
@@ -674,7 +674,8 @@
         function openRankingModal() {
             document.getElementById('rankingModal').style.display = 'flex';
             drillDownCo = null; 
-            setRankingTab('all', document.getElementById('tabAll')); 
+            // LANGSUNG BUKA TAB TOP 5 SESUAI PERMINTAAN NO.3
+            setRankingTab('top5', document.getElementById('tabTop5')); 
         }
         
         function closeRankingModal() { 
@@ -929,9 +930,13 @@
                         val: parseFloat(d[m.key + '_mtd'] || 0)
                     }));
 
-                    // Sort Descending & Ambil Top 5
+                    // Sort Descending
                     branchData.sort((a, b) => b.val - a.val);
-                    const top5 = branchData.slice(0, 5);
+                    
+                    // PERMINTAAN NO.1: Ambil sebanyak data yang ada (maksimal 5)
+                    // Jika cuma 1 cabang booking, ya tampil 1 saja
+                    const countToShow = Math.min(branchData.length, 5);
+                    const topN = branchData.slice(0, countToShow);
 
                     // Render Kartu
                     let cardHTML = `
@@ -941,7 +946,7 @@
                             </div>
                             <div class="top5-list">`;
                     
-                    top5.forEach((item, idx) => {
+                    topN.forEach((item, idx) => {
                         const isGrowth = ['ca','sa','fu'].includes(m.key);
                         const formatted = formatValue(item.val, m.unit, isGrowth, false, false);
                         cardHTML += `
