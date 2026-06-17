@@ -817,11 +817,12 @@
             XLSX.writeFile(wb, `${fileName}.xlsx`);
         }
 
-        function renderRanking() {
+                function renderRanking() {
             const thead = document.getElementById('rankingThead');
             const tbody = document.getElementById('rankingTableBody');
             tbody.innerHTML = '<tr><td colspan="100%" style="text-align:center;">Processing...</td></tr>';
 
+            // 1. PENGUMPULAN DATA
             let groupedData = [];
             let isDrillDown = !!drillDownCo;
             if (isDrillDown) {
@@ -840,6 +841,7 @@
                 groupedData = Object.keys(coMap).map(co => ({ name: co, sub: '', data: coMap[co], isAgg: true }));
             }
 
+            // 2. KALKULASI METRIK & TOTAL
             let ranked = groupedData.map(g => {
                 const mv = getMetricValues(g.data, g.isAgg);
                 let totalMtd = 0, totalTgt = 0;
@@ -850,6 +852,7 @@
                 return { ...g, metricVals: mv, totalAchv, totalMtd };
             });
 
+            // 3. SORTING LOGIC
             ranked.sort((a, b) => {
                 for (let key of activeRankingMetrics) {
                     let valA, valB;
@@ -862,24 +865,64 @@
                     }
                     if (valB !== valA) return valB - valA;
                 }
-                return 0;
+                // Secondary sort by name untuk konsistensi visual
+                return a.name.localeCompare(b.name); 
             });
+
+            // 4. RENDER HEADER TABLE
+            // Tentukan metrik mana yang menjadi "Sort Pertama" secara visual di kolom ke-3
+            let firstVisualSortKey = null;
+            
+            if (!showActualValues) {
+                // Mode Persentase: Kolom ke-3 adalah Total %
+                firstVisualSortKey = 'total';
+            } else {
+                // Mode Actual Value: Kolom ke-3 adalah Metrik dengan prioritas sort tertinggi
+                let minIndex = Infinity;
+                metrics.forEach(m => {
+                    const idx = activeRankingMetrics.indexOf(m.key);
+                    if (idx !== -1 && idx < minIndex) {
+                        minIndex = idx;
+                        firstVisualSortKey = m.key;
+                    }
+                });
+            }
 
             let headerHTML = `<tr>
                 <th><div class="th-content">#</div></th>
                 <th><div class="th-content">${isDrillDown ? 'Branch' : (currentRankingMode === 'co' ? 'Co-Branch' : 'Branch')}</div></th>`;
             
+            // Render Kolom Ke-3 (Total % atau Metrik Pertama)
             if (!showActualValues) {
                 const totalSortIndex = activeRankingMetrics.indexOf('total');
                 const highlight = totalSortIndex !== -1 ? 'highlight-col' : '';
                 const badge = totalSortIndex !== -1 ? `<span class="sort-priority-badge">${totalSortIndex + 1}</span>` : '';
                 headerHTML += `<th class="${highlight}"><div class="th-content">Total %${badge}</div></th>`;
+            } else if (firstVisualSortKey) {
+                // Di mode Actual Value, kita render metrik pertama ini sebagai kolom ke-3
+                const m = metrics.find(x => x.key === firstVisualSortKey);
+                const sortIndex = activeRankingMetrics.indexOf(firstVisualSortKey);
+                const highlight = 'highlight-col'; // Selalu highlight karena ini kolom ke-3
+                const badge = `<span class="sort-priority-badge">${sortIndex + 1}</span>`;
+                
+                headerHTML += `<th class="${highlight}" title="${m.label}">
+                    <div class="th-content">
+                        <i class="fas ${m.icon}" style="font-size: 0.9rem;"></i>
+                        <span class="indicator-prefix">${m.key.toUpperCase()}</span>
+                        ${badge}
+                    </div>
+                </th>`;
             }
-            
-            metrics.forEach(m => { 
+
+            // Render Sisa Metrik (Kolom ke-4 dst)
+            metrics.forEach(m => {
+                // Skip jika metrik ini sudah dirender sebagai kolom ke-3 di mode Actual Value
+                if (showActualValues && m.key === firstVisualSortKey) return;
+
                 const sortIndex = activeRankingMetrics.indexOf(m.key);
                 const highlight = sortIndex !== -1 ? 'highlight-col' : '';
                 const badge = sortIndex !== -1 ? `<span class="sort-priority-badge">${sortIndex + 1}</span>` : '';
+                
                 headerHTML += `<th class="${highlight}" title="${m.label}">
                     <div class="th-content">
                         <i class="fas ${m.icon}" style="font-size: 0.9rem;"></i>
@@ -888,9 +931,11 @@
                     </div>
                 </th>`; 
             });
+            
             headerHTML += `</tr>`;
             thead.innerHTML = headerHTML;
 
+            // 5. RENDER BODY TABLE
             tbody.innerHTML = '';
             ranked.forEach((r, i) => {
                 const rank = i + 1;
@@ -910,11 +955,22 @@
                     <td><span class="${badgeClass}">${rank}</span></td>
                     <td>${displayName}</td>`;
                 
+                // Render Kolom Ke-3 Data
                 if (!showActualValues) {
                     rowHTML += `<td style="color:${totalColor}; font-size:0.75rem;">${r.totalAchv.toFixed(1)}%</td>`;
+                } else if (firstVisualSortKey) {
+                    const m = metrics.find(x => x.key === firstVisualSortKey);
+                    const v = r.metricVals[firstVisualSortKey];
+                    const isGrowthType = ['ca', 'sa', 'fu'].includes(firstVisualSortKey);
+                    const displayVal = formatValue(v.mtd, m.unit, isGrowthType, false, false);
+                    
+                    rowHTML += `<td class="highlight-col" style="color:var(--text); font-size:0.7rem;">${displayVal}</td>`;
                 }
                 
+                // Render Sisa Metrik Data
                 metrics.forEach(m => {
+                    if (showActualValues && m.key === firstVisualSortKey) return;
+
                     const v = r.metricVals[m.key];
                     const isGrowthType = ['ca', 'sa', 'fu'].includes(m.key);
                     
@@ -930,7 +986,6 @@
                 tbody.innerHTML += rowHTML;
             });
         }
-
         window.onclick = function(e) {
             const modal = document.getElementById('rankingModal');
             const sortModal = document.getElementById('sortModal');
