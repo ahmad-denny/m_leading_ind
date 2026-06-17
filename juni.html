@@ -161,7 +161,7 @@
         .rank-3 { background: #cd7f32; color: white; }
 
         /* TABLE STYLES */
-        .table-wrapper { overflow-x: auto; -webkit-overflow-scrolling: touch; width: 100%; flex: 1; }
+        .table-wrapper { overflow-x: auto; -webkit-overflow-scrolling: touch; width: 100%; flex: 1; position: relative; }
         
         .ranking-table { width: 100%; border-collapse: separate; border-spacing: 0; font-size: 0.8rem; min-width: 800px; }
         
@@ -252,6 +252,64 @@
         [data-theme="dark"] .slider { background-color: #475569; }
         [data-theme="dark"] .toggle-container { color: #cbd5e1; }
 
+        /* TOP 5 GRID LAYOUT */
+        .top5-grid-container {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+            padding: 20px;
+            overflow-y: auto;
+            max-height: calc(90vh - 150px);
+            width: 100%;
+        }
+        .top5-card {
+            background: var(--card-bg);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 15px;
+            box-shadow: var(--shadow);
+            display: flex;
+            flex-direction: column;
+        }
+        .top5-header {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 12px;
+            padding-bottom: 8px;
+            border-bottom: 1px dashed var(--border);
+            color: var(--primary);
+            font-weight: bold;
+            font-size: 0.9rem;
+        }
+        .top5-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 6px 0;
+            font-size: 0.8rem;
+            border-bottom: 1px solid rgba(0,0,0,0.05);
+        }
+        .top5-item:last-child { border-bottom: none; }
+        .top5-rank {
+            width: 20px;
+            height: 20px;
+            background: var(--bg);
+            border-radius: 50%;
+            text-align: center;
+            line-height: 20px;
+            font-size: 0.7rem;
+            font-weight: bold;
+            color: var(--text-muted);
+            margin-right: 8px;
+            flex-shrink: 0;
+        }
+        .top5-item:nth-child(1) .top5-rank { background: #ffd700; color: #333; }
+        .top5-item:nth-child(2) .top5-rank { background: #c0c0c0; color: #333; }
+        .top5-item:nth-child(3) .top5-rank { background: #cd7f32; color: white; }
+        .top5-name { flex: 1; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; margin-right: 10px; }
+        .top5-val { font-weight: bold; color: var(--text); }
+
         /* Responsive Mobile */
         @media (max-width: 600px) {
             /* PERBAIKAN HEADER MOBILE AGAR TIDAK BERTUMPUK DENGAN TOMBOL TEMA */
@@ -303,6 +361,9 @@
             .action-row { display: flex; gap: 8px; width: 100%; }
             .btn-sort-trigger, .btn-export { flex: 1; justify-content: center; font-size: 0.75rem; padding: 8px 4px; }
             .btn-back-drill { width: 100%; justify-content: center; margin-top: 5px; }
+
+            /* Top 5 Mobile Adjustment */
+            .top5-grid-container { grid-template-columns: 1fr; }
         }
 
         /* PERBAIKAN DARK MODE MODAL SORT */
@@ -360,6 +421,8 @@
                     <div class="ranking-controls">
                         <button class="tab-btn active" id="tabAll" onclick="setRankingTab('all', this)">All Branch</button>
                         <button class="tab-btn" id="tabCo" onclick="setRankingTab('co', this)">All Co-Branch</button>
+                        <!-- TAB BARU UNTUK TOP 5 -->
+                        <button class="tab-btn" id="tabTop5" onclick="setRankingTab('top5', this)">🏆 Top 5 Indicators</button>
                         
                         <div class="action-row">
                             <button class="btn-sort-trigger" onclick="openSortModal()">
@@ -387,6 +450,7 @@
                         <thead id="rankingThead"></thead>
                         <tbody id="rankingTableBody"></tbody>
                     </table>
+                    <!-- Container untuk Top 5 Grid akan di-inject via JS -->
                 </div>
             </div>
         </div>
@@ -623,7 +687,21 @@
             drillDownCo = null; 
             document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
             if(btn) btn.classList.add('active');
+            
             updateDrillDownUI();
+            
+            // Sembunyikan Sort & Toggle Actual Value jika di mode Top 5
+            const sortBtn = document.querySelector('.btn-sort-trigger');
+            const toggleLabel = document.querySelector('.toggle-container');
+            
+            if (mode === 'top5') {
+                if(sortBtn) sortBtn.style.display = 'none';
+                if(toggleLabel) toggleLabel.style.display = 'none';
+            } else {
+                if(sortBtn) sortBtn.style.display = 'inline-flex';
+                if(toggleLabel) toggleLabel.style.display = 'flex';
+            }
+
             renderRanking();
         }
 
@@ -638,7 +716,8 @@
                 btnBack.style.display = 'none';
                 title.innerHTML = `<i class="fas fa-chart-bar"></i> Ranking Performance`;
                 if(currentRankingMode === 'all') document.getElementById('tabAll').classList.add('active');
-                else document.getElementById('tabCo').classList.add('active');
+                else if(currentRankingMode === 'co') document.getElementById('tabCo').classList.add('active');
+                else if(currentRankingMode === 'top5') document.getElementById('tabTop5').classList.add('active');
             }
         }
 
@@ -767,7 +846,7 @@
                     }
                     if (valB !== valA) return valB - valA;
                 }
-                return a.name.localeCompare(b.name);
+                return 0;
             });
 
             ranked.forEach((r, i) => {
@@ -817,9 +896,76 @@
             XLSX.writeFile(wb, `${fileName}.xlsx`);
         }
 
-                function renderRanking() {
+        function renderRanking() {
             const thead = document.getElementById('rankingThead');
             const tbody = document.getElementById('rankingTableBody');
+            
+            // LOGIKA BARU: Jika Mode Top 5
+            if (currentRankingMode === 'top5') {
+                thead.innerHTML = ''; // Sembunyikan Header Tabel
+                tbody.innerHTML = ''; 
+                
+                // Buat container grid jika belum ada
+                let gridContainer = document.getElementById('top5GridContainer');
+                if (!gridContainer) {
+                    gridContainer = document.createElement('div');
+                    gridContainer.id = 'top5GridContainer';
+                    gridContainer.className = 'top5-grid-container';
+                    // Masukkan ke parent tbody atau setelah table wrapper
+                    document.querySelector('.table-wrapper').appendChild(gridContainer);
+                }
+                
+                // Sembunyikan elemen tabel standar
+                document.querySelector('.ranking-table').style.display = 'none';
+                gridContainer.style.display = 'grid';
+
+                // Generate Konten Top 5
+                gridContainer.innerHTML = '';
+                metrics.forEach(m => {
+                    // Ambil semua data branch, hitung actual value
+                    let branchData = rawData.map(d => ({
+                        name: d['br'],
+                        sub: d['co'],
+                        val: parseFloat(d[m.key + '_mtd'] || 0)
+                    }));
+
+                    // Sort Descending & Ambil Top 5
+                    branchData.sort((a, b) => b.val - a.val);
+                    const top5 = branchData.slice(0, 5);
+
+                    // Render Kartu
+                    let cardHTML = `
+                        <div class="top5-card">
+                            <div class="top5-header">
+                                <i class="fas ${m.icon}"></i> ${m.label} (${m.key.toUpperCase()})
+                            </div>
+                            <div class="top5-list">`;
+                    
+                    top5.forEach((item, idx) => {
+                        const isGrowth = ['ca','sa','fu'].includes(m.key);
+                        const formatted = formatValue(item.val, m.unit, isGrowth, false, false);
+                        cardHTML += `
+                                <div class="top5-item">
+                                    <div style="display:flex; align-items:center; overflow:hidden;">
+                                        <span class="top5-rank">${idx+1}</span>
+                                        <span class="top5-name" title="${item.name}">${item.name}</span>
+                                    </div>
+                                    <span class="top5-val">${formatted}</span>
+                                </div>`;
+                    });
+                    
+                    cardHTML += `</div></div>`;
+                    gridContainer.innerHTML += cardHTML;
+                });
+                return; // Stop eksekusi fungsi di sini
+            }
+
+            // --- LOGIKA LAMA UNTUK MODE ALL/CO ---
+            // Pastikan tabel standar terlihat kembali
+            const gridContainer = document.getElementById('top5GridContainer');
+            if (gridContainer) gridContainer.style.display = 'none';
+            document.querySelector('.ranking-table').style.display = 'table';
+
             tbody.innerHTML = '<tr><td colspan="100%" style="text-align:center;">Processing...</td></tr>';
 
             // 1. PENGUMPULAN DATA
@@ -986,6 +1132,7 @@
                 tbody.innerHTML += rowHTML;
             });
         }
+
         window.onclick = function(e) {
             const modal = document.getElementById('rankingModal');
             const sortModal = document.getElementById('sortModal');
