@@ -767,7 +767,7 @@
                     }
                     if (valB !== valA) return valB - valA;
                 }
-                return 0;
+                return a.name.localeCompare(b.name);
             });
 
             ranked.forEach((r, i) => {
