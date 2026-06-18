@@ -21,7 +21,7 @@
             --warning: #ffc107;
             --highlight-bg: rgba(75, 46, 131, 0.08);
             --card-title-light: #d4c4f0; 
-            --top5-header-color: var(--primary); /* Default Light Mode */
+            --top5-header-color: var(--primary);
             
             --col-rank-w: 40px;
             --col-name-w: 120px;
@@ -41,24 +41,22 @@
             --sort-item-border: #334155;
             --sort-text-color: #e2e8f0;
             --sort-icon-color: #a78bfa;
-            --top5-header-color: #ffffff; /* PERBAIKAN WARNA HEADER CARD DI DARK MODE */
+            --top5-header-color: #ffffff;
         }
 
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', system-ui, sans-serif; transition: background-color 0.3s, color 0.3s; }
         
-        /* Mencegah scroll body saat modal terbuka di mobile */
         body.modal-open { overflow: hidden; }
-        body { background-color: var(--bg); color: var(--text); min-height: 100vh; padding-top: 140px; /* Kompensasi tinggi header fixed */ }
+        body { background-color: var(--bg); color: var(--text); min-height: 100vh; padding-top: 140px; }
 
         /* =========================================
-           HEADER FIXED & CENTERED
+           HEADER FIXED & PERFECTLY CENTERED
            ========================================= */
         .header { 
             background: linear-gradient(135deg, var(--primary), #2d1b50); 
             color: white; 
-            padding: 20px 70px 20px 20px; /* Padding kanan lebih besar untuk kompensasi tombol */
-            text-align: center; 
-            position: fixed; /* FREEZE HEADER */
+            padding: 20px 20px 20px 20px; 
+            position: fixed; 
             top: 0; left: 0; right: 0;
             z-index: 100;
             display: flex;
@@ -66,7 +64,19 @@
             align-items: center;
             justify-content: center;
             box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+            min-height: 120px; /* Tinggi minimum agar stabil */
         }
+        
+        /* Wrapper untuk memastikan title benar-benar center meski ada tombol absolute */
+        .header-content-wrapper {
+            position: relative;
+            width: 100%;
+            max-width: 600px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
         .header h1 { 
             font-size: 1.4rem; 
             margin-bottom: 5px; 
@@ -74,16 +84,17 @@
             align-items: center; 
             justify-content: center; 
             gap: 12px; 
-            width: 100%;
+            text-align: center;
+            line-height: 1.2;
         }
         .header h1 img.logo { object-fit: contain; vertical-align: middle; }
-        .header p { font-size: 0.85rem; opacity: 0.9; margin: 4px 0; }
+        .header p { font-size: 0.85rem; opacity: 0.9; margin: 2px 0; text-align: center; }
         
         .theme-toggle { 
             position: absolute; 
             top: 50%; 
             transform: translateY(-50%); 
-            right: 20px; 
+            right: 0; /* Nempel di kanan wrapper, bukan layar */
             background: rgba(255,255,255,0.15); 
             border: none; 
             color: white; 
@@ -130,7 +141,7 @@
         .progress-fill.under { background: var(--danger); }
         .footer { text-align: center; padding: 20px; font-size: 0.75rem; color: var(--text-muted); margin-top: 20px; }
 
-        /* MODAL STYLES - FULL SCREEN MOBILE FIX */
+        /* MODAL STYLES */
         .modal-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); z-index: 1000; justify-content: center; align-items: center; }
         .modal-content { 
             background: var(--card-bg); width: 95%; max-width: 1200px; 
@@ -207,7 +218,7 @@
         [data-theme="dark"] .slider { background-color: #475569; }
         [data-theme="dark"] .toggle-container { color: #cbd5e1; }
 
-        /* TOP 5 GRID LAYOUT - RESPONSIVE FIX */
+        /* TOP 5 GRID LAYOUT - EQUAL WIDTH FIX */
         .top5-grid-container {
             display: grid;
             grid-template-columns: repeat(5, 1fr);
@@ -225,6 +236,7 @@
             display: flex;
             flex-direction: column;
             min-height: 0;
+            min-width: 0; /* PENTING: Agar kolom bisa shrink dan sama rata */
         }
         .top5-header {
             display: flex;
@@ -233,7 +245,7 @@
             margin-bottom: 8px;
             padding-bottom: 6px;
             border-bottom: 1px dashed var(--border);
-            color: var(--top5-header-color); /* MENGGUNAKAN VARIABEL WARNA DINAMIS */
+            color: var(--top5-header-color);
             font-weight: bold;
             font-size: 0.75rem;
             white-space: nowrap;
@@ -247,6 +259,7 @@
             padding: 3px 0;
             font-size: 0.7rem;
             border-bottom: 1px solid rgba(0,0,0,0.05);
+            min-width: 0; /* PENTING: Mencegah item melebarkan kolom */
         }
         .top5-item:last-child { border-bottom: none; }
         .top5-rank {
@@ -257,21 +270,35 @@
         .top5-item:nth-child(1) .top5-rank { background: #ffd700; color: #333; }
         .top5-item:nth-child(2) .top5-rank { background: #c0c0c0; color: #333; }
         .top5-item:nth-child(3) .top5-rank { background: #cd7f32; color: white; }
-        .top5-name { flex: 1; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; margin-right: 5px; font-size: 0.65rem; }
-        .top5-val { font-weight: bold; color: var(--text); font-size: 0.65rem; }
+        .top5-name { 
+            flex: 1; 
+            white-space: nowrap; 
+            overflow: hidden; 
+            text-overflow: ellipsis; 
+            margin-right: 5px; 
+            font-size: 0.65rem; 
+            min-width: 0; /* PENTING: Agar nama cabang terpotong rapi */
+        }
+        .top5-val { font-weight: bold; color: var(--text); font-size: 0.65rem; flex-shrink: 0; }
 
         /* Responsive Mobile & Tablet */
         @media (max-width: 900px) {
-            /* HEADER MOBILE FIX */
+            /* HEADER MOBILE FIX: CENTER & TOMBOL TEMPOK */
             .header { 
-                padding: 15px 60px 15px 15px; 
-                text-align: center;
+                padding: 15px 15px 15px 15px; 
+                min-height: 110px;
             }
-            .header h1 { font-size: 1.2rem; }
+            .header-content-wrapper { max-width: 100%; }
+            .header h1 { font-size: 1.2rem; gap: 8px; }
             .header p { font-size: 0.75rem; }
-            .theme-toggle { top: 15px; right: 15px; width: 32px; height: 32px; font-size: 0.9rem; }
+            .theme-toggle { 
+                top: 50%; 
+                transform: translateY(-50%); 
+                right: 0; 
+                width: 32px; height: 32px; font-size: 0.9rem; 
+            }
             
-            body { padding-top: 120px; } /* Sesuaikan dengan tinggi header mobile */
+            body { padding-top: 120px; }
 
             .controls { flex-wrap: wrap; flex-direction: row; align-items: stretch; padding: 10px; gap: 8px; margin: 0 10px 15px 10px; }
             .filter-group { flex-basis: calc(60% - 8px); flex-direction: row; gap: 5px; }
@@ -306,7 +333,7 @@
             .btn-sort-trigger, .btn-export { flex: 1; justify-content: center; font-size: 0.75rem; padding: 8px 4px; }
             .btn-back-drill { width: 100%; justify-content: center; margin-top: 5px; }
 
-            /* TOP 5 MOBILE FIX: 2 KOLOM, FULL WIDTH MODAL */
+            /* TOP 5 MOBILE FIX: 2 KOLOM SAMA RATA */
             .modal-content { width: 100%; height: 100%; border-radius: 0; max-width: none; }
             .top5-grid-container { 
                 grid-template-columns: repeat(2, 1fr); 
@@ -337,10 +364,14 @@
 <body>
 
     <div class="header">
-        <button class="theme-toggle" onclick="toggleTheme()" title="Toggle Dark/Light Mode"><i class="fas fa-moon" id="themeIcon"></i></button>
-        <h1><img src="img/BMI.png" alt="Bank Muamalat Logo" class="logo" width="30" height="30" > Bank Muamalat</h1>
-        <p>Leading Indicator Dashboard 📍 Region Sumatera</p>
-        <p>📅 Per: 15 Juni 2026 | 📅 Workdays: 20</p>
+        <div class="header-content-wrapper">
+            <button class="theme-toggle" onclick="toggleTheme()" title="Toggle Dark/Light Mode"><i class="fas fa-moon" id="themeIcon"></i></button>
+            <div style="width: 100%;">
+                <h1><img src="img/BMI.png" alt="Bank Muamalat Logo" class="logo" width="30" height="30" > Bank Muamalat</h1>
+                <p>Leading Indicator Dashboard 📍 Region Sumatera</p>
+                <p>📅 Per: 15 Juni 2026 | 📅 Workdays: 20</p>
+            </div>
+        </div>
     </div>
 
     <div class="controls">
@@ -600,7 +631,7 @@
         // --- LOGIKA RANKING & DRILL-DOWN ---
         function openRankingModal() {
             document.getElementById('rankingModal').style.display = 'flex';
-            document.body.classList.add('modal-open'); // Cegah scroll body
+            document.body.classList.add('modal-open');
             drillDownCo = null; 
             setRankingTab('top5', document.getElementById('tabTop5')); 
         }
@@ -830,7 +861,6 @@
             const thead = document.getElementById('rankingThead');
             const tbody = document.getElementById('rankingTableBody');
             
-            // LOGIKA BARU: Jika Mode Top 5
             if (currentRankingMode === 'top5') {
                 thead.innerHTML = ''; 
                 tbody.innerHTML = ''; 
@@ -847,8 +877,6 @@
                 gridContainer.style.display = 'grid';
 
                 gridContainer.innerHTML = '';
-                
-                // DATA TOP 5 SELALU MENGGUNAKAN RAWDATA (TANPA FILTER)
                 let sourceData = rawData; 
 
                 metrics.forEach(m => {
@@ -858,13 +886,8 @@
                         val: parseFloat(d[m.key + '_mtd'] || 0)
                     }));
 
-                    // Filter hanya nilai > 0 sebelum sort
                     branchData = branchData.filter(item => item.val > 0);
-
-                    // Sort Descending
                     branchData.sort((a, b) => b.val - a.val);
-                    
-                    // Ambil maksimal 5
                     const topN = branchData.slice(0, 5);
 
                     if (topN.length === 0) return;
@@ -881,7 +904,7 @@
                         const formatted = formatValue(item.val, m.unit, isGrowth, false, false);
                         cardHTML += `
                                 <div class="top5-item">
-                                    <div style="display:flex; align-items:center; overflow:hidden; flex:1;">
+                                    <div style="display:flex; align-items:center; overflow:hidden; flex:1; min-width:0;">
                                         <span class="top5-rank">${idx+1}</span>
                                         <span class="top5-name" title="${item.name} (${item.sub})">${item.name}</span>
                                     </div>
@@ -895,7 +918,6 @@
                 return; 
             }
 
-            // --- LOGIKA LAMA UNTUK MODE ALL/CO ---
             const gridContainer = document.getElementById('top5GridContainer');
             if (gridContainer) gridContainer.style.display = 'none';
             document.querySelector('.ranking-table').style.display = 'table';
