@@ -45,47 +45,82 @@
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', system-ui, sans-serif; transition: background-color 0.3s, color 0.3s; }
         body { background-color: var(--bg); color: var(--text); padding-bottom: 40px; min-height: 100vh; }
 
-        /* HEADER */
+        /* HEADER - PERBAIKAN POSISI CENTER */
         .header { 
             background: linear-gradient(135deg, var(--primary), #2d1b50); 
-            color: white; padding: 20px; text-align: center; position: relative; 
-            border-radius: 0 0 var(--radius) var(--radius); margin-bottom: 25px;
+            color: white; 
+            padding: 20px 60px 20px 20px; /* Padding kanan lebih besar untuk kompensasi tombol */
+            text-align: center; 
+            position: relative; 
+            border-radius: 0 0 var(--radius) var(--radius); 
+            margin-bottom: 25px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
         }
-        .header h1 { font-size: 1.4rem; margin-bottom: 5px; display: flex; align-items: center; justify-content: center; gap: 12px; }
+        .header h1 { 
+            font-size: 1.4rem; 
+            margin-bottom: 5px; 
+            display: flex; 
+            align-items: center; 
+            justify-content: center; 
+            gap: 12px; 
+            width: 100%;
+        }
         .header h1 img.logo { object-fit: contain; vertical-align: middle; }
         .header p { font-size: 0.85rem; opacity: 0.9; margin: 4px 0; }
         
+        /* TOMBOL TEMA - ABSOLUTE POSITIONING PRESISI */
         .theme-toggle { 
-            position: absolute; top: 50%; transform: translateY(-50%); right: 20px; 
-            background: rgba(255,255,255,0.15); border: none; color: white; 
-            width: 38px; height: 38px; border-radius: 50%; cursor: pointer; 
-            display: flex; align-items: center; justify-content: center; font-size: 1rem; z-index: 10;
+            position: absolute; 
+            top: 50%; 
+            transform: translateY(-50%); 
+            right: 20px; 
+            background: rgba(255,255,255,0.15); 
+            border: none; 
+            color: white; 
+            width: 38px; 
+            height: 38px; 
+            border-radius: 50%; 
+            cursor: pointer; 
+            display: flex; 
+            align-items: center; 
+            justify-content: center; 
+            font-size: 1rem; 
+            z-index: 10;
+            flex-shrink: 0; /* Mencegah tombol mengecil */
         }
         .theme-toggle:hover { background: rgba(255,255,255,0.25); }
         
         /* CONTROLS & DASHBOARD */
         .controls { display: flex; align-items: center; padding: 15px 20px; background: var(--card-bg); margin: 0 20px 15px 20px; border-radius: var(--radius); box-shadow: var(--shadow); gap: 10px; }
         .filter-group { display: flex; gap: 10px; flex: 1; min-width: 0; }
-        select { padding: 8px 12px; border: 1px solid var(--border); border-radius: 4px; flex: 1; background: var(--card-bg); color: var(--text); min-width: 0; }
+        select { padding: 8px 12px; border: 1px solid var(--border); border-radius: 4px; flex: 1; background: var(--card-bg); color: var(--text); min-width: 0; font-size: 0.85rem; }
         .btn { padding: 8px 16px; border: none; border-radius: 4px; cursor: pointer; font-weight: 600; font-size: 0.85rem; display: inline-flex; align-items: center; gap: 6px; white-space: nowrap; }
         .btn-reset { background: var(--text-muted); color: white; }
         .btn-ranking { background: var(--warning); color: #333; }
         .btn:hover { opacity: 0.9; transform: translateY(-1px); }
 
         .dashboard-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 15px; padding: 0 20px; }
+        
+        /* CARD STYLES - FONT SIZE DISAMAKAN DENGAN FILTER */
         .card { background: var(--card-bg); padding: 16px; border-radius: var(--radius); box-shadow: -4px 0 10px -2px rgba(0,0,0,0.1), 0 2px 8px rgba(0,0,0,0.06); border-top: 1px solid var(--primary); border-left: 1px solid var(--primary); display: flex; flex-direction: column; }        
         .card-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; }
         .card-title { font-size: 0.95rem; font-weight: bold; color: var(--primary); display: flex; align-items: center; gap: 6px; }
         [data-theme="dark"] .card-title { color: var(--card-title-light); }
-        .badge-mtd { font-size: 0.65rem; background: var(--border); padding: 2px 6px; border-radius: 4px; color: var(--text-muted); }
-        .metric-row { display: flex; justify-content: space-between; font-size: 0.8rem; margin-bottom: 6px; color: var(--text-muted); }
-        .metric-val { font-weight: 600; color: var(--text); }
+        .badge-mtd { font-size: 0.75rem; background: var(--border); padding: 2px 6px; border-radius: 4px; color: var(--text-muted); }
+        
+        /* FONT METRIC ROW DISAMAKAN DENGAN FONT SELECT/FILTER (0.85rem) */
+        .metric-row { display: flex; justify-content: space-between; font-size: 0.85rem; margin-bottom: 8px; color: var(--text-muted); align-items: center; }
+        .metric-val { font-weight: 600; color: var(--text); font-size: 0.85rem; }
         .metric-val.neg { color: var(--danger); }
         .metric-val.pos { color: var(--success); }
+        
         .achievement-box { margin-top: auto; text-align: center; padding-top: 10px; border-top: 1px dashed var(--border); }
-        .achv-label { font-size: 0.75rem; color: var(--text-muted); margin-bottom: 3px; }
-        .achv-val { font-size: 1.3rem; font-weight: bold; margin-bottom: 6px; }
-        .progress-bar { height: 6px; background: var(--border); border-radius: 3px; overflow: hidden; width: 100%; }
+        .achv-label { font-size: 0.85rem; color: var(--text-muted); margin-bottom: 5px; }
+        .achv-val { font-size: 1.5rem; font-weight: bold; margin-bottom: 6px; }
+        .progress-bar { height: 8px; background: var(--border); border-radius: 4px; overflow: hidden; width: 100%; }
         .progress-fill { height: 100%; background: var(--primary); transition: width 0.5s ease; }
         .progress-fill.over { background: var(--success); }
         .progress-fill.under { background: var(--danger); }
@@ -168,14 +203,10 @@
         [data-theme="dark"] .slider { background-color: #475569; }
         [data-theme="dark"] .toggle-container { color: #cbd5e1; }
 
-        /* =========================================
-           TOP 5 GRID LAYOUT - COMPACT & RESPONSIVE
-           WEB: 5 Kolom x 2 Baris (Muat 1 Layar)
-           MOBILE: 2 Kolom x 5 Baris (Tanpa Scroll Horizontal)
-           ========================================= */
+        /* TOP 5 GRID LAYOUT */
         .top5-grid-container {
             display: grid;
-            grid-template-columns: repeat(5, 1fr); /* 5 Kolom di Desktop */
+            grid-template-columns: repeat(5, 1fr);
             gap: 12px;
             padding: 15px;
             overflow-y: auto;
@@ -186,7 +217,7 @@
             background: var(--card-bg);
             border: 1px solid var(--border);
             border-radius: var(--radius);
-            padding: 10px; /* Padding lebih kecil */
+            padding: 10px;
             box-shadow: var(--shadow);
             display: flex;
             flex-direction: column;
@@ -201,7 +232,7 @@
             border-bottom: 1px dashed var(--border);
             color: var(--primary);
             font-weight: bold;
-            font-size: 0.75rem; /* Font header lebih kecil */
+            font-size: 0.75rem;
             white-space: nowrap;
             overflow: hidden;
             text-overflow: ellipsis;
@@ -210,7 +241,7 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding: 3px 0; /* Tinggi baris lebih rapat */
+            padding: 3px 0;
             font-size: 0.7rem;
             border-bottom: 1px solid rgba(0,0,0,0.05);
         }
@@ -228,31 +259,50 @@
 
         /* Responsive Mobile & Tablet */
         @media (max-width: 900px) {
-            .header { padding: 20px 60px 20px 20px; }
-            .header h1 { font-size: 1.3rem; }
-            .theme-toggle { top: 20px; transform: none; right: 15px; width: 34px; height: 34px; }
-            
-            /* PERBAIKAN NO.5: FILTER TAMPIL RAPI DI MOBILE (GRID 2 KOLOM) */
-            .controls { 
-                flex-wrap: wrap; 
-                flex-direction: row; 
-                align-items: stretch; 
-                padding: 10px;
-                gap: 8px;
+            /* PERBAIKAN HEADER MOBILE AGAR BENAR-BENAR CENTER */
+            .header { 
+                padding: 20px 60px 20px 20px; 
+                text-align: center;
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                justify-content: center;
             }
-            .filter-group { 
-                flex-basis: calc(60% - 8px); 
-                flex-direction: row; 
-                gap: 5px;
+            .header h1 { 
+                font-size: 1.3rem; 
+                justify-content: center;
+                width: 100%;
             }
-            .filter-group select { font-size: 0.75rem; padding: 6px; }
+            .header p {
+                font-size: 0.8rem;
+                text-align: center;
+            }
+            .theme-toggle {
+                top: 20px;
+                transform: none;
+                right: 15px;
+                width: 34px;
+                height: 34px;
+            }
+
+            .controls { flex-wrap: wrap; flex-direction: row; align-items: stretch; padding: 10px; gap: 8px; }
+            .filter-group { flex-basis: calc(60% - 8px); flex-direction: row; gap: 5px; }
+            .filter-group select { font-size: 0.85rem; padding: 8px; } /* Font filter tetap 0.85rem */
             
-            .btn { flex: 1; justify-content: center; font-size: 0.75rem; padding: 6px 8px; }
+            .btn { flex: 1; justify-content: center; font-size: 0.85rem; padding: 8px; } /* Samakan dengan font filter */
             .btn-reset { flex-basis: 30%; }
             .btn-ranking { flex-basis: 100%; margin-top: 5px; } 
             
-            .dashboard-grid { grid-template-columns: repeat(2, 1fr); gap: 10px; }
+            .dashboard-grid { grid-template-columns: repeat(2, 1fr); gap: 10px; padding: 0 10px; }
             .card { padding: 12px; }
+            
+            /* FONT CARD DI MOBILE SAMA PERSIS DENGAN FONT FILTER (0.85rem) */
+            .card-title { font-size: 0.85rem; }
+            .metric-row { font-size: 0.85rem; margin-bottom: 6px; }
+            .metric-val { font-size: 0.85rem; }
+            .achv-label { font-size: 0.85rem; }
+            .achv-val { font-size: 1.3rem; }
+            .badge-mtd { font-size: 0.75rem; }
             
             :root { --col-name-w: 100px; --col-total-w: 45px; }
             .ranking-table { font-size: 0.7rem; }
@@ -269,9 +319,8 @@
             .btn-sort-trigger, .btn-export { flex: 1; justify-content: center; font-size: 0.75rem; padding: 8px 4px; }
             .btn-back-drill { width: 100%; justify-content: center; margin-top: 5px; }
 
-            /* PERBAIKAN NO.2 & 3: LAYOUT TOP 5 DI MOBILE/TABLET */
             .top5-grid-container { 
-                grid-template-columns: repeat(2, 1fr); /* 2 Kolom di Mobile */
+                grid-template-columns: repeat(2, 1fr); 
                 gap: 8px;
                 padding: 10px;
                 max-height: calc(90vh - 180px); 
@@ -302,8 +351,8 @@
     <div class="header">
         <button class="theme-toggle" onclick="toggleTheme()" title="Toggle Dark/Light Mode"><i class="fas fa-moon" id="themeIcon"></i></button>
         <h1><img src="img/BMI.png" alt="Bank Muamalat Logo" class="logo" width="30" height="30" > Bank Muamalat</h1>
-        <p>Leading Indicator Dashboard 📍 Region Sumatera</p>
-        <p>📅 Per: 15 Juni 2026 | 📅 Workdays: 20</p>
+        <p>Leading Indicator Dashboard  Region Sumatera</p>
+        <p> Per: 15 Juni 2026 | 📅 Workdays: 20</p>
     </div>
 
     <div class="controls">
@@ -324,24 +373,20 @@
     <div id="rankingModal" class="modal-overlay">
         <div class="modal-content">
             <div class="modal-header">
-                <!-- JUDUL DINAMIS -->
                 <h3 id="modalTitle"><i class="fas fa-chart-bar"></i> Ranking Performance</h3>
                 <button class="close-btn" onclick="closeRankingModal()">&times;</button>
             </div>
             <div class="modal-body">
+                <!--
                 <div class="ranking-tabs-wrapper">
                     <div class="ranking-controls">
-                        <!-- TABS: DISAMBUKNYA SAAT MODE TOP 5 -->
-                        <!--
                         <button class="tab-btn" id="tabAll" onclick="setRankingTab('all', this)">All Branch</button>
                         <button class="tab-btn" id="tabCo" onclick="setRankingTab('co', this)">All Co-Branch</button>
-                        <button class="tab-btn active" id="tabTop5" onclick="setRankingTab('top5', this)"> Top 5 Indicators</button>
-                        -->
+                        <button class="tab-btn active" id="tabTop5" onclick="setRankingTab('top5', this)">🏆 Top 5 Indicators</button>                        
                         <div class="action-row">
                             <button class="btn-sort-trigger" onclick="openSortModal()">
                                 <i class="fas fa-sort-amount-down"></i> Sort (<span id="sortCountBadge">1</span>)
                             </button>
-                            <!-- EXPORT BUTTON: AKAN DISEMBUNYIKAN VIA JS SAAT MODE TOP 5 -->
                             <button class="btn-export" id="btnExportRanking" onclick="exportToExcel()">
                                 <i class="fas fa-file-excel"></i> Export
                             </button>
@@ -358,13 +403,12 @@
                         <button class="btn-back-drill" id="btnBackDrill" onclick="backToCoList()"><i class="fas fa-arrow-left"></i> Kembali</button>
                     </div>
                 </div>
-                
+                -->
                 <div class="table-wrapper">
                     <table class="ranking-table" id="rankingTable">
                         <thead id="rankingThead"></thead>
                         <tbody id="rankingTableBody"></tbody>
                     </table>
-                    <!-- Container untuk Top 5 Grid akan di-inject via JS -->
                 </div>
             </div>
         </div>
@@ -399,7 +443,7 @@
         ];
 
         let rawData = [];
-        let currentRankingMode = 'top5'; // DEFAULT LANGSUNG KE TOP 5
+        let currentRankingMode = 'top5';
         let drillDownCo = null; 
         let activeRankingMetrics = ['total'];
         let showActualValues = false; 
@@ -589,11 +633,10 @@
             const toggleLabel = document.querySelector('.toggle-container');
             const exportBtn = document.getElementById('btnExportRanking');
             
-            // LOGIKA BARU: SEMBUNYIKAN TOMBOL EKSPOR & SORT DI MODE TOP 5
             if (mode === 'top5') {
                 if(sortBtn) sortBtn.style.display = 'none';
                 if(toggleLabel) toggleLabel.style.display = 'none';
-                if(exportBtn) exportBtn.style.display = 'none'; // Hapus tombol Export
+                if(exportBtn) exportBtn.style.display = 'none';
             } else {
                 if(sortBtn) sortBtn.style.display = 'inline-flex';
                 if(toggleLabel) toggleLabel.style.display = 'flex';
@@ -607,7 +650,6 @@
             const btnBack = document.getElementById('btnBackDrill');
             const title = document.getElementById('modalTitle');
             
-            // GANTI JUDUL MODAL MENJADI "TOP 5 INDICATORS"
             if (currentRankingMode === 'top5') {
                 title.innerHTML = `<i class="fas fa-trophy"></i> Top 5 Indicators`;
             } else if (drillDownCo) {
@@ -811,19 +853,14 @@
                     document.querySelector('.table-wrapper').appendChild(gridContainer);
                 }
                 
-                // Sembunyikan tabel agar tidak memicu scroll horizontal di mobile
                 document.querySelector('.ranking-table').style.display = 'none';
                 gridContainer.style.display = 'grid';
 
                 gridContainer.innerHTML = '';
                 
-                // AMBIL DATA BERDASARKAN FILTER YANG SEDANG AKTIF
-                const coFilter = document.getElementById('coBranchFilter').value;
-                const brFilter = document.getElementById('branchFilter').value;
-                
-                let sourceData = rawData;
-                if (coFilter) sourceData = sourceData.filter(d => d['co'] === coFilter);
-                if (brFilter) sourceData = sourceData.filter(d => d['br'] === brFilter);
+                // PERBAIKAN: DATA TOP 5 SELALU MENGGUNAKAN RAWDATA (TANPA FILTER)
+                // Abaikan filter Branch/Co-Branch yang sedang aktif
+                let sourceData = rawData; 
 
                 metrics.forEach(m => {
                     let branchData = sourceData.map(d => ({
@@ -832,16 +869,15 @@
                         val: parseFloat(d[m.key + '_mtd'] || 0)
                     }));
 
-                    // PERBAIKAN NO.1: FILTER HANYA NILAI > 0 SEBELUM SORT
+                    // Filter hanya nilai > 0 sebelum sort
                     branchData = branchData.filter(item => item.val > 0);
 
                     // Sort Descending
                     branchData.sort((a, b) => b.val - a.val);
                     
-                    // PERBAIKAN NO.1: Ambil sebanyak data yang tersedia (maksimal 5)
+                    // Ambil maksimal 5
                     const topN = branchData.slice(0, 5);
 
-                    // Skip render kartu jika tidak ada data sama sekali
                     if (topN.length === 0) return;
 
                     let cardHTML = `
@@ -853,7 +889,6 @@
                     
                     topN.forEach((item, idx) => {
                         const isGrowth = ['ca','sa','fu'].includes(m.key);
-                        // SELALU TAMPILKAN ACTUAL VALUE (PERMINTAAN NO.4)
                         const formatted = formatValue(item.val, m.unit, isGrowth, false, false);
                         cardHTML += `
                                 <div class="top5-item">
