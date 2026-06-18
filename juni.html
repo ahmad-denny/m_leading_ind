@@ -252,11 +252,11 @@
         [data-theme="dark"] .slider { background-color: #475569; }
         [data-theme="dark"] .toggle-container { color: #cbd5e1; }
 
-        /* TOP 5 GRID LAYOUT - 2 BARIS (KIRI & KANAN) */
+                /* TOP 5 GRID LAYOUT - WEB: 5 KOLOM x 2 BARIS */
         .top5-grid-container {
             display: grid;
-            grid-template-columns: repeat(2, 1fr); /* 2 Kolom = 2 Baris Visual */
-            gap: 20px;
+            grid-template-columns: repeat(5, 1fr); /* 5 Kolom di Desktop */
+            gap: 15px;
             padding: 20px;
             overflow-y: auto;
             max-height: calc(90vh - 150px);
@@ -266,104 +266,82 @@
             background: var(--card-bg);
             border: 1px solid var(--border);
             border-radius: var(--radius);
-            padding: 15px;
+            padding: 12px;
             box-shadow: var(--shadow);
             display: flex;
             flex-direction: column;
+            min-height: 0; /* Agar kartu bisa shrink jika perlu */
         }
         .top5-header {
             display: flex;
             align-items: center;
-            gap: 8px;
-            margin-bottom: 12px;
+            gap: 6px;
+            margin-bottom: 10px;
             padding-bottom: 8px;
             border-bottom: 1px dashed var(--border);
             color: var(--primary);
             font-weight: bold;
-            font-size: 0.9rem;
+            font-size: 0.8rem;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
         }
         .top5-item {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding: 6px 0;
-            font-size: 0.8rem;
+            padding: 4px 0;
+            font-size: 0.75rem;
             border-bottom: 1px solid rgba(0,0,0,0.05);
         }
         .top5-item:last-child { border-bottom: none; }
         .top5-rank {
-            width: 20px;
-            height: 20px;
+            width: 18px;
+            height: 18px;
             background: var(--bg);
             border-radius: 50%;
             text-align: center;
-            line-height: 20px;
-            font-size: 0.7rem;
+            line-height: 18px;
+            font-size: 0.65rem;
             font-weight: bold;
             color: var(--text-muted);
-            margin-right: 8px;
+            margin-right: 6px;
             flex-shrink: 0;
         }
         .top5-item:nth-child(1) .top5-rank { background: #ffd700; color: #333; }
         .top5-item:nth-child(2) .top5-rank { background: #c0c0c0; color: #333; }
         .top5-item:nth-child(3) .top5-rank { background: #cd7f32; color: white; }
-        .top5-name { flex: 1; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; margin-right: 10px; }
-        .top5-val { font-weight: bold; color: var(--text); }
+        .top5-name { 
+            flex: 1; 
+            white-space: nowrap; 
+            overflow: hidden; 
+            text-overflow: ellipsis; 
+            margin-right: 8px;
+            font-size: 0.7rem;
+        }
+        .top5-val { font-weight: bold; color: var(--text); font-size: 0.7rem; }
 
-        /* Responsive Mobile */
-        @media (max-width: 600px) {
-            /* PERBAIKAN HEADER MOBILE AGAR TIDAK BERTUMPUK DENGAN TOMBOL TEMA */
-            .header { 
-                padding: 20px 60px 20px 20px; 
-                text-align: center;
-            }
-            .header h1 { 
-                font-size: 1.3rem; 
-                justify-content: center;
-            }
-            .header p {
-                font-size: 0.8rem;
-            }
-            .theme-toggle {
-                top: 20px;
-                transform: none;
-                right: 15px;
-                width: 34px;
-                height: 34px;
-            }
-
-            .controls { flex-wrap: wrap; flex-direction: column; align-items: stretch; }
-            .filter-group { flex-basis: 100%; flex-direction: column; }
-            .btn { flex: 1; justify-content: center; }
-            
-            /* LAYOUT 2 KOLOM DI MOBILE */
-            .dashboard-grid { 
+        /* MOBILE/TABLET: 2 KOLOM x 5 BARIS */
+        @media (max-width: 900px) {
+            .top5-grid-container { 
                 grid-template-columns: repeat(2, 1fr); 
-                gap: 10px; 
+                gap: 10px;
+                padding: 15px;
             }
-            .card { padding: 12px; }
-            .card-title { font-size: 0.8rem; }
-            .metric-row { font-size: 0.7rem; margin-bottom: 4px; }
-            .achv-val { font-size: 1rem; }
-            .badge-mtd { font-size: 0.55rem; }
-            
-            :root { --col-name-w: 100px; --col-total-w: 45px; }
-            .ranking-table { font-size: 0.7rem; }
-            .ranking-table th:nth-child(2), .ranking-table td:nth-child(2) { left: var(--col-rank-w); width: var(--col-name-w); min-width: var(--col-name-w); max-width: var(--col-name-w); }
-            .ranking-table th:nth-child(3), .ranking-table td:nth-child(3) { left: calc(var(--col-rank-w) + var(--col-name-w)); width: var(--col-total-w); min-width: var(--col-total-w); max-width: var(--col-total-w); font-size: 0.65rem; }
-            .ranking-table th:not(:first-child):not(:nth-child(2)):not(:nth-child(3)), .ranking-table td:not(:first-child):not(:nth-child(2)):not(:nth-child(3)) { min-width: 36px !important; max-width: 40px !important; padding: 8px 2px !important; font-size: 0.6rem !important; }
-            .indicator-prefix { font-size: 0.45rem; }
-            .ranking-table th { height: 48px; }
-            .th-content { padding: 4px 2px; gap: 2px; }
-            
-            .ranking-controls { display: flex; flex-direction: column; gap: 8px; width: 100%; }
-            .tab-btn { width: 100%; text-align: center; padding: 8px; font-size: 0.8rem; }
-            .action-row { display: flex; gap: 8px; width: 100%; }
-            .btn-sort-trigger, .btn-export { flex: 1; justify-content: center; font-size: 0.75rem; padding: 8px 4px; }
-            .btn-back-drill { width: 100%; justify-content: center; margin-top: 5px; }
-
-            /* Top 5 Mobile Adjustment: Kembali ke 1 kolom agar muat di layar kecil */
-            .top5-grid-container { grid-template-columns: 1fr; }
+            .top5-card { padding: 10px; }
+            .top5-header { font-size: 0.75rem; }
+        }
+        
+        /* MOBILE KECIL: Tetap 2 kolom tapi lebih compact */
+        @media (max-width: 600px) {
+            .top5-grid-container { 
+                grid-template-columns: repeat(2, 1fr); 
+                gap: 8px;
+                padding: 10px;
+            }
+            .top5-item { padding: 3px 0; }
+            .top5-name { font-size: 0.65rem; }
+            .top5-val { font-size: 0.65rem; }
         }
 
         /* PERBAIKAN DARK MODE MODAL SORT */
@@ -905,7 +883,7 @@
             const thead = document.getElementById('rankingThead');
             const tbody = document.getElementById('rankingTableBody');
             
-            // LOGIKA BARU: Jika Mode Top 5
+                        // LOGIKA BARU: Jika Mode Top 5
             if (currentRankingMode === 'top5') {
                 thead.innerHTML = ''; // Sembunyikan Header Tabel
                 tbody.innerHTML = ''; 
@@ -916,7 +894,6 @@
                     gridContainer = document.createElement('div');
                     gridContainer.id = 'top5GridContainer';
                     gridContainer.className = 'top5-grid-container';
-                    // Masukkan ke parent tbody atau setelah table wrapper
                     document.querySelector('.table-wrapper').appendChild(gridContainer);
                 }
                 
@@ -934,19 +911,25 @@
                         val: parseFloat(d[m.key + '_mtd'] || 0)
                     }));
 
+                    // PERBAIKAN NO.1: FILTER HANYA NILAI > 0 SEBELUM SORT
+                    // Ini memastikan cabang dengan booking 0/tidak ada tidak masuk list
+                    branchData = branchData.filter(item => item.val > 0);
+
                     // Sort Descending
                     branchData.sort((a, b) => b.val - a.val);
                     
-                    // PERMINTAAN NO.1: Ambil sebanyak data yang ada (maksimal 5)
-                    // Jika cuma 1 cabang booking, ya tampil 1 saja
-                    const countToShow = Math.min(branchData.length, 5);
-                    const topN = branchData.slice(0, countToShow);
+                    // PERBAIKAN NO.1: Ambil sebanyak data yang tersedia (maksimal 5)
+                    // Jika cuma 1 cabang booking SME, maka topN.length = 1
+                    const topN = branchData.slice(0, 5);
+
+                    // Skip render kartu jika tidak ada data sama sekali
+                    if (topN.length === 0) return;
 
                     // Render Kartu
                     let cardHTML = `
                         <div class="top5-card">
-                            <div class="top5-header">
-                                <i class="fas ${m.icon}"></i> ${m.label} (${m.key.toUpperCase()})
+                            <div class="top5-header" title="${m.label}">
+                                <i class="fas ${m.icon}"></i> ${m.label}
                             </div>
                             <div class="top5-list">`;
                     
@@ -955,9 +938,9 @@
                         const formatted = formatValue(item.val, m.unit, isGrowth, false, false);
                         cardHTML += `
                                 <div class="top5-item">
-                                    <div style="display:flex; align-items:center; overflow:hidden;">
+                                    <div style="display:flex; align-items:center; overflow:hidden; flex:1;">
                                         <span class="top5-rank">${idx+1}</span>
-                                        <span class="top5-name" title="${item.name}">${item.name}</span>
+                                        <span class="top5-name" title="${item.name} (${item.sub})">${item.name}</span>
                                     </div>
                                     <span class="top5-val">${formatted}</span>
                                 </div>`;
