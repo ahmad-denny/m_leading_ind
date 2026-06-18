@@ -2,7 +2,7 @@
 <html lang="id">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Dashboard Leading Indicator - Bank Muamalat</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script src="https://cdn.sheetjs.com/xlsx-latest/package/dist/xlsx.full.min.js"></script>
@@ -21,6 +21,7 @@
             --warning: #ffc107;
             --highlight-bg: rgba(75, 46, 131, 0.08);
             --card-title-light: #d4c4f0; 
+            --top5-header-color: var(--primary); /* Default Light Mode */
             
             --col-rank-w: 40px;
             --col-name-w: 120px;
@@ -40,24 +41,31 @@
             --sort-item-border: #334155;
             --sort-text-color: #e2e8f0;
             --sort-icon-color: #a78bfa;
+            --top5-header-color: #ffffff; /* PERBAIKAN WARNA HEADER CARD DI DARK MODE */
         }
 
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', system-ui, sans-serif; transition: background-color 0.3s, color 0.3s; }
-        body { background-color: var(--bg); color: var(--text); padding-bottom: 40px; min-height: 100vh; }
+        
+        /* Mencegah scroll body saat modal terbuka di mobile */
+        body.modal-open { overflow: hidden; }
+        body { background-color: var(--bg); color: var(--text); min-height: 100vh; padding-top: 140px; /* Kompensasi tinggi header fixed */ }
 
-        /* HEADER - PERBAIKAN POSISI CENTER */
+        /* =========================================
+           HEADER FIXED & CENTERED
+           ========================================= */
         .header { 
             background: linear-gradient(135deg, var(--primary), #2d1b50); 
             color: white; 
-            padding: 20px 60px 20px 20px; /* Padding kanan lebih besar untuk kompensasi tombol */
+            padding: 20px 70px 20px 20px; /* Padding kanan lebih besar untuk kompensasi tombol */
             text-align: center; 
-            position: relative; 
-            border-radius: 0 0 var(--radius) var(--radius); 
-            margin-bottom: 25px;
+            position: fixed; /* FREEZE HEADER */
+            top: 0; left: 0; right: 0;
+            z-index: 100;
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: center;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.2);
         }
         .header h1 { 
             font-size: 1.4rem; 
@@ -71,7 +79,6 @@
         .header h1 img.logo { object-fit: contain; vertical-align: middle; }
         .header p { font-size: 0.85rem; opacity: 0.9; margin: 4px 0; }
         
-        /* TOMBOL TEMA - ABSOLUTE POSITIONING PRESISI */
         .theme-toggle { 
             position: absolute; 
             top: 50%; 
@@ -89,7 +96,7 @@
             justify-content: center; 
             font-size: 1rem; 
             z-index: 10;
-            flex-shrink: 0; /* Mencegah tombol mengecil */
+            flex-shrink: 0;
         }
         .theme-toggle:hover { background: rgba(255,255,255,0.25); }
         
@@ -99,24 +106,21 @@
         select { padding: 8px 12px; border: 1px solid var(--border); border-radius: 4px; flex: 1; background: var(--card-bg); color: var(--text); min-width: 0; font-size: 0.85rem; }
         .btn { padding: 8px 16px; border: none; border-radius: 4px; cursor: pointer; font-weight: 600; font-size: 0.85rem; display: inline-flex; align-items: center; gap: 6px; white-space: nowrap; }
         .btn-reset { background: var(--text-muted); color: white; }
-        .btn-ranking { background: var(--warning); color: #333; }
+        .btn-ranking { background: var(--warning); color: #333; width: 100%; justify-content: center; }
         .btn:hover { opacity: 0.9; transform: translateY(-1px); }
 
-        .dashboard-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 15px; padding: 0 20px; }
+        .dashboard-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 15px; padding: 0 20px 40px 20px; }
         
-        /* CARD STYLES - FONT SIZE DISAMAKAN DENGAN FILTER */
-        .card { background: var(--card-bg); padding: 16px; border-radius: var(--radius); box-shadow: -4px 0 10px -2px rgba(0,0,0,0.1), 0 2px 8px rgba(0,0,0,0.06); border-top: 1px solid var(--primary); border-left: 1px solid var(--primary); display: flex; flex-direction: column; }        
+        /* CARD STYLES */
+        .card { background: var(--card-bg); padding: 16px; border-radius: var(--radius); box-shadow: var(--shadow); border-top: 1px solid var(--primary); border-left: 1px solid var(--primary); display: flex; flex-direction: column; }        
         .card-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; }
         .card-title { font-size: 0.95rem; font-weight: bold; color: var(--primary); display: flex; align-items: center; gap: 6px; }
         [data-theme="dark"] .card-title { color: var(--card-title-light); }
         .badge-mtd { font-size: 0.75rem; background: var(--border); padding: 2px 6px; border-radius: 4px; color: var(--text-muted); }
-        
-        /* FONT METRIC ROW DISAMAKAN DENGAN FONT SELECT/FILTER (0.85rem) */
         .metric-row { display: flex; justify-content: space-between; font-size: 0.85rem; margin-bottom: 8px; color: var(--text-muted); align-items: center; }
         .metric-val { font-weight: 600; color: var(--text); font-size: 0.85rem; }
         .metric-val.neg { color: var(--danger); }
         .metric-val.pos { color: var(--success); }
-        
         .achievement-box { margin-top: auto; text-align: center; padding-top: 10px; border-top: 1px dashed var(--border); }
         .achv-label { font-size: 0.85rem; color: var(--text-muted); margin-bottom: 5px; }
         .achv-val { font-size: 1.5rem; font-weight: bold; margin-bottom: 6px; }
@@ -126,11 +130,11 @@
         .progress-fill.under { background: var(--danger); }
         .footer { text-align: center; padding: 20px; font-size: 0.75rem; color: var(--text-muted); margin-top: 20px; }
 
-        /* MODAL STYLES */
+        /* MODAL STYLES - FULL SCREEN MOBILE FIX */
         .modal-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); z-index: 1000; justify-content: center; align-items: center; }
         .modal-content { 
             background: var(--card-bg); width: 95%; max-width: 1200px; 
-            max-height: 90vh; border-radius: var(--radius); overflow: hidden; 
+            height: 90vh; border-radius: var(--radius); overflow: hidden; 
             display: flex; flex-direction: column; animation: slideUp 0.3s ease; color: var(--text);
         }
         @keyframes slideUp { from { transform: translateY(20px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
@@ -203,14 +207,13 @@
         [data-theme="dark"] .slider { background-color: #475569; }
         [data-theme="dark"] .toggle-container { color: #cbd5e1; }
 
-        /* TOP 5 GRID LAYOUT */
+        /* TOP 5 GRID LAYOUT - RESPONSIVE FIX */
         .top5-grid-container {
             display: grid;
             grid-template-columns: repeat(5, 1fr);
             gap: 12px;
             padding: 15px;
             overflow-y: auto;
-            max-height: calc(90vh - 140px);
             width: 100%;
         }
         .top5-card {
@@ -230,7 +233,7 @@
             margin-bottom: 8px;
             padding-bottom: 6px;
             border-bottom: 1px dashed var(--border);
-            color: var(--primary);
+            color: var(--top5-header-color); /* MENGGUNAKAN VARIABEL WARNA DINAMIS */
             font-weight: bold;
             font-size: 0.75rem;
             white-space: nowrap;
@@ -259,44 +262,28 @@
 
         /* Responsive Mobile & Tablet */
         @media (max-width: 900px) {
-            /* PERBAIKAN HEADER MOBILE AGAR BENAR-BENAR CENTER */
+            /* HEADER MOBILE FIX */
             .header { 
-                padding: 20px 60px 20px 20px; 
-                text-align: center;
-                display: flex;
-                flex-direction: column;
-                align-items: center;
-                justify-content: center;
-            }
-            .header h1 { 
-                font-size: 1.3rem; 
-                justify-content: center;
-                width: 100%;
-            }
-            .header p {
-                font-size: 0.8rem;
+                padding: 15px 60px 15px 15px; 
                 text-align: center;
             }
-            .theme-toggle {
-                top: 20px;
-                transform: none;
-                right: 15px;
-                width: 34px;
-                height: 34px;
-            }
-
-            .controls { flex-wrap: wrap; flex-direction: row; align-items: stretch; padding: 10px; gap: 8px; }
-            .filter-group { flex-basis: calc(60% - 8px); flex-direction: row; gap: 5px; }
-            .filter-group select { font-size: 0.85rem; padding: 8px; } /* Font filter tetap 0.85rem */
+            .header h1 { font-size: 1.2rem; }
+            .header p { font-size: 0.75rem; }
+            .theme-toggle { top: 15px; right: 15px; width: 32px; height: 32px; font-size: 0.9rem; }
             
-            .btn { flex: 1; justify-content: center; font-size: 0.85rem; padding: 8px; } /* Samakan dengan font filter */
+            body { padding-top: 120px; } /* Sesuaikan dengan tinggi header mobile */
+
+            .controls { flex-wrap: wrap; flex-direction: row; align-items: stretch; padding: 10px; gap: 8px; margin: 0 10px 15px 10px; }
+            .filter-group { flex-basis: calc(60% - 8px); flex-direction: row; gap: 5px; }
+            .filter-group select { font-size: 0.85rem; padding: 8px; }
+            
+            .btn { flex: 1; justify-content: center; font-size: 0.85rem; padding: 8px; }
             .btn-reset { flex-basis: 30%; }
             .btn-ranking { flex-basis: 100%; margin-top: 5px; } 
             
-            .dashboard-grid { grid-template-columns: repeat(2, 1fr); gap: 10px; padding: 0 10px; }
+            .dashboard-grid { grid-template-columns: repeat(2, 1fr); gap: 10px; padding: 0 10px 40px 10px; }
             .card { padding: 12px; }
             
-            /* FONT CARD DI MOBILE SAMA PERSIS DENGAN FONT FILTER (0.85rem) */
             .card-title { font-size: 0.85rem; }
             .metric-row { font-size: 0.85rem; margin-bottom: 6px; }
             .metric-val { font-size: 0.85rem; }
@@ -319,11 +306,12 @@
             .btn-sort-trigger, .btn-export { flex: 1; justify-content: center; font-size: 0.75rem; padding: 8px 4px; }
             .btn-back-drill { width: 100%; justify-content: center; margin-top: 5px; }
 
+            /* TOP 5 MOBILE FIX: 2 KOLOM, FULL WIDTH MODAL */
+            .modal-content { width: 100%; height: 100%; border-radius: 0; max-width: none; }
             .top5-grid-container { 
                 grid-template-columns: repeat(2, 1fr); 
                 gap: 8px;
                 padding: 10px;
-                max-height: calc(90vh - 180px); 
             }
             .top5-card { padding: 8px; }
             .top5-header { font-size: 0.7rem; margin-bottom: 5px; padding-bottom: 4px; }
@@ -351,8 +339,8 @@
     <div class="header">
         <button class="theme-toggle" onclick="toggleTheme()" title="Toggle Dark/Light Mode"><i class="fas fa-moon" id="themeIcon"></i></button>
         <h1><img src="img/BMI.png" alt="Bank Muamalat Logo" class="logo" width="30" height="30" > Bank Muamalat</h1>
-        <p>Leading Indicator Dashboard  Region Sumatera</p>
-        <p> Per: 15 Juni 2026 | 📅 Workdays: 20</p>
+        <p>Leading Indicator Dashboard 📍 Region Sumatera</p>
+        <p>📅 Per: 15 Juni 2026 | 📅 Workdays: 20</p>
     </div>
 
     <div class="controls">
@@ -377,12 +365,12 @@
                 <button class="close-btn" onclick="closeRankingModal()">&times;</button>
             </div>
             <div class="modal-body">
-                <!--
                 <div class="ranking-tabs-wrapper">
                     <div class="ranking-controls">
                         <button class="tab-btn" id="tabAll" onclick="setRankingTab('all', this)">All Branch</button>
                         <button class="tab-btn" id="tabCo" onclick="setRankingTab('co', this)">All Co-Branch</button>
-                        <button class="tab-btn active" id="tabTop5" onclick="setRankingTab('top5', this)">🏆 Top 5 Indicators</button>                        
+                        <button class="tab-btn active" id="tabTop5" onclick="setRankingTab('top5', this)">🏆 Top 5 Indicators</button>
+                        
                         <div class="action-row">
                             <button class="btn-sort-trigger" onclick="openSortModal()">
                                 <i class="fas fa-sort-amount-down"></i> Sort (<span id="sortCountBadge">1</span>)
@@ -403,7 +391,7 @@
                         <button class="btn-back-drill" id="btnBackDrill" onclick="backToCoList()"><i class="fas fa-arrow-left"></i> Kembali</button>
                     </div>
                 </div>
-                -->
+                
                 <div class="table-wrapper">
                     <table class="ranking-table" id="rankingTable">
                         <thead id="rankingThead"></thead>
@@ -612,12 +600,14 @@
         // --- LOGIKA RANKING & DRILL-DOWN ---
         function openRankingModal() {
             document.getElementById('rankingModal').style.display = 'flex';
+            document.body.classList.add('modal-open'); // Cegah scroll body
             drillDownCo = null; 
             setRankingTab('top5', document.getElementById('tabTop5')); 
         }
         
         function closeRankingModal() { 
             document.getElementById('rankingModal').style.display = 'none'; 
+            document.body.classList.remove('modal-open');
             drillDownCo = null;
         }
 
@@ -858,8 +848,7 @@
 
                 gridContainer.innerHTML = '';
                 
-                // PERBAIKAN: DATA TOP 5 SELALU MENGGUNAKAN RAWDATA (TANPA FILTER)
-                // Abaikan filter Branch/Co-Branch yang sedang aktif
+                // DATA TOP 5 SELALU MENGGUNAKAN RAWDATA (TANPA FILTER)
                 let sourceData = rawData; 
 
                 metrics.forEach(m => {
