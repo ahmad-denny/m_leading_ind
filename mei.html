@@ -2,10 +2,9 @@
 <html lang="id">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dashboard Leading Indicator - Bank Muamalat</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Leading Indicator Dashboard - Bank Muamalat</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <!-- Library untuk Export Excel -->
     <script src="https://cdn.sheetjs.com/xlsx-latest/package/dist/xlsx.full.min.js"></script>
     <style>
         :root {
@@ -22,6 +21,7 @@
             --warning: #ffc107;
             --highlight-bg: rgba(75, 46, 131, 0.08);
             --card-title-light: #d4c4f0; 
+            --top5-header-color: var(--primary);
             
             --col-rank-w: 40px;
             --col-name-w: 120px;
@@ -37,57 +37,125 @@
             --border: #2a2a40;
             --shadow: 0 2px 8px rgba(0,0,0,0.3);
             --highlight-bg: rgba(58, 34, 102, 0.3);
-            
-            /* PERBAIKAN DARK MODE MODAL SORT */
             --sort-modal-bg: #1e293b;
             --sort-item-border: #334155;
             --sort-text-color: #e2e8f0;
             --sort-icon-color: #a78bfa;
+            --top5-header-color: #ffffff;
         }
 
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', system-ui, sans-serif; transition: background-color 0.3s, color 0.3s; }
-        body { background-color: var(--bg); color: var(--text); padding-bottom: 40px; min-height: 100vh; }
-
-        .header { background: linear-gradient(135deg, var(--primary), #2d1b50); color: white; padding: 20px; text-align: center; position: relative; border-radius: 0 0 var(--radius) var(--radius); }
-        .header h1 { font-size: 1.4rem; margin-bottom: 5px; display: flex; align-items: center; justify-content: center; gap: 8px; }
-        .header p { font-size: 0.85rem; opacity: 0.9; margin: 2px 0; }
-        .theme-toggle { position: absolute; top: 15px; right: 15px; background: rgba(255,255,255,0.2); border: none; color: white; width: 36px; height: 36px; border-radius: 50%; cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 1rem; }
-        .theme-toggle:hover { background: rgba(255,255,255,0.3); }
         
-        .controls { display: flex; align-items: center; padding: 15px 20px; background: var(--card-bg); margin: 15px 20px; border-radius: var(--radius); box-shadow: var(--shadow); gap: 10px; }
-        .filter-group { display: flex; gap: 10px; flex: 1; min-width: 0; }
-        select { padding: 8px 12px; border: 1px solid var(--border); border-radius: 4px; flex: 1; background: var(--card-bg); color: var(--text); min-width: 0; }
+        body.modal-open { overflow: hidden; }
+        body { background-color: var(--bg); color: var(--text); min-height: 100vh; padding-top: 140px; }
+
+        /* =========================================
+           HEADER FIXED & PERFECTLY CENTERED
+           ========================================= */
+        .header { 
+            background: linear-gradient(135deg, var(--primary), #2d1b50); 
+            color: white; 
+            padding: 20px 20px 20px 20px; 
+            position: fixed; 
+            top: 0; left: 0; right: 0;
+            z-index: 100;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+            min-height: 120px;
+        }
+        
+        .header-content-wrapper {
+            position: relative;
+            width: 100%;
+            max-width: 600px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .header h1 { 
+            font-size: 1.4rem; 
+            margin-bottom: 5px; 
+            display: flex; 
+            align-items: center; 
+            justify-content: center; 
+            gap: 12px; 
+            text-align: center;
+            line-height: 1.2;
+        }
+        .header h1 img.logo { object-fit: contain; vertical-align: middle; }
+        .header p { font-size: 0.85rem; opacity: 0.9; margin: 2px 0; text-align: center; }
+        
+        /* PERBAIKAN NO.2 WEB: TOMBOL TEMA DI POJOK KANAN LAYAR */
+        .theme-toggle { 
+            position: fixed; /* Ubah dari absolute ke fixed agar relatif terhadap layar */
+            top: 25px; 
+            right: 20px; 
+            background: rgba(255,255,255,0.15); 
+            border: none; 
+            color: white; 
+            width: 38px; 
+            height: 38px; 
+            border-radius: 50%; 
+            cursor: pointer; 
+            display: flex; 
+            align-items: center; 
+            justify-content: center; 
+            font-size: 1rem; 
+            z-index: 101; /* Di atas header */
+            flex-shrink: 0;
+        }
+        .theme-toggle:hover { background: rgba(255,255,255,0.25); }
+        
+        /* CONTROLS & DASHBOARD - PERBAIKAN NO.1 WEB */
+        .controls { 
+            display: flex; 
+            align-items: center; 
+            padding: 15px 20px; 
+            background: var(--card-bg); 
+            margin: 0 20px 15px 20px; 
+            border-radius: var(--radius); 
+            box-shadow: var(--shadow); 
+            gap: 10px; 
+            flex-wrap: nowrap; 
+        }
+        .filter-group { display: flex; gap: 10px; flex: 2; min-width: 0; } /* Diperlebar */
+        select { padding: 8px 12px; border: 1px solid var(--border); border-radius: 4px; flex: 1; background: var(--card-bg); color: var(--text); min-width: 0; font-size: 0.85rem; }
         .btn { padding: 8px 16px; border: none; border-radius: 4px; cursor: pointer; font-weight: 600; font-size: 0.85rem; display: inline-flex; align-items: center; gap: 6px; white-space: nowrap; }
-        .btn-reset { background: var(--text-muted); color: white; }
-        .btn-ranking { background: var(--warning); color: #333; }
+        .btn-reset { background: var(--text-muted); color: white; flex: 1; justify-content: center; flex-shrink: 0; } /* Samakan lebar */
+        .btn-ranking { background: var(--warning); color: #333; flex: 1; justify-content: center; } /* Samakan lebar */
         .btn:hover { opacity: 0.9; transform: translateY(-1px); }
 
-        .dashboard-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 15px; padding: 0 20px; }
-        .card { background: var(--card-bg); padding: 16px; border-radius: var(--radius); box-shadow: -4px 0 10px -2px rgba(0,0,0,0.1), 0 2px 8px rgba(0,0,0,0.06); border-top: 1px solid var(--primary); border-left: 1px solid var(--primary); display: flex; flex-direction: column; }        
+        .dashboard-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 15px; padding: 0 20px 40px 20px; }
+        
+        /* CARD STYLES */
+        .card { background: var(--card-bg); padding: 16px; border-radius: var(--radius); box-shadow: var(--shadow); border-top: 1px solid var(--primary); border-left: 1px solid var(--primary); display: flex; flex-direction: column; }        
         .card-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; }
         .card-title { font-size: 0.95rem; font-weight: bold; color: var(--primary); display: flex; align-items: center; gap: 6px; }
         [data-theme="dark"] .card-title { color: var(--card-title-light); }
-        .badge-mtd { font-size: 0.65rem; background: var(--border); padding: 2px 6px; border-radius: 4px; color: var(--text-muted); }
-        .metric-row { display: flex; justify-content: space-between; font-size: 0.8rem; margin-bottom: 6px; color: var(--text-muted); }
-        .metric-val { font-weight: 600; color: var(--text); }
+        .badge-mtd { font-size: 0.75rem; background: var(--border); padding: 2px 6px; border-radius: 4px; color: var(--text-muted); }
+        .metric-row { display: flex; justify-content: space-between; font-size: 0.85rem; margin-bottom: 8px; color: var(--text-muted); align-items: center; }
+        .metric-val { font-weight: 600; color: var(--text); font-size: 0.85rem; }
         .metric-val.neg { color: var(--danger); }
         .metric-val.pos { color: var(--success); }
         .achievement-box { margin-top: auto; text-align: center; padding-top: 10px; border-top: 1px dashed var(--border); }
-        .achv-label { font-size: 0.75rem; color: var(--text-muted); margin-bottom: 3px; }
-        .achv-val { font-size: 1.3rem; font-weight: bold; margin-bottom: 6px; }
-        .achv-val.red { color: var(--danger); }
-        .achv-val.green { color: var(--success); }
-        .progress-bar { height: 6px; background: var(--border); border-radius: 3px; overflow: hidden; width: 100%; }
+        .achv-label { font-size: 0.85rem; color: var(--text-muted); margin-bottom: 5px; }
+        .achv-val { font-size: 1.5rem; font-weight: bold; margin-bottom: 6px; }
+        .progress-bar { height: 8px; background: var(--border); border-radius: 4px; overflow: hidden; width: 100%; }
         .progress-fill { height: 100%; background: var(--primary); transition: width 0.5s ease; }
         .progress-fill.over { background: var(--success); }
         .progress-fill.under { background: var(--danger); }
         .footer { text-align: center; padding: 20px; font-size: 0.75rem; color: var(--text-muted); margin-top: 20px; }
 
-        /* MODAL STYLES */
+        /* MODAL STYLES - PERBAIKAN NO.3 WEB HEIGHT */
         .modal-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); z-index: 1000; justify-content: center; align-items: center; }
         .modal-content { 
-            background: var(--card-bg); width: 95%; max-width: 950px; 
-            max-height: 90vh; border-radius: var(--radius); overflow: hidden; 
+            background: var(--card-bg); width: 95%; max-width: 1200px; 
+            height: auto; max-height: 85vh; /* Auto height with max limit */
+            border-radius: var(--radius); overflow: hidden; 
             display: flex; flex-direction: column; animation: slideUp 0.3s ease; color: var(--text);
         }
         @keyframes slideUp { from { transform: translateY(20px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
@@ -107,7 +175,6 @@
         .tab-btn { padding: 6px 12px; border: 1px solid var(--border); background: var(--card-bg); color: var(--text); border-radius: 4px; cursor: pointer; font-size: 0.8rem; }
         .tab-btn.active { background: var(--primary); color: white; border-color: var(--primary); }
         
-        /* Tombol Sort & Export */
         .btn-sort-trigger { padding: 6px 12px; border: 1px solid var(--primary); background: transparent; color: var(--primary); border-radius: 4px; cursor: pointer; font-size: 0.8rem; display: inline-flex; align-items: center; gap: 5px; }
         .btn-export { padding: 6px 12px; border: 1px solid var(--success); background: var(--success); color: white; border-radius: 4px; cursor: pointer; font-size: 0.8rem; display: inline-flex; align-items: center; gap: 5px; }
         .btn-export:hover { background: #218838; }
@@ -122,64 +189,24 @@
         .rank-3 { background: #cd7f32; color: white; }
 
         /* TABLE STYLES */
-        .table-wrapper { overflow-x: auto; -webkit-overflow-scrolling: touch; width: 100%; flex: 1; }
-        
+        .table-wrapper { overflow-x: auto; -webkit-overflow-scrolling: touch; width: 100%; flex: 1; position: relative; }
         .ranking-table { width: 100%; border-collapse: separate; border-spacing: 0; font-size: 0.8rem; min-width: 800px; }
-        
-        .ranking-table th { 
-            background: var(--bg); padding: 0; text-align: center; border-bottom: 2px solid var(--border); 
-            position: sticky; top: 0; z-index: 5; color: var(--text); vertical-align: middle; height: 55px;
-        }
-
-        .ranking-table th.highlight-col {
-            background: var(--highlight-bg);
-            border-bottom: 2px solid var(--primary);
-        }
-
+        .ranking-table th { background: var(--bg); padding: 0; text-align: center; border-bottom: 2px solid var(--border); position: sticky; top: 0; z-index: 5; color: var(--text); vertical-align: middle; height: 55px; }
+        .ranking-table th.highlight-col { background: var(--highlight-bg); border-bottom: 2px solid var(--primary); }
         .th-content { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 3px; padding: 8px 4px; height: 100%; box-sizing: border-box; position: relative; }
         .indicator-prefix { font-size: 0.6rem; font-weight: 700; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.5px; line-height: 1; }
-        
-        /* Badge Prioritas Sort di Header */
-        .sort-priority-badge {
-            position: absolute; top: 2px; right: 2px;
-            background: var(--primary); color: white;
-            font-size: 0.55rem; width: 14px; height: 14px;
-            border-radius: 50%; display: flex; align-items: center; justify-content: center;
-            font-weight: bold;
-        }
-
+        .sort-priority-badge { position: absolute; top: 2px; right: 2px; background: var(--primary); color: white; font-size: 0.55rem; width: 14px; height: 14px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: bold; }
         .ranking-table td { padding: 10px 4px; border-bottom: 1px solid var(--border); color: var(--text); text-align: center; white-space: nowrap; background: var(--card-bg); }
-        
-        .ranking-table td.highlight-col {
-            background: var(--highlight-bg);
-            font-weight: bold;
-        }
+        .ranking-table td.highlight-col { background: var(--highlight-bg); font-weight: bold; }
 
         /* Sticky Columns Logic */
-        .ranking-table th:first-child, .ranking-table td:first-child { 
-            position: sticky; left: 0; z-index: 30; width: var(--col-rank-w); min-width: var(--col-rank-w); max-width: var(--col-rank-w);
-            border-right: 1px solid var(--border); background: var(--card-bg); 
-        }
-        .ranking-table th:nth-child(2), .ranking-table td:nth-child(2) { 
-            position: sticky; left: var(--col-rank-w); z-index: 25; width: var(--col-name-w); min-width: var(--col-name-w); max-width: var(--col-name-w);
-            text-align: left !important; border-right: 1px solid var(--border); overflow: hidden; text-overflow: ellipsis; background: var(--card-bg); 
-        }
-        .ranking-table th:nth-child(3), .ranking-table td:nth-child(3) {
-            position: sticky; left: calc(var(--col-rank-w) + var(--col-name-w)); z-index: 20; font-weight: bold;
-            background: var(--card-bg); border-right: 2px solid var(--primary); 
-            width: var(--col-total-w); min-width: var(--col-total-w); max-width: var(--col-total-w);
-            font-size: 0.75rem; box-shadow: 2px 0 5px -2px rgba(0,0,0,0.1); padding-right: 4px !important; 
-        }
+        .ranking-table th:first-child, .ranking-table td:first-child { position: sticky; left: 0; z-index: 30; width: var(--col-rank-w); min-width: var(--col-rank-w); max-width: var(--col-rank-w); border-right: 1px solid var(--border); background: var(--card-bg); }
+        .ranking-table th:nth-child(2), .ranking-table td:nth-child(2) { position: sticky; left: var(--col-rank-w); z-index: 25; width: var(--col-name-w); min-width: var(--col-name-w); max-width: var(--col-name-w); text-align: left !important; border-right: 1px solid var(--border); overflow: hidden; text-overflow: ellipsis; background: var(--card-bg); }
+        .ranking-table th:nth-child(3), .ranking-table td:nth-child(3) { position: sticky; left: calc(var(--col-rank-w) + var(--col-name-w)); z-index: 20; font-weight: bold; background: var(--card-bg); border-right: 2px solid var(--primary); width: var(--col-total-w); min-width: var(--col-total-w); max-width: var(--col-total-w); font-size: 0.75rem; box-shadow: 2px 0 5px -2px rgba(0,0,0,0.1); padding-right: 4px !important; }
         
         /* SORT MODAL POPUP */
-        .sort-modal-overlay {
-            display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0,0,0,0.5); z-index: 2000; justify-content: center; align-items: center;
-        }
-        .sort-modal-content {
-            background: var(--card-bg); width: 90%; max-width: 400px; border-radius: var(--radius);
-            padding: 20px; box-shadow: 0 5px 15px rgba(0,0,0,0.2); animation: slideUp 0.2s ease;
-        }
+        .sort-modal-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 2000; justify-content: center; align-items: center; }
+        .sort-modal-content { background: var(--card-bg); width: 90%; max-width: 400px; border-radius: var(--radius); padding: 20px; box-shadow: 0 5px 15px rgba(0,0,0,0.2); animation: slideUp 0.2s ease; }
         .sort-modal-header { font-size: 1rem; font-weight: bold; margin-bottom: 15px; color: var(--primary); display: flex; justify-content: space-between; }
         .sort-checkbox-list { max-height: 300px; overflow-y: auto; display: flex; flex-direction: column; gap: 8px; margin-bottom: 15px; }
         .sort-item { display: flex; align-items: center; gap: 10px; padding: 8px; border: 1px solid var(--border); border-radius: 4px; cursor: pointer; }
@@ -191,44 +218,130 @@
         .btn-apply { background: var(--primary); color: white; }
 
         /* TOGGLE SWITCH STYLE */
-        .toggle-container {
-            display: flex; align-items: center; gap: 8px; 
-            font-size: 0.75rem; color: var(--text-muted); cursor: pointer;
-            user-select: none; white-space: nowrap;
-        }
-        .toggle-switch {
-            position: relative; display: inline-block; width: 36px; height: 20px;
-        }
+        .toggle-container { display: flex; align-items: center; gap: 8px; font-size: 0.75rem; color: var(--text-muted); cursor: pointer; user-select: none; white-space: nowrap; }
+        .toggle-switch { position: relative; display: inline-block; width: 36px; height: 20px; }
         .toggle-switch input { opacity: 0; width: 0; height: 0; }
-        .slider {
-            position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0;
-            background-color: #ccc; transition: .3s; border-radius: 20px;
-        }
-        .slider:before {
-            position: absolute; content: ""; height: 14px; width: 14px; left: 3px; bottom: 3px;
-            background-color: white; transition: .3s; border-radius: 50%;
-        }
+        .slider { position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background-color: #ccc; transition: .3s; border-radius: 20px; }
+        .slider:before { position: absolute; content: ""; height: 14px; width: 14px; left: 3px; bottom: 3px; background-color: white; transition: .3s; border-radius: 50%; }
         input:checked + .slider { background-color: var(--primary); }
         input:checked + .slider:before { transform: translateX(16px); }
         [data-theme="dark"] .slider { background-color: #475569; }
         [data-theme="dark"] .toggle-container { color: #cbd5e1; }
 
-        /* Responsive Mobile */
-        @media (max-width: 600px) {
-            .controls { flex-wrap: wrap; flex-direction: column; align-items: stretch; }
-            .filter-group { flex-basis: 100%; flex-direction: column; }
-            .btn { flex: 1; justify-content: center; }
-            
-            /* LAYOUT 2 KOLOM DI MOBILE */
-            .dashboard-grid { 
-                grid-template-columns: repeat(2, 1fr); 
-                gap: 10px; 
+        /* TOP 5 GRID LAYOUT - EQUAL WIDTH FIX */
+        .top5-grid-container {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 12px;
+            padding: 15px;
+            overflow-y: auto;
+            width: 100%;
+        }
+        .top5-card {
+            background: var(--card-bg);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 10px;
+            box-shadow: var(--shadow);
+            display: flex;
+            flex-direction: column;
+            min-height: 0;
+            min-width: 0;
+        }
+        .top5-header {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            margin-bottom: 8px;
+            padding-bottom: 6px;
+            border-bottom: 1px dashed var(--border);
+            color: var(--top5-header-color);
+            font-weight: bold;
+            font-size: 0.75rem;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        .top5-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 3px 0;
+            font-size: 0.7rem;
+            border-bottom: 1px solid rgba(0,0,0,0.05);
+            min-width: 0;
+        }
+        .top5-item:last-child { border-bottom: none; }
+        .top5-rank {
+            width: 16px; height: 16px; background: var(--bg); border-radius: 50%;
+            text-align: center; line-height: 16px; font-size: 0.6rem;
+            font-weight: bold; color: var(--text-muted); margin-right: 5px; flex-shrink: 0;
+        }
+        .top5-item:nth-child(1) .top5-rank { background: #ffd700; color: #333; }
+        .top5-item:nth-child(2) .top5-rank { background: #c0c0c0; color: #333; }
+        .top5-item:nth-child(3) .top5-rank { background: #cd7f32; color: white; }
+        .top5-name { 
+            flex: 1; 
+            white-space: nowrap; 
+            overflow: hidden; 
+            text-overflow: ellipsis; 
+            margin-right: 5px; 
+            font-size: 0.65rem; 
+            min-width: 0;
+        }
+        .top5-val { font-weight: bold; color: var(--text); font-size: 0.65rem; flex-shrink: 0; }
+
+        /* Responsive Mobile & Tablet */
+        @media (max-width: 900px) {
+            /* HEADER MOBILE FIX */
+            .header { 
+                padding: 15px 15px 15px 15px; 
+                min-height: 110px;
             }
+            .header-content-wrapper { max-width: 100%; }
+            .header h1 { font-size: 1.2rem; gap: 8px; }
+            .header p { font-size: 0.75rem; }
+            
+            /* PERBAIKAN NO.2 MOBILE: TOMBOL TEMA DI DALAM WRAPPER AGAR RAPI */
+            .theme-toggle { 
+                position: absolute; 
+                top: 50%; 
+                transform: translateY(-50%); 
+                right: 0; 
+                width: 32px; height: 32px; font-size: 0.9rem; 
+            }
+            
+            body { padding-top: 120px; }
+
+            /* CONTROLS MOBILE */
+            .controls { 
+                flex-wrap: wrap; 
+                flex-direction: row; 
+                align-items: stretch; 
+                padding: 10px; 
+                gap: 8px; 
+                margin: 0 10px 15px 10px; 
+            }
+            .filter-group { 
+                flex-basis: 100%; 
+                flex-direction: row; 
+                gap: 5px;
+            }
+            .filter-group select { font-size: 0.85rem; padding: 8px; }
+            
+            .btn { flex: 1; justify-content: center; font-size: 0.85rem; padding: 8px; }
+            .btn-reset { flex-basis: 40%; }
+            .btn-ranking { flex-basis: 55%; margin-top: 0; } 
+            
+            .dashboard-grid { grid-template-columns: repeat(2, 1fr); gap: 10px; padding: 0 10px 40px 10px; }
             .card { padding: 12px; }
-            .card-title { font-size: 0.8rem; }
-            .metric-row { font-size: 0.7rem; margin-bottom: 4px; }
-            .achv-val { font-size: 1rem; }
-            .badge-mtd { font-size: 0.55rem; }
+            
+            .card-title { font-size: 0.85rem; }
+            .metric-row { font-size: 0.85rem; margin-bottom: 6px; }
+            .metric-val { font-size: 0.85rem; }
+            .achv-label { font-size: 0.85rem; }
+            .achv-val { font-size: 1.3rem; }
+            .badge-mtd { font-size: 0.75rem; }
             
             :root { --col-name-w: 100px; --col-total-w: 45px; }
             .ranking-table { font-size: 0.7rem; }
@@ -244,39 +357,56 @@
             .action-row { display: flex; gap: 8px; width: 100%; }
             .btn-sort-trigger, .btn-export { flex: 1; justify-content: center; font-size: 0.75rem; padding: 8px 4px; }
             .btn-back-drill { width: 100%; justify-content: center; margin-top: 5px; }
-        }
 
-        /* PERBAIKAN DARK MODE MODAL SORT */
-        [data-theme="dark"] .sort-modal-content {
-            background: var(--sort-modal-bg);
-            border: 1px solid var(--border);
+            /* PERBAIKAN NO.1 MOBILE: HEADER MODAL DIPERKECIL */
+            .modal-header { padding: 10px 15px; }
+            .modal-header h3 { font-size: 1.1rem; }
+            .close-btn { font-size: 1.2rem; }
+            
+            .ranking-tabs-wrapper { padding: 10px 15px; }
+
+            /* TOP 5 MOBILE FIX */
+            .modal-content { width: 100%; height: 100%; border-radius: 0; max-width: none; max-height: 100vh; }
+            .top5-grid-container { 
+                grid-template-columns: repeat(2, 1fr); 
+                gap: 8px;
+                padding: 10px;
+            }
+            .top5-card { padding: 8px; }
+            .top5-header { font-size: 0.7rem; margin-bottom: 5px; padding-bottom: 4px; }
+            .top5-item { padding: 2px 0; }
+            .top5-name { font-size: 0.6rem; }
+            .top5-val { font-size: 0.6rem; }
+            .top5-rank { width: 14px; height: 14px; line-height: 14px; font-size: 0.55rem; margin-right: 4px; }
         }
+        
+        /* DARK MODE MODAL SORT FIX */
+        [data-theme="dark"] .sort-modal-content { background: var(--sort-modal-bg); border: 1px solid var(--border); }
         [data-theme="dark"] .sort-modal-header { color: #ffffff; }
-        [data-theme="dark"] .sort-item {
-            background: transparent; border-color: var(--sort-item-border); color: var(--sort-text-color);
-        }
+        [data-theme="dark"] .sort-item { background: transparent; border-color: var(--sort-item-border); color: var(--sort-text-color); }
         [data-theme="dark"] .sort-item:hover { background: rgba(255, 255, 255, 0.05); }
         [data-theme="dark"] .sort-item label { color: var(--sort-text-color); }
         [data-theme="dark"] .sort-item i { color: var(--sort-icon-color) !important; opacity: 1; }
         [data-theme="dark"] .btn-cancel { background: #475569; color: white; border: none; }
         [data-theme="dark"] .btn-apply { background: var(--primary); color: white; border: none; }
-        [data-theme="dark"] .btn-sort-trigger {
-            border-color: #6d28d9; color: #c4b5fd; background: rgba(109, 40, 217, 0.1);
-        }
+        [data-theme="dark"] .btn-sort-trigger { border-color: #6d28d9; color: #c4b5fd; background: rgba(109, 40, 217, 0.1); }
         [data-theme="dark"] .btn-sort-trigger:hover { background: rgba(109, 40, 217, 0.2); color: white; }
     </style>
 </head>
 <body>
 
-    <!-- HEADER -->
     <div class="header">
-        <button class="theme-toggle" onclick="toggleTheme()" title="Toggle Dark/Light Mode"><i class="fas fa-moon" id="themeIcon"></i></button>
-        <h1><!--<i class="fas fa-university"></i>--><img src="img/BMI.png" alt="Bank Muamalat Logo" class="logo" width="30" height="30" > Bank Muamalat</h1>
-        <p>Leading Indicator Dashboard 📍 Region Sumatera</p>
-        <p>📅 Per: 29 Mei 2026 | 📆 Workdays: 16</p>
+        <div class="header-content-wrapper">
+            <!-- Tombol tema dipindahkan ke luar wrapper di web via CSS fixed, tapi tetap di sini untuk struktur mobile -->
+            <button class="theme-toggle" onclick="toggleTheme()" title="Toggle Dark/Light Mode"><i class="fas fa-moon" id="themeIcon"></i></button>
+            <div style="width: 100%;">
+                <h1><img src="img/BMI.png" alt="Bank Muamalat Logo" class="logo" width="30" height="30" > Bank Muamalat</h1>
+                <p>Leading Indicator Dashboard 📍 Region Sumatera</p>
+                <p>📅 Per: 29 Mei 2026 | 📅 Workdays: 16</p>
+            </div>
+        </div>
     </div>
 
-    <!-- CONTROLS -->
     <div class="controls">
         <div class="filter-group">
             <select id="coBranchFilter" onchange="handleCoBranchChange()"><option value="">All Co-Branch</option></select>
@@ -286,15 +416,12 @@
         <button class="btn btn-ranking" onclick="openRankingModal()"><i class="fas fa-trophy"></i> Performance Ranking</button>
     </div>
 
-    <!-- DASHBOARD CARDS -->
     <div class="dashboard-grid" id="dashboardContainer">
         <div style="grid-column: 1/-1; text-align: center; padding: 40px; color: var(--text-muted);"><i class="fas fa-spinner fa-spin fa-2x"></i><br><br>Memuat data...</div>
     </div>
 
-    <!-- FOOTER -->
-    <div class="footer">💡 Update data in the HTML script section | 📱 Optimized for Mobile & Web | Theme: Light/Dark | Made by Love - RBPM</div>
+    <div class="footer">Update data in the HTML script section | Optimized for Mobile & Web | Theme: Light/Dark | Made by Love - RBPM</div>
 
-    <!-- MODAL RANKING -->
     <div id="rankingModal" class="modal-overlay">
         <div class="modal-content">
             <div class="modal-header">
@@ -302,21 +429,22 @@
                 <button class="close-btn" onclick="closeRankingModal()">&times;</button>
             </div>
             <div class="modal-body">
+                <!--
                 <div class="ranking-tabs-wrapper">
                     <div class="ranking-controls">
-                        <button class="tab-btn active" id="tabAll" onclick="setRankingTab('all', this)">All Branch</button>
+                        <button class="tab-btn" id="tabAll" onclick="setRankingTab('all', this)">All Branch</button>
                         <button class="tab-btn" id="tabCo" onclick="setRankingTab('co', this)">All Co-Branch</button>
+                        <button class="tab-btn active" id="tabTop5" onclick="setRankingTab('top5', this)">🏆 Top 5 Leading Indicators</button>
                         
                         <div class="action-row">
                             <button class="btn-sort-trigger" onclick="openSortModal()">
                                 <i class="fas fa-sort-amount-down"></i> Sort (<span id="sortCountBadge">1</span>)
                             </button>
-                            <button class="btn-export" onclick="exportToExcel()">
+                            <button class="btn-export" id="btnExportRanking" onclick="exportToExcel()">
                                 <i class="fas fa-file-excel"></i> Export
                             </button>
                         </div>
 
-                        <!-- TOGGLE ANGKA AKTUAL / PERSENTASE -->
                         <label class="toggle-container">
                             <div class="toggle-switch">
                                 <input type="checkbox" id="toggleActualValues" onchange="toggleDisplayMode()">
@@ -328,6 +456,7 @@
                         <button class="btn-back-drill" id="btnBackDrill" onclick="backToCoList()"><i class="fas fa-arrow-left"></i> Kembali</button>
                     </div>
                 </div>
+                -->
                 
                 <div class="table-wrapper">
                     <table class="ranking-table" id="rankingTable">
@@ -339,7 +468,6 @@
         </div>
     </div>
 
-    <!-- MODAL SORT CHECKBOX -->
     <div id="sortModal" class="sort-modal-overlay">
         <div class="sort-modal-content">
             <div class="sort-modal-header">
@@ -369,7 +497,7 @@
         ];
 
         let rawData = [];
-        let currentRankingMode = 'all';
+        let currentRankingMode = 'top5';
         let drillDownCo = null; 
         let activeRankingMetrics = ['total'];
         let showActualValues = false; 
@@ -377,7 +505,7 @@
         window.onload = async function() {
             initTheme();
             try {
-                const res = await fetch('data_juni.json');
+                const res = await fetch('data_mei.json');
                 if (!res.ok) throw new Error('File data_juni.json tidak ditemukan');
                 rawData = await res.json();
                 
@@ -452,38 +580,23 @@
             renderDashboard(rawData);
         }
 
-                // --- FUNGSI FORMAT ANGKA UTAMA (TARGET 1 DESIMAL UNTUK UNIT 'M') ---
         function formatValue(val, unit, isGrowthType = false, isTarget = false, isGap = false) {
             let prefix = '';
-            
-            // Logika tanda +
-            if (isTarget) {
-                prefix = ''; 
-            } else if ((isGrowthType || isGap) && val > 0) {
-                if (!isGap) prefix = '+'; 
-            } else if (val > 0 && !isGrowthType && !isGap) {
-                prefix = ''; 
-            }
+            if (isTarget) prefix = ''; 
+            else if ((isGrowthType || isGap) && val > 0) { if (!isGap) prefix = '+'; } 
+            else if (val > 0 && !isGrowthType && !isGap) prefix = ''; 
 
-            // Hitung nilai display (absolut untuk GAP)
             let displayVal = isGap ? Math.abs(val) : val;
 
             if (unit === 'M') {
-                // PERBAIKAN: Jika ini TARGET, gunakan 1 desimal
-                if (isTarget) {
-                    return prefix + displayVal.toLocaleString('id-ID', { minimumFractionDigits: 1, maximumFractionDigits: 1 }) + ' M';
-                }
-                
-                // Untuk AKTUAL & GAP: Jika 0 tampilkan bulat, jika tidak tampilkan 2 desimal
-                if (displayVal === 0) {
-                    return prefix + '0 M';
-                }
+                if (isTarget) return prefix + displayVal.toLocaleString('id-ID', { minimumFractionDigits: 1, maximumFractionDigits: 1 }) + ' M';
+                if (displayVal === 0) return prefix + '0 M';
                 return prefix + displayVal.toLocaleString('id-ID', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) + ' M';
             } else {
-                // Unit kosong (Integer) tetap tanpa desimal
                 return prefix + Math.round(displayVal).toLocaleString('id-ID');
             }
         }
+        
         function renderDashboard(data) {
             const container = document.getElementById('dashboardContainer');
             container.innerHTML = '';
@@ -511,53 +624,24 @@
             metrics.forEach(m => {
                 const mtd = agg[m.key + '_mtd'];
                 let tgt = agg[m.key + '_tgt'];
-                
-                // PERBAIKAN LOGIKA GAP: 
-                // Jika Target > 0, GAP = Target - Aktual (Sisa yang harus dicapai)
-                // Jika Target <= 0, GAP = Aktual - Target (Selisih murni)
-                let gap;
-                if (tgt > 0) {
-                    gap = tgt - mtd; 
-                } else {
-                    gap = mtd - tgt;
-                }
-                
-                // Hitung Achievement
+                let gap = tgt > 0 ? tgt - mtd : mtd - tgt;
                 let achv = 0;
-                if (tgt > 0) {
-                    achv = (mtd / tgt) * 100;
-                } else if (mtd > 0) {
-                    achv = (mtd / 1) * 100; 
-                }
+                if (tgt > 0) achv = (mtd / tgt) * 100;
+                else if (mtd > 0) achv = (mtd / 1) * 100; 
                 
                 let achvDisplay = achv.toFixed(1) + '%';
-                
-                // Logika Warna Achievement & Progress Bar
-                let achvColorClass = 'red';
-                let barColor = 'under';
                 let barWidth = Math.min(Math.max(achv, 0), 100);
-
-                if (achv >= 80) {
-                    achvColorClass = 'green';
-                    barColor = 'over';
-                } else if (achv >= 50) {
-                    achvColorClass = 'yellow';
-                    barColor = 'warning';
-                } else {
-                    achvColorClass = 'red';
-                    barColor = 'under';
-                }
 
                 const isNegGrowth = (m.key === 'ca' || m.key === 'sa' || m.key === 'fu') && mtd < 0;
                 const growthClass = isNegGrowth ? 'neg' : 'pos';
                 const isGrowthType = ['ca', 'sa', 'fu'].includes(m.key);
                 
-                const formattedMtd = formatValue(mtd, m.unit, isGrowthType, false, false, m.key); // Tambahkan m.key
-                const formattedTgt = formatValue(tgt, m.unit, false, true, false, m.key);         // Tambahkan m.key
-                const formattedGap = formatValue(gap, m.unit, false, false, true, m.key);         // Tambahkan m.key                
+                const formattedMtd = formatValue(mtd, m.unit, isGrowthType, false, false);
+                const formattedTgt = formatValue(tgt, m.unit, false, true, false);
+                const formattedGap = formatValue(gap, m.unit, false, false, true);
                 
-                const gapLabel = m.key === 'ca' || m.key === 'sa' || m.key === 'fu' ? 'GAP Growth' : 
-                                 m.key === 'con' || m.key === 'sme' || m.key === 'ph' || m.key === 'sli' ? 'GAP Booking' : 'GAP Akuisisi';
+                const gapLabel = ['ca','sa','fu'].includes(m.key) ? 'Growth GAP' : 
+                                 ['con','sme','ph','sli'].includes(m.key) ? 'GAP Booking' : 'GAP Akuisisi';
 
                 container.innerHTML += `
                     <div class="card">
@@ -566,7 +650,7 @@
                             <span class="badge-mtd">MTD</span>
                         </div>
                         <div class="metric-row"><span>${m.type}</span><span class="metric-val ${growthClass}">${formattedMtd}</span></div>
-                        <div class="metric-row"><span>Target MTD</span><span class="metric-val">${formattedTgt}</span></div>
+                        <div class="metric-row"><span>MTD Target</span><span class="metric-val">${formattedTgt}</span></div>
                         <div class="metric-row"><span>${gapLabel}</span><span class="metric-val" style="color: var(--danger);">${formattedGap}</span></div>
                         <div class="achievement-box">
                             <div class="achv-label">Achievement</div>
@@ -578,15 +662,18 @@
                     </div>`;
             });
         }
+
         // --- LOGIKA RANKING & DRILL-DOWN ---
         function openRankingModal() {
             document.getElementById('rankingModal').style.display = 'flex';
+            document.body.classList.add('modal-open');
             drillDownCo = null; 
-            setRankingTab('all', document.getElementById('tabAll')); 
+            setRankingTab('top5', document.getElementById('tabTop5')); 
         }
         
         function closeRankingModal() { 
             document.getElementById('rankingModal').style.display = 'none'; 
+            document.body.classList.remove('modal-open');
             drillDownCo = null;
         }
 
@@ -595,14 +682,33 @@
             drillDownCo = null; 
             document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
             if(btn) btn.classList.add('active');
+            
             updateDrillDownUI();
+            
+            const sortBtn = document.querySelector('.btn-sort-trigger');
+            const toggleLabel = document.querySelector('.toggle-container');
+            const exportBtn = document.getElementById('btnExportRanking');
+            
+            if (mode === 'top5') {
+                if(sortBtn) sortBtn.style.display = 'none';
+                if(toggleLabel) toggleLabel.style.display = 'none';
+                if(exportBtn) exportBtn.style.display = 'none';
+            } else {
+                if(sortBtn) sortBtn.style.display = 'inline-flex';
+                if(toggleLabel) toggleLabel.style.display = 'flex';
+                if(exportBtn) exportBtn.style.display = 'inline-flex';
+            }
+
             renderRanking();
         }
 
         function updateDrillDownUI() {
             const btnBack = document.getElementById('btnBackDrill');
             const title = document.getElementById('modalTitle');
-            if (drillDownCo) {
+            
+            if (currentRankingMode === 'top5') {
+                title.innerHTML = `<i class="fas fa-trophy"></i> Top 5 Leading Indicators`;
+            } else if (drillDownCo) {
                 btnBack.style.display = 'inline-flex';
                 title.innerHTML = `<i class="fas fa-chart-bar"></i> Ranking: ${drillDownCo}`;
                 document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
@@ -610,7 +716,7 @@
                 btnBack.style.display = 'none';
                 title.innerHTML = `<i class="fas fa-chart-bar"></i> Ranking Performance`;
                 if(currentRankingMode === 'all') document.getElementById('tabAll').classList.add('active');
-                else document.getElementById('tabCo').classList.add('active');
+                else if(currentRankingMode === 'co') document.getElementById('tabCo').classList.add('active');
             }
         }
 
@@ -689,7 +795,6 @@
             let remainingKeys = metrics.map(m => m.key).filter(k => !sortedKeys.includes(k));
             let finalOrderKeys = [...sortedKeys, ...remainingKeys];
             
-            // Header Dinamis
             let headers = ['#', 'Branch'];
             if (!showActualValues) headers.push('Total %');
             
@@ -700,7 +805,6 @@
 
             let ws_data = [headers];
 
-            // Siapkan Data
             let groupedData = [];
             let isDrillDown = !!drillDownCo;
             if (isDrillDown) {
@@ -747,7 +851,6 @@
             ranked.forEach((r, i) => {
                 let branchName = `${r.name}\n${r.sub}`;
                 let row = [i + 1, branchName];
-                
                 if (!showActualValues) row.push(r.totalAchv / 100);
 
                 finalOrderKeys.forEach(key => {
@@ -768,14 +871,12 @@
             for(let R = range.s.r + 1; R <= range.e.r; ++R) {
                 const cellAddrB = XLSX.utils.encode_cell({r: R, c: 1});
                 if(ws[cellAddrB]) ws[cellAddrB].s = { alignment: { wrapText: true } };
-
                 if (!showActualValues) {
                     for(let C = 2; C <= range.e.c; ++C) { 
                         const cellAddr = XLSX.utils.encode_cell({r: R, c: C});
                         if(ws[cellAddr]) ws[cellAddr].z = '0%';
                     }
                 } else {
-                    // Jika mode aktual, gunakan format angka biasa (sesuai card)
                     for(let C = 2; C <= range.e.c; ++C) { 
                         const cellAddr = XLSX.utils.encode_cell({r: R, c: C});
                         if(ws[cellAddr]) ws[cellAddr].z = '#,##0.0';
@@ -788,13 +889,74 @@
             let fileName = "Performance_Ranking_2026";
             if (showActualValues) fileName += "_Aktual";
             else fileName += "_Persentase";
-            
             XLSX.writeFile(wb, `${fileName}.xlsx`);
         }
 
         function renderRanking() {
             const thead = document.getElementById('rankingThead');
             const tbody = document.getElementById('rankingTableBody');
+            
+            if (currentRankingMode === 'top5') {
+                thead.innerHTML = ''; 
+                tbody.innerHTML = ''; 
+                
+                let gridContainer = document.getElementById('top5GridContainer');
+                if (!gridContainer) {
+                    gridContainer = document.createElement('div');
+                    gridContainer.id = 'top5GridContainer';
+                    gridContainer.className = 'top5-grid-container';
+                    document.querySelector('.table-wrapper').appendChild(gridContainer);
+                }
+                
+                document.querySelector('.ranking-table').style.display = 'none';
+                gridContainer.style.display = 'grid';
+
+                gridContainer.innerHTML = '';
+                let sourceData = rawData; 
+
+                metrics.forEach(m => {
+                    let branchData = sourceData.map(d => ({
+                        name: d['br'],
+                        sub: d['co'],
+                        val: parseFloat(d[m.key + '_mtd'] || 0)
+                    }));
+
+                    branchData = branchData.filter(item => item.val > 0);
+                    branchData.sort((a, b) => b.val - a.val);
+                    const topN = branchData.slice(0, 5);
+
+                    if (topN.length === 0) return;
+
+                    let cardHTML = `
+                        <div class="top5-card">
+                            <div class="top5-header" title="${m.label}">
+                                <i class="fas ${m.icon}"></i> ${m.label}
+                            </div>
+                            <div class="top5-list">`;
+                    
+                    topN.forEach((item, idx) => {
+                        const isGrowth = ['ca','sa','fu'].includes(m.key);
+                        const formatted = formatValue(item.val, m.unit, isGrowth, false, false);
+                        cardHTML += `
+                                <div class="top5-item">
+                                    <div style="display:flex; align-items:center; overflow:hidden; flex:1; min-width:0;">
+                                        <span class="top5-rank">${idx+1}</span>
+                                        <span class="top5-name" title="${item.name} (${item.sub})">${item.name}</span>
+                                    </div>
+                                    <span class="top5-val">${formatted}</span>
+                                </div>`;
+                    });
+                    
+                    cardHTML += `</div></div>`;
+                    gridContainer.innerHTML += cardHTML;
+                });
+                return; 
+            }
+
+            const gridContainer = document.getElementById('top5GridContainer');
+            if (gridContainer) gridContainer.style.display = 'none';
+            document.querySelector('.ranking-table').style.display = 'table';
+
             tbody.innerHTML = '<tr><td colspan="100%" style="text-align:center;">Processing...</td></tr>';
 
             let groupedData = [];
@@ -837,10 +999,23 @@
                     }
                     if (valB !== valA) return valB - valA;
                 }
-                return 0;
+                return a.name.localeCompare(b.name); 
             });
 
-            // Build Header
+            let firstVisualSortKey = null;
+            if (!showActualValues) {
+                firstVisualSortKey = 'total';
+            } else {
+                let minIndex = Infinity;
+                metrics.forEach(m => {
+                    const idx = activeRankingMetrics.indexOf(m.key);
+                    if (idx !== -1 && idx < minIndex) {
+                        minIndex = idx;
+                        firstVisualSortKey = m.key;
+                    }
+                });
+            }
+
             let headerHTML = `<tr>
                 <th><div class="th-content">#</div></th>
                 <th><div class="th-content">${isDrillDown ? 'Branch' : (currentRankingMode === 'co' ? 'Co-Branch' : 'Branch')}</div></th>`;
@@ -850,9 +1025,22 @@
                 const highlight = totalSortIndex !== -1 ? 'highlight-col' : '';
                 const badge = totalSortIndex !== -1 ? `<span class="sort-priority-badge">${totalSortIndex + 1}</span>` : '';
                 headerHTML += `<th class="${highlight}"><div class="th-content">Total %${badge}</div></th>`;
+            } else if (firstVisualSortKey) {
+                const m = metrics.find(x => x.key === firstVisualSortKey);
+                const sortIndex = activeRankingMetrics.indexOf(firstVisualSortKey);
+                const highlight = 'highlight-col';
+                const badge = `<span class="sort-priority-badge">${sortIndex + 1}</span>`;
+                headerHTML += `<th class="${highlight}" title="${m.label}">
+                    <div class="th-content">
+                        <i class="fas ${m.icon}" style="font-size: 0.9rem;"></i>
+                        <span class="indicator-prefix">${m.key.toUpperCase()}</span>
+                        ${badge}
+                    </div>
+                </th>`;
             }
-            
-            metrics.forEach(m => { 
+
+            metrics.forEach(m => {
+                if (showActualValues && m.key === firstVisualSortKey) return;
                 const sortIndex = activeRankingMetrics.indexOf(m.key);
                 const highlight = sortIndex !== -1 ? 'highlight-col' : '';
                 const badge = sortIndex !== -1 ? `<span class="sort-priority-badge">${sortIndex + 1}</span>` : '';
@@ -864,6 +1052,7 @@
                     </div>
                 </th>`; 
             });
+            
             headerHTML += `</tr>`;
             thead.innerHTML = headerHTML;
 
@@ -888,17 +1077,21 @@
                 
                 if (!showActualValues) {
                     rowHTML += `<td style="color:${totalColor}; font-size:0.75rem;">${r.totalAchv.toFixed(1)}%</td>`;
+                } else if (firstVisualSortKey) {
+                    const m = metrics.find(x => x.key === firstVisualSortKey);
+                    const v = r.metricVals[firstVisualSortKey];
+                    const isGrowthType = ['ca', 'sa', 'fu'].includes(firstVisualSortKey);
+                    const displayVal = formatValue(v.mtd, m.unit, isGrowthType, false, false);
+                    rowHTML += `<td class="highlight-col" style="color:var(--text); font-size:0.7rem;">${displayVal}</td>`;
                 }
                 
                 metrics.forEach(m => {
+                    if (showActualValues && m.key === firstVisualSortKey) return;
                     const v = r.metricVals[m.key];
                     const isGrowthType = ['ca', 'sa', 'fu'].includes(m.key);
-                    
-                    // PERBAIKAN: Gunakan formatValue yang sama persis dengan card dashboard
                     const displayVal = showActualValues 
                         ? formatValue(v.mtd, m.unit, isGrowthType, false, false) 
                         : v.achv.toFixed(0) + '%';
-                        
                     const color = showActualValues ? 'var(--text)' : (v.achv >= 100 ? 'var(--success)' : 'var(--danger)');
                     const highlight = activeRankingMetrics.includes(m.key) ? 'highlight-col' : '';
                     rowHTML += `<td class="${highlight}" style="color:${color}; font-size:0.7rem;">${displayVal}</td>`;
