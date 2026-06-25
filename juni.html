@@ -21,7 +21,7 @@
             --warning: #ffc107;
             --highlight-bg: rgba(75, 46, 131, 0.08);
             --card-title-light: #d4c4f0; 
-            --top5-header-color: var(--primary);
+            --top5--color: var(--primary);
             
             --col-rank-w: 40px;
             --col-name-w: 120px;
@@ -41,7 +41,7 @@
             --sort-item-border: #334155;
             --sort-text-color: #e2e8f0;
             --sort-icon-color: #a78bfa;
-            --top5-header-color: #ffffff;
+            --top5--color: #ffffff;
         }
 
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', system-ui, sans-serif; transition: background-color 0.3s, color 0.3s; }
@@ -50,9 +50,9 @@
         body { background-color: var(--bg); color: var(--text); min-height: 100vh; padding-top: 140px; }
 
         /* =========================================
-           HEADER FIXED & PERFECTLY CENTERED
+            FIXED & PERFECTLY CENTERED
            ========================================= */
-        .header { 
+        . { 
             background: linear-gradient(135deg, var(--primary), #2d1b50); 
             color: white; 
             padding: 20px 20px 20px 20px; 
@@ -163,7 +163,7 @@
         .modal-header { 
             background: var(--primary); 
             color: white; 
-            padding: 4px 15px 0 15px; /* Diubah: padding bawah 0 agar menempel ke konten */
+            padding: 2px 15px 0 15px; /* Diubah: padding bawah 0 agar menempel ke konten */
             display: flex; 
             align-items: flex-end; /* Diubah: rata bawah agar tab menempel pas di garis pantai */
             flex-shrink: 0; 
