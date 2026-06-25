@@ -169,7 +169,7 @@
         }
 
         .ranking-controls { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; }
-        .tab-btn { padding: 6px 12px; border: 1px solid var(--border); background: var(--card-bg); color: var(--text); border-radius: 4px; cursor: pointer; font-size: 0.8rem; }
+        .tab-btn { padding: 6px 12px; border: 1px solid var(--border); background: var(--card-bg); color: var(--text); border-radius: 4px; cursor: pointer; font-size: 0.8rem; display: inline-flex; align-items: center; gap: 5px; }
         .tab-btn.active { background: var(--primary); color: white; border-color: var(--primary); }
         
         .btn-sort-trigger { padding: 6px 12px; border: 1px solid var(--primary); background: transparent; color: var(--primary); border-radius: 4px; cursor: pointer; font-size: 0.8rem; display: inline-flex; align-items: center; gap: 5px; }
@@ -408,7 +408,31 @@
                 <h3 id="modalTitle"><i class="fas fa-chart-bar"></i> Ranking Performance</h3>
                 <button class="close-btn" onclick="closeRankingModal()">&times;</button>
             </div>
-            <div class="modal-body">              
+            <div class="modal-body">
+                <div class="ranking-tabs-wrapper">
+                    <div class="ranking-controls">
+                        <button id="tabTop5Branch" class="tab-btn" onclick="setRankingTab('top5branch', this)"><i class="fas fa-trophy"></i> Top 5 Branch</button>
+                        <button id="tabTop5CoBranch" class="tab-btn" onclick="setRankingTab('top5cobranch', this)"><i class="fas fa-sitemap"></i> Top 5 Co-Branch</button>
+                        <button id="tabAll" class="tab-btn" onclick="setRankingTab('all', this)"><i class="fas fa-list"></i> All Branch</button>
+                        
+                        <button id="btnSortTrigger" class="btn-sort-trigger" onclick="openSortModal()">
+                            <i class="fas fa-sort-amount-down"></i> Sortir (<span id="sortCountBadge">1</span>)
+                        </button>
+                        
+                        <label class="toggle-container">
+                            <div class="toggle-switch">
+                                <input type="checkbox" id="toggleActualValues" onchange="toggleDisplayMode()">
+                                <span class="slider"></span>
+                            </div>
+                            <span>Nilai Aktual</span>
+                        </label>
+                        
+                        <button id="btnExportRanking" class="btn-export" onclick="exportToExcel()">
+                            <i class="fas fa-file-excel"></i> Export
+                        </button>
+                    </div>
+                </div>
+                
                 <div class="table-wrapper">
                     <table class="ranking-table" id="rankingTable">
                         <thead id="rankingThead"></thead>
@@ -448,7 +472,7 @@
         ];
 
         let rawData = [];
-        let currentRankingMode = 'top5';
+        let currentRankingMode = 'top5branch';
         let top5Level = 'branch'; 
         let activeRankingMetrics = ['total'];
         let showActualValues = false; 
@@ -617,7 +641,7 @@
         function openRankingModal() {
             document.getElementById('rankingModal').style.display = 'flex';
             document.body.classList.add('modal-open');
-            setRankingTab('top5', document.getElementById('tabTop5')); 
+            setRankingTab('top5branch', document.getElementById('tabTop5Branch')); 
         }
         
         function closeRankingModal() { 
@@ -630,13 +654,19 @@
             document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
             if(btn) btn.classList.add('active');
             
+            if (mode === 'top5branch') {
+                top5Level = 'branch';
+            } else if (mode === 'top5cobranch') {
+                top5Level = 'co';
+            }
+
             updateDrillDownUI();
             
             const sortBtn = document.getElementById('btnSortTrigger');
             const toggleLabel = document.querySelector('.toggle-container');
             const exportBtn = document.getElementById('btnExportRanking');
             
-            if (mode === 'top5') {
+            if (mode === 'top5branch' || mode === 'top5cobranch') {
                 if(sortBtn) sortBtn.style.display = 'none';
                 if(toggleLabel) toggleLabel.style.display = 'none';
                 if(exportBtn) exportBtn.style.display = 'none';
@@ -651,19 +681,11 @@
 
         function updateDrillDownUI() {
             const title = document.getElementById('modalTitle');
-            
-            if (currentRankingMode === 'top5') {
+            if (currentRankingMode === 'top5branch' || currentRankingMode === 'top5cobranch') {
                 title.innerHTML = `<i class="fas fa-trophy"></i> Top 5 Leading Indicators`;
             } else {
                 title.innerHTML = `<i class="fas fa-chart-bar"></i> Ranking Performance`;
-                if(currentRankingMode === 'all') document.getElementById('tabAll').classList.add('active');
             }
-        }
-
-        function toggleTop5Level(e) {
-            if(e) e.preventDefault();
-            top5Level = (top5Level === 'branch') ? 'co' : 'branch';
-            renderRanking();
         }
 
         function getMetricValues(rowOrAgg, isAggregated) {
@@ -814,7 +836,7 @@
             const thead = document.getElementById('rankingThead');
             const tbody = document.getElementById('rankingTableBody');
             
-            if (currentRankingMode === 'top5') {
+            if (currentRankingMode === 'top5branch' || currentRankingMode === 'top5cobranch') {
                 thead.innerHTML = ''; 
                 tbody.innerHTML = ''; 
                 
@@ -830,17 +852,16 @@
                 gridContainer.style.display = 'grid';
                 gridContainer.innerHTML = '';
 
-                let toggleLinkHTML = `
-                    <div style="grid-column: 1/-1; display: flex; justify-content: space-between; align-items: center; margin-bottom: 5px; padding: 5px 10px; background: var(--highlight-bg); border-radius: 4px;">
-                        <span style="font-size: 0.8rem; font-weight: bold;">
-                            Menampilkan Data: <span style="color: var(--primary); text-transform: uppercase;">Top 5 Per ${top5Level}</span>
+                // Header Teks Judul Dinamis Sesuai Desain Baru (Gambar 1)
+                let headerText = top5Level === 'branch' ? 'Top 5 Branches Indicators' : 'Top 5 Co-Branches Indicators';
+                let titleHeaderHTML = `
+                    <div style="grid-column: 1/-1; display: flex; align-items: center; padding: 8px 12px; background: var(--highlight-bg); border-radius: 4px; margin-bottom: 5px;">
+                        <span style="font-size: 0.85rem; font-weight: bold; color: var(--primary);">
+                            <i class="fas fa-star" style="margin-right: 5px; color: var(--warning);"></i> ${headerText}
                         </span>
-                        <a href="#" onclick="toggleTop5Level(event)" style="font-size: 0.8rem; color: var(--primary); text-decoration: underline; font-weight: bold;">
-                            <i class="fas fa-exchange-alt"></i> Lihat Top 5 ${top5Level === 'branch' ? 'Co-Branch' : 'Branch'}
-                        </a>
                     </div>
                 `;
-                gridContainer.innerHTML = toggleLinkHTML;
+                gridContainer.innerHTML = titleHeaderHTML;
 
                 if (top5Level === 'branch') {
                     metrics.forEach(m => {
