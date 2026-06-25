@@ -157,22 +157,68 @@
         }
         @keyframes slideUp { from { transform: translateY(20px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
         
-        /* MODIFIKASI: Mengubah align-items menjadi center */
-        .modal-header { background: var(--primary); color: white; padding: 5px 10px; display: flex; align-items: center; flex-shrink: 0; }
-        /* MODIFIKASI: Menambahkan margin-left: auto agar tombol X berada di kanan */
-        .close-btn { background: none; border: none; color: white; font-size: 1.5rem; cursor: pointer; display: flex; margin-left: auto; }
-
+        /* =========================================
+           MODAL HEADER & TAB ADJUSTMENTS
+           ========================================= */
+        .modal-header { 
+            background: var(--primary); 
+            color: white; 
+            padding: 12px 15px 0 15px; /* Diubah: padding bawah 0 agar menempel ke konten */
+            display: flex; 
+            align-items: flex-end; /* Diubah: rata bawah agar tab menempel pas di garis pantai */
+            flex-shrink: 0; 
+        }
+        
+        .close-btn { 
+            background: none; 
+            border: none; 
+            color: white; 
+            font-size: 1.5rem; 
+            cursor: pointer;  
+            display: flex; 
+            align-self: center; /* Tetap di tengah secara vertikal */
+            margin-left: auto; /* Dorong otomatis ke kanan */
+            padding-bottom: 10px; /* Jarak proporsional khusus tombol close */
+        }
+        
         .modal-body { padding: 0; overflow-y: auto; flex: 1; display: flex; flex-direction: column; position: relative; }
-
+        
         .ranking-tabs-wrapper {
             position: sticky; top: 0; z-index: 40; background: var(--card-bg);
             padding: 15px 20px; border-bottom: 1px solid var(--border);
             box-shadow: 0 2px 4px rgba(0,0,0,0.05);
         }
-
+        
         .ranking-controls { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; }
-        .tab-btn.active { padding: 5px; border: 1px solid var(--border); background: var(--card-bg); color: var(--text); border-radius: 4px; cursor: pointer; font-size: 0.8rem; align-items: center; margin-right: 10px  }
-        .tab-btn { padding: 5px; background: var(--primary); color: white ; border-color: var(--primary); align-items: center; margin-right: 10px}
+        
+        /* Style tombol dasar */
+        .tab-btn { 
+            padding: 8px 16px; 
+            background: rgba(0, 0, 0, 0.15); /* Sedikit gelap transparan untuk tab tidak aktif */
+            color: rgba(255, 255, 255, 0.8); 
+            border: 1px solid transparent;
+            border-radius: 4px 4px 0 0; /* Diubah: sudut membulat hanya di atas */
+            cursor: pointer; 
+            font-size: 0.8rem; 
+            display: inline-flex;
+            align-items: center; 
+            margin-right: 5px;
+        }
+        
+        /* Style tombol saat aktif */
+        .tab-btn.active { 
+            padding: 8px 16px; 
+            border: 1px solid var(--card-bg); 
+            border-bottom: 1px solid var(--card-bg); /* Diubah: warna putih/card-bg menyatu kebawah */
+            background: var(--card-bg); 
+            color: var(--primary); /* Diubah ke warna ungu utama agar teks lebih kontras & terbaca */
+            border-radius: 4px 4px 0 0; /* Diubah: bawahnya flat */
+            cursor: pointer; 
+            font-size: 0.8rem; 
+            display: inline-flex;
+            align-items: center; 
+            margin-right: 5px; 
+        }
         
         .btn-sort-trigger { padding: 6px 12px; border: 1px solid var(--primary); background: transparent; color: var(--primary); border-radius: 4px; cursor: pointer; font-size: 0.8rem; display: inline-flex; align-items: center; gap: 5px; }
         .btn-export { padding: 6px 12px; border: 1px solid var(--success); background: var(--success); color: white; border-radius: 4px; cursor: pointer; font-size: 0.8rem; display: inline-flex; align-items: center; gap: 5px; }
@@ -339,7 +385,15 @@
             .th-content { padding: 4px 2px; gap: 2px; }
             
             .ranking-controls { display: flex; flex-direction: column; gap: 8px; width: 100%; }
-            .tab-btn.active { padding: 5px; border: 1px solid var(--border); background: var(--card-bg); color: var(--text); border-radius: 4px; cursor: pointer; font-size: 0.8rem; align-items: center; margin-right: 10px  }
+            /* Cari baris ini di dalam @media (max-width: 900px) dan sesuaikan nilainya */
+            .tab-btn.active { 
+                padding: 6px 12px; 
+                border: 1px solid var(--card-bg); 
+                border-bottom: 1px solid var(--card-bg);
+                background: var(--card-bg); 
+                color: var(--primary); 
+                border-radius: 4px 4px 0 0; 
+            }
 
             .action-row { display: flex; gap: 8px; width: 100%; }
             .btn-sort-trigger, .btn-export { flex: 1; justify-content: center; font-size: 0.75rem; padding: 8px 4px; }
