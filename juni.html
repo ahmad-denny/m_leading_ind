@@ -176,10 +176,6 @@
         .btn-export { padding: 6px 12px; border: 1px solid var(--success); background: var(--success); color: white; border-radius: 4px; cursor: pointer; font-size: 0.8rem; display: inline-flex; align-items: center; gap: 5px; }
         .btn-export:hover { background: #218838; }
 
-        .btn-back-drill { padding: 6px 12px; border: 1px solid var(--primary); background: transparent; color: var(--primary); border-radius: 4px; cursor: pointer; font-size: 0.8rem; margin-left: auto; display: none; align-items: center; gap: 5px; }
-        .clickable-co { color: var(--primary); text-decoration: underline dotted; cursor: pointer; transition: 0.2s; }
-        .clickable-co:hover { color: var(--warning); background: rgba(255, 193, 7, 0.1); }
-        [data-theme="dark"] .clickable-co { color: var(--card-title-light); }
         .rank-badge { display: inline-block; width: 22px; height: 22px; line-height: 22px; text-align: center; border-radius: 50%; font-weight: bold; font-size: 0.7rem; background: var(--border); }
         .rank-1 { background: #ffd700; color: #333; }
         .rank-2 { background: #c0c0c0; color: #333; }
@@ -344,7 +340,6 @@
             .tab-btn { width: 100%; text-align: center; padding: 8px; font-size: 0.8rem; }
             .action-row { display: flex; gap: 8px; width: 100%; }
             .btn-sort-trigger, .btn-export { flex: 1; justify-content: center; font-size: 0.75rem; padding: 8px 4px; }
-            .btn-back-drill { width: 100%; justify-content: center; margin-top: 5px; }
 
             .modal-header { padding: 10px 15px; }
             .modal-header h3 { font-size: 1.1rem; }
@@ -418,7 +413,6 @@
                     <div class="ranking-controls">
                         <button id="tabTop5" class="tab-btn" onclick="setRankingTab('top5', this)"><i class="fas fa-trophy"></i> Top 5</button>
                         <button id="tabAll" class="tab-btn" onclick="setRankingTab('all', this)"><i class="fas fa-list"></i> All Branch</button>
-                        <button id="tabCo" class="tab-btn" onclick="setRankingTab('co', this)"><i class="fas fa-building"></i> Co-Branch</button>
                         
                         <button id="btnSortTrigger" class="btn-sort-trigger" onclick="openSortModal()">
                             <i class="fas fa-sort-amount-down"></i> Sortir (<span id="sortCountBadge">1</span>)
@@ -434,10 +428,6 @@
                         
                         <button id="btnExportRanking" class="btn-export" onclick="exportToExcel()">
                             <i class="fas fa-file-excel"></i> Export
-                        </button>
-                        
-                        <button id="btnBackDrill" class="btn-back-drill" onclick="backToCoList()">
-                            <i class="fas fa-arrow-left"></i> Kembali ke Co-Branch
                         </button>
                     </div>
                 </div>
@@ -482,8 +472,7 @@
 
         let rawData = [];
         let currentRankingMode = 'top5';
-        let top5Level = 'branch'; // Default level untuk Top 5 ('branch' atau 'co')
-        let drillDownCo = null; 
+        let top5Level = 'branch'; 
         let activeRankingMetrics = ['total'];
         let showActualValues = false; 
 
@@ -651,19 +640,16 @@
         function openRankingModal() {
             document.getElementById('rankingModal').style.display = 'flex';
             document.body.classList.add('modal-open');
-            drillDownCo = null; 
             setRankingTab('top5', document.getElementById('tabTop5')); 
         }
         
         function closeRankingModal() { 
             document.getElementById('rankingModal').style.display = 'none'; 
             document.body.classList.remove('modal-open');
-            drillDownCo = null;
         }
 
         function setRankingTab(mode, btn) {
             currentRankingMode = mode;
-            drillDownCo = null; 
             document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
             if(btn) btn.classList.add('active');
             
@@ -687,34 +673,14 @@
         }
 
         function updateDrillDownUI() {
-            const btnBack = document.getElementById('btnBackDrill');
             const title = document.getElementById('modalTitle');
             
             if (currentRankingMode === 'top5') {
                 title.innerHTML = `<i class="fas fa-trophy"></i> Top 5 Leading Indicators`;
-            } else if (drillDownCo) {
-                btnBack.style.display = 'inline-flex';
-                title.innerHTML = `<i class="fas fa-chart-bar"></i> Ranking: ${drillDownCo}`;
-                document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
             } else {
-                btnBack.style.display = 'none';
                 title.innerHTML = `<i class="fas fa-chart-bar"></i> Ranking Performance`;
                 if(currentRankingMode === 'all') document.getElementById('tabAll').classList.add('active');
-                else if(currentRankingMode === 'co') document.getElementById('tabCo').classList.add('active');
             }
-        }
-
-        function backToCoList() {
-            drillDownCo = null;
-            currentRankingMode = 'co';
-            updateDrillDownUI();
-            renderRanking();
-        }
-
-        function triggerDrillDown(coName) {
-            drillDownCo = coName;
-            updateDrillDownUI();
-            renderRanking();
         }
 
         function toggleTop5Level(e) {
@@ -794,21 +760,8 @@
             let ws_data = [headers];
 
             let groupedData = [];
-            let isDrillDown = !!drillDownCo;
-            if (isDrillDown) {
-                groupedData = rawData.filter(d => d['co'] === drillDownCo).map(d => ({ name: d['br'], sub: d['co'], data: d, isAgg: false }));
-            } else if (currentRankingMode === 'all') {
+            if (currentRankingMode === 'all') {
                 groupedData = rawData.map(d => ({ name: d['br'], sub: d['co'], data: d, isAgg: false }));
-            } else if (currentRankingMode === 'co') {
-                const coMap = {};
-                rawData.forEach(d => {
-                    if (!coMap[d['co']]) coMap[d['co']] = { mtd: {}, tgt: {} };
-                    metrics.forEach(m => {
-                        coMap[d['co']].mtd[m.key] = (coMap[d['co']].mtd[m.key] || 0) + parseFloat(d[m.key+'_mtd']||0);
-                        coMap[d['co']].tgt[m.key] = (coMap[d['co']].tgt[m.key] || 0) + parseFloat(d[m.key+'_tgt']||0);
-                    });
-                });
-                groupedData = Object.keys(coMap).map(co => ({ name: co, sub: '', data: coMap[co], isAgg: true }));
             }
 
             let ranked = groupedData.map(g => {
@@ -884,7 +837,6 @@
             const thead = document.getElementById('rankingThead');
             const tbody = document.getElementById('rankingTableBody');
             
-            // --- KONDISI DETEKSI UNTUK VIEW TOP 5 ---
             if (currentRankingMode === 'top5') {
                 thead.innerHTML = ''; 
                 tbody.innerHTML = ''; 
@@ -901,7 +853,6 @@
                 gridContainer.style.display = 'grid';
                 gridContainer.innerHTML = '';
 
-                // PENAMBAHAN LINK TOGGLE ANTARA LEVEL BRANCH & CO-BRANCH
                 let toggleLinkHTML = `
                     <div style="grid-column: 1/-1; display: flex; justify-content: space-between; align-items: center; margin-bottom: 5px; padding: 5px 10px; background: var(--highlight-bg); border-radius: 4px;">
                         <span style="font-size: 0.8rem; font-weight: bold;">
@@ -915,7 +866,6 @@
                 gridContainer.innerHTML = toggleLinkHTML;
 
                 if (top5Level === 'branch') {
-                    // LOGIKA LAMA: TAMPILAN PER BRANCH
                     metrics.forEach(m => {
                         let branchData = rawData.map(d => ({
                             name: d['br'],
@@ -947,7 +897,6 @@
                         gridContainer.innerHTML += cardHTML;
                     });
                 } else {
-                    // LOGIKA BARU: TAMPILAN PER CO-BRANCH (AGREGASI OTOMATIS)
                     const coMap = {};
                     rawData.forEach(d => {
                         const coName = d['co'] || 'Unknown Co';
@@ -1001,21 +950,8 @@
             tbody.innerHTML = '<tr><td colspan="100%" style="text-align:center;">Processing...</td></tr>';
 
             let groupedData = [];
-            let isDrillDown = !!drillDownCo;
-            if (isDrillDown) {
-                groupedData = rawData.filter(d => d['co'] === drillDownCo).map(d => ({ name: d['br'], sub: d['co'], data: d, isAgg: false }));
-            } else if (currentRankingMode === 'all') {
+            if (currentRankingMode === 'all') {
                 groupedData = rawData.map(d => ({ name: d['br'], sub: d['co'], data: d, isAgg: false }));
-            } else if (currentRankingMode === 'co') {
-                const coMap = {};
-                rawData.forEach(d => {
-                    if (!coMap[d['co']]) coMap[d['co']] = { mtd: {}, tgt: {} };
-                    metrics.forEach(m => {
-                        coMap[d['co']].mtd[m.key] = (coMap[d['co']].mtd[m.key] || 0) + parseFloat(d[m.key+'_mtd']||0);
-                        coMap[d['co']].tgt[m.key] = (coMap[d['co']].tgt[m.key] || 0) + parseFloat(d[m.key+'_tgt']||0);
-                    });
-                });
-                groupedData = Object.keys(coMap).map(co => ({ name: co, sub: '', data: coMap[co], isAgg: true }));
             }
 
             let ranked = groupedData.map(g => {
@@ -1059,7 +995,7 @@
 
             let headerHTML = `<tr>
                 <th><div class="th-content">#</div></th>
-                <th><div class="th-content">${isDrillDown ? 'Branch' : (currentRankingMode === 'co' ? 'Co-Branch' : 'Branch')}</div></th>`;
+                <th><div class="th-content">Branch</div></th>`;
             
             if (!showActualValues) {
                 const totalSortIndex = activeRankingMetrics.indexOf('total');
@@ -1107,9 +1043,6 @@
 
                 const totalColor = r.totalAchv >= 100 ? 'var(--success)' : 'var(--danger)';
                 let nameHtml = `<strong>${r.name}</strong>`;
-                if (!isDrillDown && currentRankingMode === 'co') {
-                    nameHtml = `<span class="clickable-co" onclick="triggerDrillDown('${r.name}')"><strong>${r.name}</strong></span>`;
-                }
                 let displayName = `${nameHtml}<br><small style="color:var(--text-muted)">${r.sub}</small>`;
 
                 let rowHTML = `<tr>
