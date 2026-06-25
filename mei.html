@@ -420,7 +420,7 @@
         <div style="grid-column: 1/-1; text-align: center; padding: 40px; color: var(--text-muted);"><i class="fas fa-spinner fa-spin fa-2x"></i><br><br>Memuat data...</div>
     </div>
 
-    <div class="footer">Update data in the HTML script section | Optimized for Mobile & Web | Theme: Light/Dark | Made by Love - RBPM</div>
+    <div class="footer">Typing, Create, Update, Repeat | Optimized for Mobile & Web | Theme: Light/Dark | RBPM - Region Sumatera</div>
 
     <div id="rankingModal" class="modal-overlay">
         <div class="modal-content">
@@ -505,7 +505,7 @@
         window.onload = async function() {
             initTheme();
             try {
-                const res = await fetch('data_mei.json');
+                const res = await fetch('data_juni.json');
                 if (!res.ok) throw new Error('File data_juni.json tidak ditemukan');
                 rawData = await res.json();
                 
@@ -641,7 +641,7 @@
                 const formattedGap = formatValue(gap, m.unit, false, false, true);
                 
                 const gapLabel = ['ca','sa','fu'].includes(m.key) ? 'Growth GAP' : 
-                                 ['con','sme','ph','sli'].includes(m.key) ? 'GAP Booking' : 'GAP Akuisisi';
+                                 ['con','sme','ph','sli'].includes(m.key) ? 'Booking GAP' : 'Akuisisi GAP';
 
                 container.innerHTML += `
                     <div class="card">
