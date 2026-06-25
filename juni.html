@@ -89,9 +89,8 @@
         .header h1 img.logo { object-fit: contain; vertical-align: middle; }
         .header p { font-size: 0.85rem; opacity: 0.9; margin: 2px 0; text-align: center; }
         
-        /* PERBAIKAN NO.2 WEB: TOMBOL TEMA DI POJOK KANAN LAYAR */
         .theme-toggle { 
-            position: fixed; /* Ubah dari absolute ke fixed agar relatif terhadap layar */
+            position: fixed; 
             top: 25px; 
             right: 20px; 
             background: rgba(255,255,255,0.15); 
@@ -105,12 +104,11 @@
             align-items: center; 
             justify-content: center; 
             font-size: 1rem; 
-            z-index: 101; /* Di atas header */
+            z-index: 101; 
             flex-shrink: 0;
         }
         .theme-toggle:hover { background: rgba(255,255,255,0.25); }
         
-        /* CONTROLS & DASHBOARD - PERBAIKAN NO.1 WEB */
         .controls { 
             display: flex; 
             align-items: center; 
@@ -122,16 +120,15 @@
             gap: 10px; 
             flex-wrap: nowrap; 
         }
-        .filter-group { display: flex; gap: 10px; flex: 2; min-width: 0; } /* Diperlebar */
+        .filter-group { display: flex; gap: 10px; flex: 2; min-width: 0; } 
         select { padding: 8px 12px; border: 1px solid var(--border); border-radius: 4px; flex: 1; background: var(--card-bg); color: var(--text); min-width: 0; font-size: 0.85rem; }
         .btn { padding: 8px 16px; border: none; border-radius: 4px; cursor: pointer; font-weight: 600; font-size: 0.85rem; display: inline-flex; align-items: center; gap: 6px; white-space: nowrap; }
-        .btn-reset { background: var(--text-muted); color: white; flex: 1; justify-content: center; flex-shrink: 0; } /* Samakan lebar */
-        .btn-ranking { background: var(--warning); color: #333; flex: 1; justify-content: center; } /* Samakan lebar */
+        .btn-reset { background: var(--text-muted); color: white; flex: 1; justify-content: center; flex-shrink: 0; } 
+        .btn-ranking { background: var(--warning); color: #333; flex: 1; justify-content: center; } 
         .btn:hover { opacity: 0.9; transform: translateY(-1px); }
 
         .dashboard-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 15px; padding: 0 20px 40px 20px; }
         
-        /* CARD STYLES */
         .card { background: var(--card-bg); padding: 16px; border-radius: var(--radius); box-shadow: var(--shadow); border-top: 1px solid var(--primary); border-left: 1px solid var(--primary); display: flex; flex-direction: column; }        
         .card-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; }
         .card-title { font-size: 0.95rem; font-weight: bold; color: var(--primary); display: flex; align-items: center; gap: 6px; }
@@ -151,11 +148,10 @@
         
         .footer { text-align: center; padding: 10px; font-size: 0.75rem; color: var(--text-muted); margin-top: 3px; }
 
-        /* MODAL STYLES - PERBAIKAN NO.3 WEB HEIGHT */
         .modal-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); z-index: 1000; justify-content: center; align-items: center; }
         .modal-content { 
             background: var(--card-bg); width: 95%; max-width: 1200px; 
-            height: auto; max-height: 85vh; /* Auto height with max limit */
+            height: auto; max-height: 85vh; 
             border-radius: var(--radius); overflow: hidden; 
             display: flex; flex-direction: column; animation: slideUp 0.3s ease; color: var(--text);
         }
@@ -189,7 +185,6 @@
         .rank-2 { background: #c0c0c0; color: #333; }
         .rank-3 { background: #cd7f32; color: white; }
 
-        /* TABLE STYLES */
         .table-wrapper { overflow-x: auto; -webkit-overflow-scrolling: touch; width: 100%; flex: 1; position: relative; }
         .ranking-table { width: 100%; border-collapse: separate; border-spacing: 0; font-size: 0.8rem; min-width: 800px; }
         .ranking-table th { background: var(--bg); padding: 0; text-align: center; border-bottom: 2px solid var(--border); position: sticky; top: 0; z-index: 5; color: var(--text); vertical-align: middle; height: 55px; }
@@ -200,12 +195,10 @@
         .ranking-table td { padding: 10px 4px; border-bottom: 1px solid var(--border); color: var(--text); text-align: center; white-space: nowrap; background: var(--card-bg); }
         .ranking-table td.highlight-col { background: var(--highlight-bg); font-weight: bold; }
 
-        /* Sticky Columns Logic */
         .ranking-table th:first-child, .ranking-table td:first-child { position: sticky; left: 0; z-index: 30; width: var(--col-rank-w); min-width: var(--col-rank-w); max-width: var(--col-rank-w); border-right: 1px solid var(--border); background: var(--card-bg); }
         .ranking-table th:nth-child(2), .ranking-table td:nth-child(2) { position: sticky; left: var(--col-rank-w); z-index: 25; width: var(--col-name-w); min-width: var(--col-name-w); max-width: var(--col-name-w); text-align: left !important; border-right: 1px solid var(--border); overflow: hidden; text-overflow: ellipsis; background: var(--card-bg); }
         .ranking-table th:nth-child(3), .ranking-table td:nth-child(3) { position: sticky; left: calc(var(--col-rank-w) + var(--col-name-w)); z-index: 20; font-weight: bold; background: var(--card-bg); border-right: 2px solid var(--primary); width: var(--col-total-w); min-width: var(--col-total-w); max-width: var(--col-total-w); font-size: 0.75rem; box-shadow: 2px 0 5px -2px rgba(0,0,0,0.1); padding-right: 4px !important; }
         
-        /* SORT MODAL POPUP */
         .sort-modal-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 2000; justify-content: center; align-items: center; }
         .sort-modal-content { background: var(--card-bg); width: 90%; max-width: 400px; border-radius: var(--radius); padding: 20px; box-shadow: 0 5px 15px rgba(0,0,0,0.2); animation: slideUp 0.2s ease; }
         .sort-modal-header { font-size: 1rem; font-weight: bold; margin-bottom: 15px; color: var(--primary); display: flex; justify-content: space-between; }
@@ -218,7 +211,6 @@
         .btn-cancel { background: var(--text-muted); color: white; }
         .btn-apply { background: var(--primary); color: white; }
 
-        /* TOGGLE SWITCH STYLE */
         .toggle-container { display: flex; align-items: center; gap: 8px; font-size: 0.75rem; color: var(--text-muted); cursor: pointer; user-select: none; white-space: nowrap; }
         .toggle-switch { position: relative; display: inline-block; width: 36px; height: 20px; }
         .toggle-switch input { opacity: 0; width: 0; height: 0; }
@@ -229,7 +221,6 @@
         [data-theme="dark"] .slider { background-color: #475569; }
         [data-theme="dark"] .toggle-container { color: #cbd5e1; }
 
-        /* TOP 5 GRID LAYOUT - EQUAL WIDTH FIX */
         .top5-grid-container {
             display: grid;
             grid-template-columns: repeat(5, 1fr);
@@ -292,9 +283,7 @@
         }
         .top5-val { font-weight: bold; color: var(--text); font-size: 0.65rem; flex-shrink: 0; }
 
-        /* Responsive Mobile & Tablet */
         @media (max-width: 900px) {
-            /* HEADER MOBILE FIX */
             .header { 
                 padding: 15px 15px 15px 15px; 
                 min-height: 110px;
@@ -303,7 +292,6 @@
             .header h1 { font-size: 1.2rem; gap: 8px; }
             .header p { font-size: 0.75rem; }
             
-            /* PERBAIKAN NO.2 MOBILE: TOMBOL TEMA DI DALAM WRAPPER AGAR RAPI */
             .theme-toggle { 
                 position: absolute; 
                 top: 50%; 
@@ -314,7 +302,6 @@
             
             body { padding-top: 120px; }
 
-            /* CONTROLS MOBILE */
             .controls { 
                 flex-wrap: wrap; 
                 flex-direction: row; 
@@ -359,14 +346,12 @@
             .btn-sort-trigger, .btn-export { flex: 1; justify-content: center; font-size: 0.75rem; padding: 8px 4px; }
             .btn-back-drill { width: 100%; justify-content: center; margin-top: 5px; }
 
-            /* PERBAIKAN NO.1 MOBILE: HEADER MODAL DIPERKECIL */
             .modal-header { padding: 10px 15px; }
             .modal-header h3 { font-size: 1.1rem; }
             .close-btn { font-size: 1.2rem; }
             
             .ranking-tabs-wrapper { padding: 10px 15px; }
 
-            /* TOP 5 MOBILE FIX */
             .modal-content { width: 100%; height: 100%; border-radius: 0; max-width: none; max-height: 100vh; }
             .top5-grid-container { 
                 grid-template-columns: repeat(2, 1fr); 
@@ -381,7 +366,6 @@
             .top5-rank { width: 14px; height: 14px; line-height: 14px; font-size: 0.55rem; margin-right: 4px; }
         }
         
-        /* DARK MODE MODAL SORT FIX */
         [data-theme="dark"] .sort-modal-content { background: var(--sort-modal-bg); border: 1px solid var(--border); }
         [data-theme="dark"] .sort-modal-header { color: #ffffff; }
         [data-theme="dark"] .sort-item { background: transparent; border-color: var(--sort-item-border); color: var(--sort-text-color); }
@@ -398,12 +382,11 @@
 
     <div class="header">
         <div class="header-content-wrapper">
-            <!-- Tombol tema dipindahkan ke luar wrapper di web via CSS fixed, tapi tetap di sini untuk struktur mobile -->
             <button class="theme-toggle" onclick="toggleTheme()" title="Toggle Dark/Light Mode"><i class="fas fa-moon" id="themeIcon"></i></button>
             <div style="width: 100%;">
                 <h1><img src="img/BMI.png" alt="Bank Muamalat Logo" class="logo" width="30" height="30" > Bank Muamalat</h1>
-                <p>Leading Indicator Dashboard 📍 Region Sumatera</p>
-                <p>📅 Per: 23 Juni 2026 | 📅 Workdays: 20</p>
+                <p>Leading Indicator Dashboard 📑 Region Sumatera</p>
+                <p>📅 Per: 23 Juni 2026 | 💼 Workdays: 20</p>
             </div>
         </div>
     </div>
@@ -424,6 +407,9 @@
     </div>
     <div class="footer">Typing, Create, Update, Repeat | Optimized for Mobile & Web | Theme: Light/Dark | RBPM - Region Sumatera</div>
 
+    <!-- =========================================
+       MODAL RANKING PERFORMANCE (FIXED CONTROLS)
+       ========================================= -->
     <div id="rankingModal" class="modal-overlay">
         <div class="modal-content">
             <div class="modal-header">
@@ -432,6 +418,36 @@
             </div>
             <div class="modal-body">
                 
+                <!-- BAGIAN KONTROL YANG SEBELUMNYA HILANG -->
+                <div class="ranking-tabs-wrapper">
+                    <div class="ranking-controls">
+                        <button id="tabTop5" class="tab-btn active" onclick="setRankingTab('top5', this)"><i class="fas fa-star"></i> Top 5</button>
+                        <button id="tabCo" class="tab-btn" onclick="setRankingTab('co', this)"><i class="fas fa-network-wired"></i> Co-Branch</button>
+                        <button id="tabAll" class="tab-btn" onclick="setRankingTab('all', this)"><i class="fas fa-list"></i> All Branch</button>
+                        
+                        <div class="action-row">
+                            <button class="btn btn-sort-trigger" onclick="openSortModal()">
+                                <i class="fas fa-filter"></i> Sortir (<span id="sortCountBadge">1</span>)
+                            </button>
+                            <button id="btnExportRanking" class="btn btn-export" onclick="exportToExcel()">
+                                <i class="fas fa-file-excel"></i> Export Excel
+                            </button>
+                        </div>
+
+                        <label class="toggle-container">
+                            <span class="toggle-switch">
+                                <input type="checkbox" id="toggleActualValues" onchange="toggleDisplayMode()">
+                                <span class="slider"></span>
+                            </span>
+                            Nilai Aktual
+                        </label>
+
+                        <button id="btnBackDrill" class="btn btn-back-drill" onclick="backToCoList()">
+                            <i class="fas fa-arrow-left"></i> Kembali ke Co-Branch
+                        </button>
+                    </div>
+                </div>
+
                 <div class="table-wrapper">
                     <table class="ranking-table" id="rankingTable">
                         <thead id="rankingThead"></thead>
@@ -565,7 +581,7 @@
             if (unit === 'M') {
                 if (isTarget) return prefix + displayVal.toLocaleString('id-ID', { minimumFractionDigits: 1, maximumFractionDigits: 1 }) + ' M';
                 if (displayVal === 0) return prefix + '0 M';
-                return prefix + displayVal.toLocaleString('id-ID', { minimumFractionDigits: 1, maximumFractionDigits: 1 }) + ' M';
+                return prefix + displayVal.toLocaleString('id-ID', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) + ' M';
             } else {
                 return prefix + Math.round(displayVal).toLocaleString('id-ID');
             }
@@ -637,7 +653,6 @@
             });
         }
 
-        // --- LOGIKA RANKING & DRILL-DOWN ---
         function openRankingModal() {
             document.getElementById('rankingModal').style.display = 'flex';
             document.body.classList.add('modal-open');
@@ -726,7 +741,6 @@
             return vals;
         }
 
-        // --- SORT MODAL FUNCTIONS ---
         function openSortModal() {
             const list = document.getElementById('sortCheckboxList');
             list.innerHTML = '';
@@ -763,7 +777,6 @@
             renderRanking();
         }
 
-        // --- EXPORT TO EXCEL FUNCTION ---
         function exportToExcel() {
             let sortedKeys = activeRankingMetrics.filter(k => k !== 'total');
             let remainingKeys = metrics.map(m => m.key).filter(k => !sortedKeys.includes(k));
@@ -911,18 +924,11 @@
                     topN.forEach((item, idx) => {
                         const isGrowth = ['ca','sa','fu'].includes(m.key);
                         const formatted = formatValue(item.val, m.unit, isGrowth, false, false);
-                        
-                        // MODIFIKASI: Tambahkan class clickable-co dan onclick event jika sedang di view Co-Branch (bukan drilldown)
-                        let nameHtml = item.name;
-                        if (!drillDownCo) {
-                            nameHtml = `<span class="clickable-co" onclick="triggerDrillDown('${item.sub}')">${item.name}</span>`;
-                        }
-
                         cardHTML += `
                                 <div class="top5-item">
                                     <div style="display:flex; align-items:center; overflow:hidden; flex:1; min-width:0;">
                                         <span class="top5-rank">${idx+1}</span>
-                                        <span class="top5-name" title="${item.name} (${item.sub})">${nameHtml}</span>
+                                        <span class="top5-name" title="${item.name} (${item.sub})">${item.name}</span>
                                     </div>
                                     <span class="top5-val">${formatted}</span>
                                 </div>`;
