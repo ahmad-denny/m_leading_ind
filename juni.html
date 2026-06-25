@@ -679,14 +679,14 @@
             renderRanking();
         }
 
-        function updateDrillDownUI() {
-            const title = document.getElementById('modalTitle');
-            if (currentRankingMode === 'top5branch' || currentRankingMode === 'top5cobranch') {
-                title.innerHTML = `<i class="fas fa-trophy"></i> Top 5 Leading Indicators`;
-            } else {
-                title.innerHTML = `<i class="fas fa-chart-bar"></i> Ranking Performance`;
-            }
-        }
+//        function updateDrillDownUI() {
+//            const title = document.getElementById('modalTitle');
+//            if (currentRankingMode === 'top5branch' || currentRankingMode === 'top5cobranch') {
+//                title.innerHTML = `<i class="fas fa-trophy"></i> Top 5 Leading Indicators`;
+//            } else {
+//                title.innerHTML = `<i class="fas fa-chart-bar"></i> Ranking Performance`;
+//            }
+//        }
 
         function getMetricValues(rowOrAgg, isAggregated) {
             const vals = {};
