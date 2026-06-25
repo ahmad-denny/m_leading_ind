@@ -408,30 +408,7 @@
                 <h3 id="modalTitle"><i class="fas fa-chart-bar"></i> Ranking Performance</h3>
                 <button class="close-btn" onclick="closeRankingModal()">&times;</button>
             </div>
-            <div class="modal-body">
-                <div class="ranking-tabs-wrapper">
-                    <div class="ranking-controls">
-                        <button id="tabTop5" class="tab-btn" onclick="setRankingTab('top5', this)"><i class="fas fa-trophy"></i> Top 5</button>
-                        <button id="tabAll" class="tab-btn" onclick="setRankingTab('all', this)"><i class="fas fa-list"></i> All Branch</button>
-                        
-                        <button id="btnSortTrigger" class="btn-sort-trigger" onclick="openSortModal()">
-                            <i class="fas fa-sort-amount-down"></i> Sortir (<span id="sortCountBadge">1</span>)
-                        </button>
-                        
-                        <label class="toggle-container">
-                            <div class="toggle-switch">
-                                <input type="checkbox" id="toggleActualValues" onchange="toggleDisplayMode()">
-                                <span class="slider"></span>
-                            </div>
-                            <span>Nilai Aktual</span>
-                        </label>
-                        
-                        <button id="btnExportRanking" class="btn-export" onclick="exportToExcel()">
-                            <i class="fas fa-file-excel"></i> Export
-                        </button>
-                    </div>
-                </div>
-                
+            <div class="modal-body">              
                 <div class="table-wrapper">
                     <table class="ranking-table" id="rankingTable">
                         <thead id="rankingThead"></thead>
