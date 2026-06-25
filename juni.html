@@ -176,8 +176,6 @@
         .btn-export { padding: 6px 12px; border: 1px solid var(--success); background: var(--success); color: white; border-radius: 4px; cursor: pointer; font-size: 0.8rem; display: inline-flex; align-items: center; gap: 5px; }
         .btn-export:hover { background: #218838; }
 
-        .btn-group { display: flex; flex-wrap: wrap;}
-
         .rank-badge { display: inline-block; width: 22px; height: 22px; line-height: 22px; text-align: center; border-radius: 50%; font-weight: bold; font-size: 0.7rem; background: var(--border); }
         .rank-1 { background: #ffd700; color: #333; }
         .rank-2 { background: #c0c0c0; color: #333; }
@@ -407,7 +405,6 @@
     <div id="rankingModal" class="modal-overlay">
         <div class="modal-content">
             <div class="modal-header">
-                <button class="tab-btn" onclick="setRankingTab('top5branch', this)" active><i class="fas fa-trophy"></i> Top 5 Branch</button>
                 <button class="tab-btn" onclick="setRankingTab('top5branch', this)" active><i class="fas fa-trophy"></i> Top 5 Branch</button>
                 <button class="tab-btn" onclick="setRankingTab('top5cobranch', this)"><i class="fas fa-sitemap"></i> Top 5 Co-Branch</button>
                 <button class="close-btn" onclick="closeRankingModal()">&times;</button>
