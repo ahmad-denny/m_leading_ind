@@ -2,403 +2,1091 @@
 <html lang="id">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dashboard Leading Indicators - Bank Muamalat</title>
-    <!-- Menggunakan Font Awesome untuk Ikon -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Leading Indicator Dashboard - Bank Muamalat</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    
+    <script src="https://cdn.sheetjs.com/xlsx-latest/package/dist/xlsx.full.min.js"></script>
     <style>
         :root {
-            --primary-color: #4b2e83; /* Warna Ungu Khas */
-            --secondary-color: #f3f4f6;
-            --text-dark: #1f2937;
-            --text-light: #6b7280;
-            --gold: #fbbf24;
-            --silver: #9ca3af;
-            --bronze: #d97706;
-            --bg-card: #ffffff;
-            --border-color: #e5e7eb;
+            --primary: #4b2e83;
+            --bg: #f4f6f9;
+            --card-bg: #ffffff;
+            --text: #333333;
+            --text-muted: #6c757d;
+            --border: #e9ecef;
+            --shadow: 0 2px 8px rgba(0,0,0,0.06);
+            --radius: 8px;
+            --success: #28a745;
+            --danger: #dc3545;
+            --warning: #ffc107;
+            --highlight-bg: rgba(75, 46, 131, 0.08);
+            --card-title-light: #d4c4f0; 
+            --top5-header-color: var(--primary);
+            
+            --col-rank-w: 40px;
+            --col-name-w: 120px;
+            --col-total-w: 60px;
         }
 
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background-color: #f9fafb;
-            margin: 0;
-            padding: 20px;
+        [data-theme="dark"] {
+            --primary: #3a2266;
+            --bg: #1a1a2e;
+            --card-bg: #16213e;
+            --text: #e0e0e0;
+            --text-muted: #a0a0a0;
+            --border: #2a2a40;
+            --shadow: 0 2px 8px rgba(0,0,0,0.3);
+            --highlight-bg: rgba(58, 34, 102, 0.3);
+            --sort-modal-bg: #1e293b;
+            --sort-item-border: #334155;
+            --sort-text-color: #e2e8f0;
+            --sort-icon-color: #a78bfa;
+            --top5-header-color: #ffffff;
         }
 
-        /* Tombol Pemicu Modal */
-        .trigger-btn {
-            background-color: var(--primary-color);
-            color: white;
-            border: none;
-            padding: 12px 24px;
-            border-radius: 8px;
-            font-size: 16px;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            box-shadow: 0 4px 6px rgba(75, 46, 131, 0.2);
-            transition: transform 0.2s;
-        }
-        .trigger-btn:hover {
-            transform: translateY(-2px);
-            background-color: #3a2266;
-        }
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', system-ui, sans-serif; transition: background-color 0.3s, color 0.3s; }
+        
+        body.modal-open { overflow: hidden; }
+        body { background-color: var(--bg); color: var(--text); min-height: 100vh; padding-top: 140px; }
 
-        /* Modal Overlay */
-        .modal-overlay {
-            display: none; /* Hidden by default */
-            position: fixed;
-            top: 0; left: 0;
-            width: 100%; height: 100%;
-            background-color: rgba(0, 0, 0, 0.5);
-            z-index: 1000;
-            justify-content: center;
-            align-items: center;
-            backdrop-filter: blur(4px);
-        }
-
-        /* Modal Content */
-        .modal-content {
-            background-color: white;
-            width: 95%;
-            max-width: 1400px;
-            border-radius: 12px;
-            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
-            overflow: hidden;
+        /* =========================================
+           HEADER FIXED & PERFECTLY CENTERED
+           ========================================= */
+        .header { 
+            background: linear-gradient(135deg, var(--primary), #2d1b50); 
+            color: white; 
+            padding: 20px 20px 20px 20px; 
+            position: fixed; 
+            top: 0; left: 0; right: 0;
+            z-index: 100;
             display: flex;
             flex-direction: column;
-            max-height: 90vh;
-            animation: slideDown 0.3s ease-out;
-        }
-
-        @keyframes slideDown {
-            from { transform: translateY(-20px); opacity: 0; }
-            to { transform: translateY(0); opacity: 1; }
-        }
-
-        /* Header Modal */
-        .modal-header {
-            background-color: var(--primary-color);
-            color: white;
-            padding: 16px 24px;
-            display: flex;
-            justify-content: space-between;
             align-items: center;
-        }
-        .modal-title {
-            font-size: 20px;
-            font-weight: bold;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-        .close-btn {
-            background: none;
-            border: none;
-            color: white;
-            font-size: 24px;
-            cursor: pointer;
-            opacity: 0.8;
-        }
-        .close-btn:hover { opacity: 1; }
-
-        /* Tab Navigation (FITUR BARU) */
-        .tab-container {
-            display: flex;
-            background-color: #f8fafc;
-            border-bottom: 1px solid var(--border-color);
-            padding: 0 24px;
-            gap: 20px;
-        }
-        .tab-btn {
-            padding: 12px 0;
-            background: none;
-            border: none;
-            font-size: 14px;
-            font-weight: 600;
-            color: var(--text-light);
-            cursor: pointer;
-            border-bottom: 3px solid transparent;
-            transition: all 0.2s;
-        }
-        .tab-btn:hover { color: var(--primary-color); }
-        .tab-btn.active {
-            color: var(--primary-color);
-            border-bottom-color: var(--primary-color);
-        }
-
-        /* Body Modal & Grid */
-        .modal-body {
-            padding: 24px;
-            overflow-y: auto;
-            background-color: #f9fafb;
+            justify-content: center;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+            min-height: 120px;
         }
         
-        .top5-grid {
+        .header-content-wrapper {
+            position: relative;
+            width: 100%;
+            max-width: 600px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .header h1 { 
+            font-size: 1.4rem; 
+            margin-bottom: 5px; 
+            display: flex; 
+            align-items: center; 
+            justify-content: center; 
+            gap: 12px; 
+            text-align: center;
+            line-height: 1.2;
+        }
+        .header h1 img.logo { object-fit: contain; vertical-align: middle; }
+        .header p { font-size: 0.85rem; opacity: 0.9; margin: 2px 0; text-align: center; }
+        
+        /* PERBAIKAN NO.2 WEB: TOMBOL TEMA DI POJOK KANAN LAYAR */
+        .theme-toggle { 
+            position: fixed; /* Ubah dari absolute ke fixed agar relatif terhadap layar */
+            top: 25px; 
+            right: 20px; 
+            background: rgba(255,255,255,0.15); 
+            border: none; 
+            color: white; 
+            width: 38px; 
+            height: 38px; 
+            border-radius: 50%; 
+            cursor: pointer; 
+            display: flex; 
+            align-items: center; 
+            justify-content: center; 
+            font-size: 1rem; 
+            z-index: 101; /* Di atas header */
+            flex-shrink: 0;
+        }
+        .theme-toggle:hover { background: rgba(255,255,255,0.25); }
+        
+        /* CONTROLS & DASHBOARD - PERBAIKAN NO.1 WEB */
+        .controls { 
+            display: flex; 
+            align-items: center; 
+            padding: 15px 20px; 
+            background: var(--card-bg); 
+            margin: 0 20px 15px 20px; 
+            border-radius: var(--radius); 
+            box-shadow: var(--shadow); 
+            gap: 10px; 
+            flex-wrap: nowrap; 
+        }
+        .filter-group { display: flex; gap: 10px; flex: 2; min-width: 0; } /* Diperlebar */
+        select { padding: 8px 12px; border: 1px solid var(--border); border-radius: 4px; flex: 1; background: var(--card-bg); color: var(--text); min-width: 0; font-size: 0.85rem; }
+        .btn { padding: 8px 16px; border: none; border-radius: 4px; cursor: pointer; font-weight: 600; font-size: 0.85rem; display: inline-flex; align-items: center; gap: 6px; white-space: nowrap; }
+        .btn-reset { background: var(--text-muted); color: white; flex: 1; justify-content: center; flex-shrink: 0; } /* Samakan lebar */
+        .btn-ranking { background: var(--warning); color: #333; flex: 1; justify-content: center; } /* Samakan lebar */
+        .btn:hover { opacity: 0.9; transform: translateY(-1px); }
+
+        .dashboard-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 15px; padding: 0 20px 40px 20px; }
+        
+        /* CARD STYLES */
+        .card { background: var(--card-bg); padding: 16px; border-radius: var(--radius); box-shadow: var(--shadow); border-top: 1px solid var(--primary); border-left: 1px solid var(--primary); display: flex; flex-direction: column; }        
+        .card-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; }
+        .card-title { font-size: 0.95rem; font-weight: bold; color: var(--primary); display: flex; align-items: center; gap: 6px; }
+        [data-theme="dark"] .card-title { color: var(--card-title-light); }
+        .badge-mtd { font-size: 0.75rem; background: var(--border); padding: 2px 6px; border-radius: 4px; color: var(--text-muted); }
+        .metric-row { display: flex; justify-content: space-between; font-size: 0.85rem; margin-bottom: 8px; color: var(--text-muted); align-items: center; }
+        .metric-val { font-weight: 600; color: var(--text); font-size: 0.85rem; }
+        .metric-val.neg { color: var(--danger); }
+        .metric-val.pos { color: var(--success); }
+        .achievement-box { margin-top: auto; text-align: center; padding-top: 10px; border-top: 1px dashed var(--border); }
+        .achv-label { font-size: 0.85rem; color: var(--text-muted); margin-bottom: 5px; }
+        .achv-val { font-size: 1.5rem; font-weight: bold; margin-bottom: 6px; }
+        .progress-bar { height: 8px; background: var(--border); border-radius: 4px; overflow: hidden; width: 100%; }
+        .progress-fill { height: 100%; background: var(--primary); transition: width 0.5s ease; }
+        .progress-fill.over { background: var(--success); }
+        .progress-fill.under { background: var(--danger); }
+        
+        .footer { text-align: center; padding: 10px; font-size: 0.75rem; color: var(--text-muted); margin-top: 3px; }
+
+        /* MODAL STYLES - PERBAIKAN NO.3 WEB HEIGHT */
+        .modal-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); z-index: 1000; justify-content: center; align-items: center; }
+        .modal-content { 
+            background: var(--card-bg); width: 95%; max-width: 1200px; 
+            height: auto; max-height: 85vh; /* Auto height with max limit */
+            border-radius: var(--radius); overflow: hidden; 
+            display: flex; flex-direction: column; animation: slideUp 0.3s ease; color: var(--text);
+        }
+        @keyframes slideUp { from { transform: translateY(20px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+        
+        .modal-header { background: var(--primary); color: white; padding: 15px 20px; display: flex; justify-content: space-between; align-items: center; flex-shrink: 0; }
+        .close-btn { background: none; border: none; color: white; font-size: 1.5rem; cursor: pointer; }
+
+        .modal-body { padding: 0; overflow-y: auto; flex: 1; display: flex; flex-direction: column; position: relative; }
+
+        .ranking-tabs-wrapper {
+            position: sticky; top: 0; z-index: 40; background: var(--card-bg);
+            padding: 15px 20px; border-bottom: 1px solid var(--border);
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+        }
+
+        .ranking-controls { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; }
+        .tab-btn { padding: 6px 12px; border: 1px solid var(--border); background: var(--card-bg); color: var(--text); border-radius: 4px; cursor: pointer; font-size: 0.8rem; }
+        .tab-btn.active { background: var(--primary); color: white; border-color: var(--primary); }
+        
+        .btn-sort-trigger { padding: 6px 12px; border: 1px solid var(--primary); background: transparent; color: var(--primary); border-radius: 4px; cursor: pointer; font-size: 0.8rem; display: inline-flex; align-items: center; gap: 5px; }
+        .btn-export { padding: 6px 12px; border: 1px solid var(--success); background: var(--success); color: white; border-radius: 4px; cursor: pointer; font-size: 0.8rem; display: inline-flex; align-items: center; gap: 5px; }
+        .btn-export:hover { background: #218838; }
+
+        .btn-back-drill { padding: 6px 12px; border: 1px solid var(--primary); background: transparent; color: var(--primary); border-radius: 4px; cursor: pointer; font-size: 0.8rem; margin-left: auto; display: none; align-items: center; gap: 5px; }
+        .clickable-co { color: var(--primary); text-decoration: underline dotted; cursor: pointer; transition: 0.2s; }
+        .clickable-co:hover { color: var(--warning); background: rgba(255, 193, 7, 0.1); }
+        [data-theme="dark"] .clickable-co { color: var(--card-title-light); }
+        .rank-badge { display: inline-block; width: 22px; height: 22px; line-height: 22px; text-align: center; border-radius: 50%; font-weight: bold; font-size: 0.7rem; background: var(--border); }
+        .rank-1 { background: #ffd700; color: #333; }
+        .rank-2 { background: #c0c0c0; color: #333; }
+        .rank-3 { background: #cd7f32; color: white; }
+
+        /* TABLE STYLES */
+        .table-wrapper { overflow-x: auto; -webkit-overflow-scrolling: touch; width: 100%; flex: 1; position: relative; }
+        .ranking-table { width: 100%; border-collapse: separate; border-spacing: 0; font-size: 0.8rem; min-width: 800px; }
+        .ranking-table th { background: var(--bg); padding: 0; text-align: center; border-bottom: 2px solid var(--border); position: sticky; top: 0; z-index: 5; color: var(--text); vertical-align: middle; height: 55px; }
+        .ranking-table th.highlight-col { background: var(--highlight-bg); border-bottom: 2px solid var(--primary); }
+        .th-content { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 3px; padding: 8px 4px; height: 100%; box-sizing: border-box; position: relative; }
+        .indicator-prefix { font-size: 0.6rem; font-weight: 700; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.5px; line-height: 1; }
+        .sort-priority-badge { position: absolute; top: 2px; right: 2px; background: var(--primary); color: white; font-size: 0.55rem; width: 14px; height: 14px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: bold; }
+        .ranking-table td { padding: 10px 4px; border-bottom: 1px solid var(--border); color: var(--text); text-align: center; white-space: nowrap; background: var(--card-bg); }
+        .ranking-table td.highlight-col { background: var(--highlight-bg); font-weight: bold; }
+
+        /* Sticky Columns Logic */
+        .ranking-table th:first-child, .ranking-table td:first-child { position: sticky; left: 0; z-index: 30; width: var(--col-rank-w); min-width: var(--col-rank-w); max-width: var(--col-rank-w); border-right: 1px solid var(--border); background: var(--card-bg); }
+        .ranking-table th:nth-child(2), .ranking-table td:nth-child(2) { position: sticky; left: var(--col-rank-w); z-index: 25; width: var(--col-name-w); min-width: var(--col-name-w); max-width: var(--col-name-w); text-align: left !important; border-right: 1px solid var(--border); overflow: hidden; text-overflow: ellipsis; background: var(--card-bg); }
+        .ranking-table th:nth-child(3), .ranking-table td:nth-child(3) { position: sticky; left: calc(var(--col-rank-w) + var(--col-name-w)); z-index: 20; font-weight: bold; background: var(--card-bg); border-right: 2px solid var(--primary); width: var(--col-total-w); min-width: var(--col-total-w); max-width: var(--col-total-w); font-size: 0.75rem; box-shadow: 2px 0 5px -2px rgba(0,0,0,0.1); padding-right: 4px !important; }
+        
+        /* SORT MODAL POPUP */
+        .sort-modal-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 2000; justify-content: center; align-items: center; }
+        .sort-modal-content { background: var(--card-bg); width: 90%; max-width: 400px; border-radius: var(--radius); padding: 20px; box-shadow: 0 5px 15px rgba(0,0,0,0.2); animation: slideUp 0.2s ease; }
+        .sort-modal-header { font-size: 1rem; font-weight: bold; margin-bottom: 15px; color: var(--primary); display: flex; justify-content: space-between; }
+        .sort-checkbox-list { max-height: 300px; overflow-y: auto; display: flex; flex-direction: column; gap: 8px; margin-bottom: 15px; }
+        .sort-item { display: flex; align-items: center; gap: 10px; padding: 8px; border: 1px solid var(--border); border-radius: 4px; cursor: pointer; }
+        .sort-item:hover { background: var(--bg); }
+        .sort-item input[type="checkbox"] { accent-color: var(--primary); width: 16px; height: 16px; }
+        .sort-item label { cursor: pointer; flex: 1; font-size: 0.85rem; }
+        .sort-actions { display: flex; justify-content: flex-end; gap: 10px; }
+        .btn-cancel { background: var(--text-muted); color: white; }
+        .btn-apply { background: var(--primary); color: white; }
+
+        /* TOGGLE SWITCH STYLE */
+        .toggle-container { display: flex; align-items: center; gap: 8px; font-size: 0.75rem; color: var(--text-muted); cursor: pointer; user-select: none; white-space: nowrap; }
+        .toggle-switch { position: relative; display: inline-block; width: 36px; height: 20px; }
+        .toggle-switch input { opacity: 0; width: 0; height: 0; }
+        .slider { position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background-color: #ccc; transition: .3s; border-radius: 20px; }
+        .slider:before { position: absolute; content: ""; height: 14px; width: 14px; left: 3px; bottom: 3px; background-color: white; transition: .3s; border-radius: 50%; }
+        input:checked + .slider { background-color: var(--primary); }
+        input:checked + .slider:before { transform: translateX(16px); }
+        [data-theme="dark"] .slider { background-color: #475569; }
+        [data-theme="dark"] .toggle-container { color: #cbd5e1; }
+
+        /* TOP 5 GRID LAYOUT - EQUAL WIDTH FIX */
+        .top5-grid-container {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-            gap: 20px;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 12px;
+            padding: 15px;
+            overflow-y: auto;
+            width: 100%;
         }
-
-        /* Card Style */
-        .indicator-card {
-            background: var(--bg-card);
-            border: 1px solid var(--border-color);
-            border-radius: 10px;
-            padding: 16px;
-            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+        .top5-card {
+            background: var(--card-bg);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 10px;
+            box-shadow: var(--shadow);
+            display: flex;
+            flex-direction: column;
+            min-height: 0;
+            min-width: 0;
         }
-        .card-header {
+        .top5-header {
             display: flex;
             align-items: center;
-            gap: 8px;
-            margin-bottom: 16px;
-            color: var(--primary-color);
+            gap: 5px;
+            margin-bottom: 8px;
+            padding-bottom: 6px;
+            border-bottom: 1px dashed var(--border);
+            color: var(--top5-header-color);
             font-weight: bold;
-            font-size: 15px;
-            border-bottom: 1px dashed var(--border-color);
-            padding-bottom: 10px;
-        }
-
-        /* List Items */
-        .rank-list {
-            list-style: none;
-            padding: 0;
-            margin: 0;
-        }
-        .rank-item {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 8px 0;
-            font-size: 13px;
-            border-bottom: 1px solid #f3f4f6;
-        }
-        .rank-item:last-child { border-bottom: none; }
-        
-        .rank-info {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            flex: 1;
-            overflow: hidden;
-        }
-        .rank-name {
+            font-size: 0.75rem;
             white-space: nowrap;
             overflow: hidden;
             text-overflow: ellipsis;
-            color: var(--text-dark);
         }
-        .rank-value {
-            font-weight: 600;
-            color: var(--text-dark);
-        }
-
-        /* Rank Badges */
-        .badge {
-            width: 20px;
-            height: 20px;
-            border-radius: 50%;
+        .top5-item {
             display: flex;
+            justify-content: space-between;
             align-items: center;
-            justify-content: center;
-            font-size: 11px;
-            font-weight: bold;
-            color: white;
-            flex-shrink: 0;
+            padding: 3px 0;
+            font-size: 0.7rem;
+            border-bottom: 1px solid rgba(0,0,0,0.05);
+            min-width: 0;
         }
-        .badge-1 { background-color: var(--gold); color: #fff; text-shadow: 0 1px 2px rgba(0,0,0,0.2); }
-        .badge-2 { background-color: var(--silver); }
-        .badge-3 { background-color: var(--bronze); }
-        .badge-4, .badge-5 { background-color: #f3f4f6; color: var(--text-light); }
+        .top5-item:last-child { border-bottom: none; }
+        .top5-rank {
+            width: 16px; height: 16px; background: var(--bg); border-radius: 50%;
+            text-align: center; line-height: 16px; font-size: 0.6rem;
+            font-weight: bold; color: var(--text-muted); margin-right: 5px; flex-shrink: 0;
+        }
+        .top5-item:nth-child(1) .top5-rank { background: #ffd700; color: #333; }
+        .top5-item:nth-child(2) .top5-rank { background: #c0c0c0; color: #333; }
+        .top5-item:nth-child(3) .top5-rank { background: #cd7f32; color: white; }
+        .top5-name { 
+            flex: 1; 
+            white-space: nowrap; 
+            overflow: hidden; 
+            text-overflow: ellipsis; 
+            margin-right: 5px; 
+            font-size: 0.65rem; 
+            min-width: 0;
+        }
+        .top5-val { font-weight: bold; color: var(--text); font-size: 0.65rem; flex-shrink: 0; }
 
-        /* Responsive Adjustments */
-        @media (max-width: 768px) {
-            .top5-grid { grid-template-columns: 1fr; }
-            .modal-content { width: 100%; height: 100%; max-height: 100%; border-radius: 0; }
+        /* Responsive Mobile & Tablet */
+        @media (max-width: 900px) {
+            /* HEADER MOBILE FIX */
+            .header { 
+                padding: 15px 15px 15px 15px; 
+                min-height: 110px;
+            }
+            .header-content-wrapper { max-width: 100%; }
+            .header h1 { font-size: 1.2rem; gap: 8px; }
+            .header p { font-size: 0.75rem; }
+            
+            /* PERBAIKAN NO.2 MOBILE: TOMBOL TEMA DI DALAM WRAPPER AGAR RAPI */
+            .theme-toggle { 
+                position: absolute; 
+                top: 50%; 
+                transform: translateY(-50%); 
+                right: 0; 
+                width: 32px; height: 32px; font-size: 0.9rem; 
+            }
+            
+            body { padding-top: 120px; }
+
+            /* CONTROLS MOBILE */
+            .controls { 
+                flex-wrap: wrap; 
+                flex-direction: row; 
+                align-items: stretch; 
+                padding: 10px; 
+                gap: 8px; 
+                margin: 0 10px 15px 10px; 
+            }
+            .filter-group { 
+                flex-basis: 100%; 
+                flex-direction: row; 
+                gap: 5px;
+            }
+            .filter-group select { font-size: 0.85rem; padding: 8px; }
+            
+            .btn { flex: 1; justify-content: center; font-size: 0.85rem; padding: 8px; }
+            .btn-reset { flex-basis: 40%; }
+            .btn-ranking { flex-basis: 55%; margin-top: 0; } 
+            
+            .dashboard-grid { grid-template-columns: repeat(2, 1fr); gap: 10px; padding: 0 10px 40px 10px; }
+            .card { padding: 12px; }
+            
+            .card-title { font-size: 0.85rem; }
+            .metric-row { font-size: 0.85rem; margin-bottom: 6px; }
+            .metric-val { font-size: 0.85rem; }
+            .achv-label { font-size: 0.85rem; }
+            .achv-val { font-size: 1.3rem; }
+            .badge-mtd { font-size: 0.75rem; }
+            
+            :root { --col-name-w: 100px; --col-total-w: 45px; }
+            .ranking-table { font-size: 0.7rem; }
+            .ranking-table th:nth-child(2), .ranking-table td:nth-child(2) { left: var(--col-rank-w); width: var(--col-name-w); min-width: var(--col-name-w); max-width: var(--col-name-w); }
+            .ranking-table th:nth-child(3), .ranking-table td:nth-child(3) { left: calc(var(--col-rank-w) + var(--col-name-w)); width: var(--col-total-w); min-width: var(--col-total-w); max-width: var(--col-total-w); font-size: 0.65rem; }
+            .ranking-table th:not(:first-child):not(:nth-child(2)):not(:nth-child(3)), .ranking-table td:not(:first-child):not(:nth-child(2)):not(:nth-child(3)) { min-width: 36px !important; max-width: 40px !important; padding: 8px 2px !important; font-size: 0.6rem !important; }
+            .indicator-prefix { font-size: 0.45rem; }
+            .ranking-table th { height: 48px; }
+            .th-content { padding: 4px 2px; gap: 2px; }
+            
+            .ranking-controls { display: flex; flex-direction: column; gap: 8px; width: 100%; }
+            .tab-btn { width: 100%; text-align: center; padding: 8px; font-size: 0.8rem; }
+            .action-row { display: flex; gap: 8px; width: 100%; }
+            .btn-sort-trigger, .btn-export { flex: 1; justify-content: center; font-size: 0.75rem; padding: 8px 4px; }
+            .btn-back-drill { width: 100%; justify-content: center; margin-top: 5px; }
+
+            /* PERBAIKAN NO.1 MOBILE: HEADER MODAL DIPERKECIL */
+            .modal-header { padding: 10px 15px; }
+            .modal-header h3 { font-size: 1.1rem; }
+            .close-btn { font-size: 1.2rem; }
+            
+            .ranking-tabs-wrapper { padding: 10px 15px; }
+
+            /* TOP 5 MOBILE FIX */
+            .modal-content { width: 100%; height: 100%; border-radius: 0; max-width: none; max-height: 100vh; }
+            .top5-grid-container { 
+                grid-template-columns: repeat(2, 1fr); 
+                gap: 8px;
+                padding: 10px;
+            }
+            .top5-card { padding: 8px; }
+            .top5-header { font-size: 0.7rem; margin-bottom: 5px; padding-bottom: 4px; }
+            .top5-item { padding: 2px 0; }
+            .top5-name { font-size: 0.6rem; }
+            .top5-val { font-size: 0.6rem; }
+            .top5-rank { width: 14px; height: 14px; line-height: 14px; font-size: 0.55rem; margin-right: 4px; }
         }
+        
+        /* DARK MODE MODAL SORT FIX */
+        [data-theme="dark"] .sort-modal-content { background: var(--sort-modal-bg); border: 1px solid var(--border); }
+        [data-theme="dark"] .sort-modal-header { color: #ffffff; }
+        [data-theme="dark"] .sort-item { background: transparent; border-color: var(--sort-item-border); color: var(--sort-text-color); }
+        [data-theme="dark"] .sort-item:hover { background: rgba(255, 255, 255, 0.05); }
+        [data-theme="dark"] .sort-item label { color: var(--sort-text-color); }
+        [data-theme="dark"] .sort-item i { color: var(--sort-icon-color) !important; opacity: 1; }
+        [data-theme="dark"] .btn-cancel { background: #475569; color: white; border: none; }
+        [data-theme="dark"] .btn-apply { background: var(--primary); color: white; border: none; }
+        [data-theme="dark"] .btn-sort-trigger { border-color: #6d28d9; color: #c4b5fd; background: rgba(109, 40, 217, 0.1); }
+        [data-theme="dark"] .btn-sort-trigger:hover { background: rgba(109, 40, 217, 0.2); color: white; }
     </style>
 </head>
 <body>
 
-    <!-- Tombol untuk membuka Modal -->
-    <button class="trigger-btn" onclick="openModal()">
-        <i class="fas fa-trophy"></i> Lihat Top 5 Leading Indicators
-    </button>
+    <div class="header">
+        <div class="header-content-wrapper">
+            <!-- Tombol tema dipindahkan ke luar wrapper di web via CSS fixed, tapi tetap di sini untuk struktur mobile -->
+            <button class="theme-toggle" onclick="toggleTheme()" title="Toggle Dark/Light Mode"><i class="fas fa-moon" id="themeIcon"></i></button>
+            <div style="width: 100%;">
+                <h1><img src="img/BMI.png" alt="Bank Muamalat Logo" class="logo" width="30" height="30" > Bank Muamalat</h1>
+                <p>Leading Indicator Dashboard 📍 Region Sumatera</p>
+                <p>📅 Per: 23 Juni 2026 | 📅 Workdays: 20</p>
+            </div>
+        </div>
+    </div>
 
-    <!-- Struktur Modal -->
-    <div id="leadingIndicatorModal" class="modal-overlay">
+    <div class="controls">
+        <div class="filter-group">
+            <select id="coBranchFilter" onchange="handleCoBranchChange()"><option value="">All Co-Branch</option></select>
+            <select id="branchFilter" onchange="applyFilters()"><option value="">All Branch</option></select>
+        </div>
+        <button class="btn btn-reset" onclick="resetFilters()"><i class="fas fa-sync-alt"></i> Filter Reset</button>
+        <button class="btn btn-ranking" onclick="openRankingModal()"><i class="fas fa-trophy"></i> Performance Ranking</button>
+    </div>
+
+    <div class="dashboard-grid" id="dashboardContainer">
+        <div style="grid-column: 1/-1; text-align: center; padding: 40px; color: var(--text-muted);">                
+            <i class="fas fa-spinner fa-spin fa-2x"></i><br><br>Memuat data...
+        </div>        
+    </div>
+    <div class="footer">Typing, Create, Update, Repeat | Optimized for Mobile & Web | Theme: Light/Dark | RBPM - Region Sumatera</div>
+
+    <div id="rankingModal" class="modal-overlay">
         <div class="modal-content">
-            
-            <!-- Header Modal -->
             <div class="modal-header">
-                <div class="modal-title">
-                    <i class="fas fa-chart-line"></i> Top 5 Leading Indicators
-                </div>
-                <button class="close-btn" onclick="closeModal()">&times;</button>
+                <h3 id="modalTitle"><i class="fas fa-chart-bar"></i> Ranking Performance</h3>
+                <button class="close-btn" onclick="closeRankingModal()">&times;</button>
             </div>
-
-            <!-- TAB NAVIGASI (FITUR BARU) -->
-            <div class="tab-container">
-                <button class="tab-btn active" id="tabBranch" onclick="switchTab('branch')">
-                    <i class="fas fa-building"></i> By Branch
-                </button>
-                <button class="tab-btn" id="tabCoBranch" onclick="switchTab('co-branch')">
-                    <i class="fas fa-sitemap"></i> By Co-Branch
-                </button>
-            </div>
-
-            <!-- Area Konten Grid -->
             <div class="modal-body">
-                <div id="gridContainer" class="top5-grid">
-                    <!-- Kartu indikator akan digenerate oleh JavaScript di sini -->
+                
+                <div class="table-wrapper">
+                    <table class="ranking-table" id="rankingTable">
+                        <thead id="rankingThead"></thead>
+                        <tbody id="rankingTableBody"></tbody>
+                    </table>
                 </div>
             </div>
+        </div>
+    </div>
 
+    <div id="sortModal" class="sort-modal-overlay">
+        <div class="sort-modal-content">
+            <div class="sort-modal-header">
+                Pilih Kriteria Sortir
+                <i class="fas fa-times" style="cursor:pointer;" onclick="closeSortModal()"></i>
+            </div>
+            <div class="sort-checkbox-list" id="sortCheckboxList"></div>
+            <div class="sort-actions">
+                <button class="btn btn-cancel" onclick="resetSortSelection()">Reset</button>
+                <button class="btn btn-apply" onclick="applySortSelection()">Terapkan</button>
+            </div>
         </div>
     </div>
 
     <script>
-        // --- 1. DATA DUMMY (Simulasi Data dari Database/API) ---
-        // Format: { co: 'Nama Co-Branch', br: 'Nama Branch', metrics: { ... } }
-        const rawData = [
-            { co: 'LAMPUNG', br: 'KCP METRO LAMPUNG', ca: 8.2, sa: 2.1, fu: 12.7, con: 1.5, sme: 5.2, ph: 80, mdin: 120, qris: 50, sli: 60, cif: 140 },
-            { co: 'LAMPUNG', br: 'KCP KOTABUMI LAMPUNG', ca: 5.2, sa: 1.8, fu: 11.1, con: 1.2, sme: 4.1, ph: 67, mdin: 90, qris: 40, sli: 50, cif: 110 },
-            { co: 'LAMPUNG', br: 'LAMPUNG UTAMA', ca: 15.6, sa: 3.5, fu: 19.3, con: 2.0, sme: 3.5, ph: 96, mdin: 81, qris: 14, sli: 45, cif: 90 },
-            
-            { co: 'SUMUT', br: 'PADANG', ca: 1.4, sa: 4.6, fu: 7.8, con: 3.0, sme: 4.3, ph: 40, mdin: 150, qris: 80, sli: 30, cif: 200 },
-            { co: 'SUMUT', br: 'KCP BINJAI', ca: 3.1, sa: 2.0, fu: 5.5, con: 2.5, sme: 2.1, ph: 30, mdin: 60, qris: 10, sli: 20, cif: 80 },
-            { co: 'SUMUT', br: 'KCP KISARAN', ca: 2.2, sa: 2.0, fu: 4.2, con: 2.6, sme: 1.5, ph: 25, mdin: 50, qris: 15, sli: 15, cif: 70 },
-            { co: 'SUMUT', br: 'MEDAN BARU', ca: 4.5, sa: 3.2, fu: 8.1, con: 2.4, sme: 2.8, ph: 55, mdin: 96, qris: 14, sli: 81, cif: 102 },
-            
-            { co: 'SUMSEL', br: 'PALEMBANG', ca: 4.7, sa: 2.5, fu: 6.5, con: 2.0, sme: 2.0, ph: 68, mdin: 78, qris: 12, sli: 58, cif: 102 },
-            { co: 'SUMSEL', br: 'BENGKULU', ca: 3.0, sa: 1.5, fu: 4.0, con: 1.0, sme: 1.2, ph: 69, mdin: 40, qris: 8, sli: 40, cif: 60 },
-            { co: 'SUMSEL', br: 'KCP ARGA MAKMUR', ca: 1.2, sa: 0.8, fu: 2.1, con: 0.5, sme: 0.5, ph: 10, mdin: 20, qris: 14, sli: 10, cif: 30 },
-            
-            { co: 'ACEH', br: 'BANDA ACEH', ca: 2.5, sa: 1.2, fu: 3.5, con: 1.1, sme: 1.8, ph: 45, mdin: 167, qris: 30, sli: 25, cif: 203 },
-            { co: 'ACEH', br: 'LANGSA', ca: 1.0, sa: 0.5, fu: 1.5, con: 0.4, sme: 0.8, ph: 15, mdin: 30, qris: 5, sli: 51, cif: 40 }
+        const metrics = [
+            { key: 'ca', label: 'Current Account', icon: 'fa-wallet', type: 'MTD Growth', unit: 'M' },
+            { key: 'sa', label: 'Saving Account', icon: 'fa-sack-dollar', type: 'MTD Growth', unit: 'M' },
+            { key: 'fu', label: 'Funding', icon: 'fa-chart-line', type: 'MTD Growth', unit: 'M' },
+            { key: 'con', label: 'Consumer Booking', icon: 'fa-users', type: 'MTD Booking', unit: 'M' },
+            { key: 'sme', label: 'SME - Region', icon: 'fa-building', type: 'MTD Booking', unit: 'M' },
+            { key: 'ph', label: 'Porsi Haji', icon: 'fa-kaaba', type: 'MTD Booking', unit: '' },
+            { key: 'mdin', label: 'MDIN', icon: 'fa-mobile-alt', type: 'Acquisition MTD', unit: '' },
+            { key: 'qris', label: 'QRIS', icon: 'fa-qrcode', type: 'Acquisition MTD', unit: '' },
+            { key: 'sli', label: 'Sunlife (SLI)', icon: 'fa-umbrella', type: 'MTD Booking', unit: '' },
+            { key: 'cif', label: 'New CIF', icon: 'fa-id-card', type: 'Acquisition MTD', unit: '' }
         ];
 
-        // Definisi Metrik (Sesuai Screenshot)
-        const metricsDef = [
-            { key: 'ca', label: 'Current Account', icon: 'fa-wallet', unit: 'M' },
-            { key: 'sa', label: 'Saving Account', icon: 'fa-piggy-bank', unit: 'M' },
-            { key: 'fu', label: 'Funding', icon: 'fa-money-bill-wave', unit: 'M' },
-            { key: 'con', label: 'Consumer Booking', icon: 'fa-users', unit: 'M' },
-            { key: 'sme', label: 'SME - Region', icon: 'fa-briefcase', unit: 'M' },
-            { key: 'ph', label: 'Porsi Haji', icon: 'fa-kaaba', unit: '' },
-            { key: 'mdin', label: 'MDIN', icon: 'fa-mobile-alt', unit: '' },
-            { key: 'qris', label: 'QRIS', icon: 'fa-qrcode', unit: '' },
-            { key: 'sli', label: 'Sunlife (SLI)', icon: 'fa-umbrella', unit: '' },
-            { key: 'cif', label: 'New CIF', icon: 'fa-id-card', unit: '' }
-        ];
+        let rawData = [];
+        let currentRankingMode = 'top5';
+        let drillDownCo = null; 
+        let activeRankingMetrics = ['total'];
+        let showActualValues = false; 
 
-        let currentMode = 'branch'; // Default mode
-
-        // --- 2. FUNGSI LOGIKA ---
-
-        function openModal() {
-            document.getElementById('leadingIndicatorModal').style.display = 'flex';
-            renderGrid(); // Render awal
-        }
-
-        function closeModal() {
-            document.getElementById('leadingIndicatorModal').style.display = 'none';
-        }
-
-        // Fungsi Ganti Tab
-        function switchTab(mode) {
-            currentMode = mode;
-            
-            // Update UI Tab Button
-            document.getElementById('tabBranch').classList.toggle('active', mode === 'branch');
-            document.getElementById('tabCoBranch').classList.toggle('active', mode === 'co-branch');
-            
-            // Render ulang grid
-            renderGrid();
-        }
-
-        // Fungsi Format Angka
-        function formatNumber(num, unit) {
-            if (!num) return '0 ' + unit;
-            // Jika unit Miliar, format desimal. Jika satuan (Haji, QRIS), bulatkan.
-            if (unit === 'M') {
-                return '+' + num.toLocaleString('id-ID', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) + ' M';
-            }
-            return Math.round(num).toLocaleString('id-ID');
-        }
-
-        // Fungsi Utama Render Grid
-        function renderGrid() {
-            const container = document.getElementById('gridContainer');
-            container.innerHTML = ''; // Bersihkan konten lama
-
-            metricsDef.forEach(metric => {
-                let sortedData = [];
-
-                if (currentMode === 'branch') {
-                    // MODE BRANCH: Ambil langsung dari rawData
-                    sortedData = [...rawData]
-                        .sort((a, b) => b[metric.key] - a[metric.key])
-                        .slice(0, 5)
-                        .map(item => ({ name: item.br, value: item[metric.key] }));
+        window.onload = async function() {
+            initTheme();
+            try {
+                const res = await fetch('data_juni.json');
+                if (!res.ok) throw new Error('File data_juni.json tidak ditemukan');
+                rawData = await res.json();
                 
-                } else {
-                    // MODE CO-BRANCH: Agregasi (Sum) dulu baru Sort
-                    const aggregated = {};
-                    rawData.forEach(item => {
-                        if (!aggregated[item.co]) aggregated[item.co] = 0;
-                        aggregated[item.co] += item[metric.key];
+                if (!Array.isArray(rawData)) throw new Error("Format JSON tidak valid");
+
+                rawData = rawData.map(item => {
+                    const clean = {};
+                    Object.keys(item).forEach(k => {
+                        const val = item[k];
+                        clean[k.trim()] = (typeof val === 'string') ? val.trim() : val;
                     });
-                    
-                    // Convert ke array dan sort
-                    sortedData = Object.keys(aggregated)
-                        .map(co => ({ name: co, value: aggregated[co] }))
-                        .sort((a, b) => b.value - a.value)
-                        .slice(0, 5);
-                }
-
-                // Buat HTML Card
-                const card = document.createElement('div');
-                card.className = 'indicator-card';
-                
-                let listHtml = '';
-                sortedData.forEach((item, index) => {
-                    const rank = index + 1;
-                    let badgeClass = `badge-${rank}`;
-                    
-                    listHtml += `
-                        <li class="rank-item">
-                            <div class="rank-info">
-                                <span class="badge ${badgeClass}">${rank}</span>
-                                <span class="rank-name" title="${item.name}">${item.name}</span>
-                            </div>
-                            <span class="rank-value">${formatNumber(item.value, metric.unit)}</span>
-                        </li>
-                    `;
+                    return clean;
                 });
 
-                card.innerHTML = `
-                    <div class="card-header">
-                        <i class="fas ${metric.icon}"></i> ${metric.label}
-                    </div>
-                    <ul class="rank-list">
-                        ${listHtml}
-                    </ul>
-                `;
-                container.appendChild(card);
+                populateCoBranchFilter();
+                renderDashboard(rawData);
+            } catch (err) {
+                document.getElementById('dashboardContainer').innerHTML = `<div style="color:var(--danger); text-align:center; padding:20px;">Error: ${err.message}</div>`;
+            }
+        };
+
+        function initTheme() {
+            const saved = localStorage.getItem('bm_theme');
+            if (saved === 'dark') {
+                document.documentElement.setAttribute('data-theme', 'dark');
+                document.getElementById('themeIcon').className = 'fas fa-sun';
+            }
+        }
+
+        function toggleTheme() {
+            const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
+            if (isDark) {
+                document.documentElement.removeAttribute('data-theme');
+                document.getElementById('themeIcon').className = 'fas fa-moon';
+                localStorage.setItem('bm_theme', 'light');
+            } else {
+                document.documentElement.setAttribute('data-theme', 'dark');
+                document.getElementById('themeIcon').className = 'fas fa-sun';
+                localStorage.setItem('bm_theme', 'dark');
+            }
+        }
+
+        function populateCoBranchFilter() {
+            const coSet = new Set(rawData.map(d => d['co']).filter(Boolean));
+            const coSelect = document.getElementById('coBranchFilter');
+            [...coSet].sort().forEach(co => { coSelect.innerHTML += `<option value="${co}">${co}</option>`; });
+        }
+
+        function handleCoBranchChange() {
+            const coVal = document.getElementById('coBranchFilter').value;
+            const brSelect = document.getElementById('branchFilter');
+            brSelect.innerHTML = '<option value="">All Branch</option>';
+            if (coVal) {
+                const brSet = new Set(rawData.filter(d => d['co'] === coVal).map(d => d['br']).filter(Boolean));
+                [...brSet].sort().forEach(br => { brSelect.innerHTML += `<option value="${br}">${br}</option>`; });
+            }
+            applyFilters();
+        }
+
+        function applyFilters() {
+            const coVal = document.getElementById('coBranchFilter').value;
+            const brVal = document.getElementById('branchFilter').value;
+            let filtered = rawData;
+            if (coVal) filtered = filtered.filter(d => d['co'] === coVal);
+            if (brVal) filtered = filtered.filter(d => d['br'] === brVal);
+            renderDashboard(filtered);
+        }
+
+        function resetFilters() {
+            document.getElementById('coBranchFilter').value = "";
+            document.getElementById('branchFilter').innerHTML = '<option value="">All Branch</option>';
+            renderDashboard(rawData);
+        }
+
+        function formatValue(val, unit, isGrowthType = false, isTarget = false, isGap = false) {
+            let prefix = '';
+            if (isTarget) prefix = ''; 
+            else if ((isGrowthType || isGap) && val > 0) { if (!isGap) prefix = '+'; } 
+            else if (val > 0 && !isGrowthType && !isGap) prefix = ''; 
+
+            let displayVal = isGap ? Math.abs(val) : val;
+
+            if (unit === 'M') {
+                if (isTarget) return prefix + displayVal.toLocaleString('id-ID', { minimumFractionDigits: 1, maximumFractionDigits: 1 }) + ' M';
+                if (displayVal === 0) return prefix + '0 M';
+                return prefix + displayVal.toLocaleString('id-ID', { minimumFractionDigits: 1, maximumFractionDigits: 1 }) + ' M';
+            } else {
+                return prefix + Math.round(displayVal).toLocaleString('id-ID');
+            }
+        }
+        
+        function renderDashboard(data) {
+            const container = document.getElementById('dashboardContainer');
+            container.innerHTML = '';
+            if (data.length === 0) {
+                container.innerHTML = '<div style="grid-column:1/-1; text-align:center; padding:20px; color:var(--text-muted);">Tidak ada data.</div>';
+                return;
+            }
+
+            const coVal = document.getElementById('coBranchFilter').value;
+            const brVal = document.getElementById('branchFilter').value;
+            const isRegionView = (coVal === "" && brVal === "");
+
+            const agg = {};
+            metrics.forEach(m => { agg[m.key + '_mtd'] = 0; agg[m.key + '_tgt'] = 0; });
+            data.forEach(row => {
+                metrics.forEach(m => {
+                    agg[m.key + '_mtd'] += parseFloat(row[m.key + '_mtd'] || 0);
+                    agg[m.key + '_tgt'] += parseFloat(row[m.key + '_tgt'] || 0);
+                });
+            });
+
+            const SME_TARGET_REGION = 50; 
+            if (isRegionView) { agg['sme_tgt'] = SME_TARGET_REGION; }
+
+            metrics.forEach(m => {
+                const mtd = agg[m.key + '_mtd'];
+                let tgt = agg[m.key + '_tgt'];
+                let gap = tgt > 0 ? tgt - mtd : mtd - tgt;
+                let achv = 0;
+                if (tgt > 0) achv = (mtd / tgt) * 100;
+                else if (mtd > 0) achv = (mtd / 1) * 100; 
+                
+                let achvDisplay = achv.toFixed(1) + '%';
+                let barWidth = Math.min(Math.max(achv, 0), 100);
+
+                const isNegGrowth = (m.key === 'ca' || m.key === 'sa' || m.key === 'fu') && mtd < 0;
+                const growthClass = isNegGrowth ? 'neg' : 'pos';
+                const isGrowthType = ['ca', 'sa', 'fu'].includes(m.key);
+                
+                const formattedMtd = formatValue(mtd, m.unit, isGrowthType, false, false);
+                const formattedTgt = formatValue(tgt, m.unit, false, true, false);
+                const formattedGap = formatValue(gap, m.unit, false, false, true);
+                
+                const gapLabel = ['ca','sa','fu'].includes(m.key) ? 'Growth GAP' : 
+                                 ['con','sme','ph','sli'].includes(m.key) ? 'Booking GAP' : 'Akuisisi GAP';
+
+                container.innerHTML += `
+                    <div class="card">
+                        <div class="card-header">
+                            <span class="card-title"><i class="fas ${m.icon}"></i> ${m.label}</span>
+                            <span class="badge-mtd">MTD</span>
+                        </div>
+                        <div class="metric-row"><span>${m.type}</span><span class="metric-val ${growthClass}">${formattedMtd}</span></div>
+                        <div class="metric-row"><span>MTD Target</span><span class="metric-val">${formattedTgt}</span></div>
+                        <div class="metric-row"><span>${gapLabel}</span><span class="metric-val" style="color: var(--danger);">${formattedGap}</span></div>
+                        <div class="achievement-box">
+                            <div class="achv-label">Achievement</div>
+                            <div class="achv-val" style="color: ${achv >= 80 ? 'var(--success)' : achv >= 50 ? 'var(--warning)' : 'var(--danger)'};">${achvDisplay}</div>
+                            <div class="progress-bar">
+                                <div class="progress-fill" style="background-color: ${achv >= 80 ? 'var(--success)' : achv >= 50 ? 'var(--warning)' : 'var(--danger)'}; width: ${barWidth}%"></div>
+                            </div>
+                        </div>
+                    </div>`;
             });
         }
 
-        // Close modal jika klik di luar area konten
-        window.onclick = function(event) {
-            const modal = document.getElementById('leadingIndicatorModal');
-            if (event.target == modal) {
-                closeModal();
+        // --- LOGIKA RANKING & DRILL-DOWN ---
+        function openRankingModal() {
+            document.getElementById('rankingModal').style.display = 'flex';
+            document.body.classList.add('modal-open');
+            drillDownCo = null; 
+            setRankingTab('top5', document.getElementById('tabTop5')); 
+        }
+        
+        function closeRankingModal() { 
+            document.getElementById('rankingModal').style.display = 'none'; 
+            document.body.classList.remove('modal-open');
+            drillDownCo = null;
+        }
+
+        function setRankingTab(mode, btn) {
+            currentRankingMode = mode;
+            drillDownCo = null; 
+            document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+            if(btn) btn.classList.add('active');
+            
+            updateDrillDownUI();
+            
+            const sortBtn = document.querySelector('.btn-sort-trigger');
+            const toggleLabel = document.querySelector('.toggle-container');
+            const exportBtn = document.getElementById('btnExportRanking');
+            
+            if (mode === 'top5') {
+                if(sortBtn) sortBtn.style.display = 'none';
+                if(toggleLabel) toggleLabel.style.display = 'none';
+                if(exportBtn) exportBtn.style.display = 'none';
+            } else {
+                if(sortBtn) sortBtn.style.display = 'inline-flex';
+                if(toggleLabel) toggleLabel.style.display = 'flex';
+                if(exportBtn) exportBtn.style.display = 'inline-flex';
             }
+
+            renderRanking();
+        }
+
+        function updateDrillDownUI() {
+            const btnBack = document.getElementById('btnBackDrill');
+            const title = document.getElementById('modalTitle');
+            
+            if (currentRankingMode === 'top5') {
+                title.innerHTML = `<i class="fas fa-trophy"></i> Top 5 Leading Indicators`;
+            } else if (drillDownCo) {
+                btnBack.style.display = 'inline-flex';
+                title.innerHTML = `<i class="fas fa-chart-bar"></i> Ranking: ${drillDownCo}`;
+                document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+            } else {
+                btnBack.style.display = 'none';
+                title.innerHTML = `<i class="fas fa-chart-bar"></i> Ranking Performance`;
+                if(currentRankingMode === 'all') document.getElementById('tabAll').classList.add('active');
+                else if(currentRankingMode === 'co') document.getElementById('tabCo').classList.add('active');
+            }
+        }
+
+        function backToCoList() {
+            drillDownCo = null;
+            currentRankingMode = 'co';
+            updateDrillDownUI();
+            renderRanking();
+        }
+
+        function triggerDrillDown(coName) {
+            drillDownCo = coName;
+            updateDrillDownUI();
+            renderRanking();
+        }
+
+        function getMetricValues(rowOrAgg, isAggregated) {
+            const vals = {};
+            metrics.forEach(m => {
+                let mtd, tgt;
+                if (isAggregated) {
+                    mtd = rowOrAgg.mtd[m.key] || 0;
+                    tgt = rowOrAgg.tgt[m.key] || 0;
+                } else {
+                    mtd = parseFloat(rowOrAgg[m.key+'_mtd'] || 0);
+                    tgt = parseFloat(rowOrAgg[m.key+'_tgt'] || 0);
+                }
+                let achv = 0;
+                if (tgt > 0) achv = (mtd / tgt) * 100;
+                else if (mtd > 0) achv = (mtd / 1) * 100; 
+                vals[m.key] = { mtd, tgt, achv };
+            });
+            return vals;
+        }
+
+        // --- SORT MODAL FUNCTIONS ---
+        function openSortModal() {
+            const list = document.getElementById('sortCheckboxList');
+            list.innerHTML = '';
+            const totalChecked = activeRankingMetrics.includes('total') ? 'checked' : '';
+            list.innerHTML += `<div class="sort-item"><input type="checkbox" id="chk_total" value="total" ${totalChecked}><label for="chk_total"><strong>Total Achievement</strong></label></div>`;
+            metrics.forEach((m) => {
+                const isChecked = activeRankingMetrics.includes(m.key) ? 'checked' : '';
+                list.innerHTML += `<div class="sort-item"><input type="checkbox" id="chk_${m.key}" value="${m.key}" ${isChecked}><label for="chk_${m.key}"><i class="fas ${m.icon}" style="margin-right:5px; color:var(--primary);"></i> ${m.label} (${m.key.toUpperCase()})</label></div>`;
+            });
+            document.getElementById('sortModal').style.display = 'flex';
+        }
+
+        function closeSortModal() { document.getElementById('sortModal').style.display = 'none'; }
+
+        function resetSortSelection() {
+            activeRankingMetrics = ['total'];
+            document.getElementById('sortCountBadge').textContent = '1';
+            closeSortModal();
+            renderRanking();
+        }
+
+        function applySortSelection() {
+            const checkboxes = document.querySelectorAll('#sortCheckboxList input[type="checkbox"]:checked');
+            const selected = Array.from(checkboxes).map(cb => cb.value);
+            if (selected.length === 0) { alert("Minimal pilih satu kriteria sortir!"); return; }
+            activeRankingMetrics = selected;
+            document.getElementById('sortCountBadge').textContent = selected.length;
+            closeSortModal();
+            renderRanking();
+        }
+
+        function toggleDisplayMode() {
+            showActualValues = document.getElementById('toggleActualValues').checked;
+            renderRanking();
+        }
+
+        // --- EXPORT TO EXCEL FUNCTION ---
+        function exportToExcel() {
+            let sortedKeys = activeRankingMetrics.filter(k => k !== 'total');
+            let remainingKeys = metrics.map(m => m.key).filter(k => !sortedKeys.includes(k));
+            let finalOrderKeys = [...sortedKeys, ...remainingKeys];
+            
+            let headers = ['#', 'Branch'];
+            if (!showActualValues) headers.push('Total %');
+            
+            finalOrderKeys.forEach(key => {
+                if (key === 'total' && showActualValues) headers.push('TOTAL_ACHV_VAL'); 
+                else if (key !== 'total') headers.push(key.toUpperCase());
+            });
+
+            let ws_data = [headers];
+
+            let groupedData = [];
+            let isDrillDown = !!drillDownCo;
+            if (isDrillDown) {
+                groupedData = rawData.filter(d => d['co'] === drillDownCo).map(d => ({ name: d['br'], sub: d['co'], data: d, isAgg: false }));
+            } else if (currentRankingMode === 'all') {
+                groupedData = rawData.map(d => ({ name: d['br'], sub: d['co'], data: d, isAgg: false }));
+            } else if (currentRankingMode === 'co') {
+                const coMap = {};
+                rawData.forEach(d => {
+                    if (!coMap[d['co']]) coMap[d['co']] = { mtd: {}, tgt: {} };
+                    metrics.forEach(m => {
+                        coMap[d['co']].mtd[m.key] = (coMap[d['co']].mtd[m.key] || 0) + parseFloat(d[m.key+'_mtd']||0);
+                        coMap[d['co']].tgt[m.key] = (coMap[d['co']].tgt[m.key] || 0) + parseFloat(d[m.key+'_tgt']||0);
+                    });
+                });
+                groupedData = Object.keys(coMap).map(co => ({ name: co, sub: '', data: coMap[co], isAgg: true }));
+            }
+
+            let ranked = groupedData.map(g => {
+                const mv = getMetricValues(g.data, g.isAgg);
+                let totalMtd = 0, totalTgt = 0;
+                metrics.forEach(m => { totalMtd += mv[m.key].mtd; totalTgt += mv[m.key].tgt; });
+                let totalAchv = 0;
+                if (totalTgt > 0) totalAchv = (totalMtd / totalTgt) * 100;
+                else if (totalMtd > 0) totalAchv = (totalMtd / 1) * 100;
+                return { ...g, metricVals: mv, totalAchv, totalMtd };
+            });
+
+            ranked.sort((a, b) => {
+                for (let key of activeRankingMetrics) {
+                    let valA, valB;
+                    if (key === 'total') { 
+                        valA = showActualValues ? a.totalMtd : a.totalAchv; 
+                        valB = showActualValues ? b.totalMtd : b.totalAchv; 
+                    } else { 
+                        valA = showActualValues ? a.metricVals[key].mtd : a.metricVals[key].achv; 
+                        valB = showActualValues ? b.metricVals[key].mtd : b.metricVals[key].achv; 
+                    }
+                    if (valB !== valA) return valB - valA;
+                }
+                return 0;
+            });
+
+            ranked.forEach((r, i) => {
+                let branchName = `${r.name}\n${r.sub}`;
+                let row = [i + 1, branchName];
+                if (!showActualValues) row.push(r.totalAchv / 100);
+
+                finalOrderKeys.forEach(key => {
+                    if (key === 'total') {
+                        if (showActualValues) row.push(r.totalMtd);
+                    } else {
+                        row.push(showActualValues ? r.metricVals[key].mtd : r.metricVals[key].achv / 100);
+                    }
+                });
+                ws_data.push(row);
+            });
+
+            const ws = XLSX.utils.aoa_to_sheet(ws_data);
+            const range = XLSX.utils.decode_range(ws['!ref']);
+            if(!ws['!cols']) ws['!cols'] = [];
+            ws['!cols'][1] = { wch: 30 };
+
+            for(let R = range.s.r + 1; R <= range.e.r; ++R) {
+                const cellAddrB = XLSX.utils.encode_cell({r: R, c: 1});
+                if(ws[cellAddrB]) ws[cellAddrB].s = { alignment: { wrapText: true } };
+                if (!showActualValues) {
+                    for(let C = 2; C <= range.e.c; ++C) { 
+                        const cellAddr = XLSX.utils.encode_cell({r: R, c: C});
+                        if(ws[cellAddr]) ws[cellAddr].z = '0%';
+                    }
+                } else {
+                    for(let C = 2; C <= range.e.c; ++C) { 
+                        const cellAddr = XLSX.utils.encode_cell({r: R, c: C});
+                        if(ws[cellAddr]) ws[cellAddr].z = '#,##0.0';
+                    }
+                }
+            }
+
+            const wb = XLSX.utils.book_new();
+            XLSX.utils.book_append_sheet(wb, ws, "Performance Ranking");
+            let fileName = "Performance_Ranking_2026";
+            if (showActualValues) fileName += "_Aktual";
+            else fileName += "_Persentase";
+            XLSX.writeFile(wb, `${fileName}.xlsx`);
+        }
+
+        function renderRanking() {
+            const thead = document.getElementById('rankingThead');
+            const tbody = document.getElementById('rankingTableBody');
+            
+            if (currentRankingMode === 'top5') {
+                thead.innerHTML = ''; 
+                tbody.innerHTML = ''; 
+                
+                let gridContainer = document.getElementById('top5GridContainer');
+                if (!gridContainer) {
+                    gridContainer = document.createElement('div');
+                    gridContainer.id = 'top5GridContainer';
+                    gridContainer.className = 'top5-grid-container';
+                    document.querySelector('.table-wrapper').appendChild(gridContainer);
+                }
+                
+                document.querySelector('.ranking-table').style.display = 'none';
+                gridContainer.style.display = 'grid';
+
+                gridContainer.innerHTML = '';
+                let sourceData = rawData; 
+
+                metrics.forEach(m => {
+                    let branchData = sourceData.map(d => ({
+                        name: d['br'],
+                        sub: d['co'],
+                        val: parseFloat(d[m.key + '_mtd'] || 0)
+                    }));
+
+                    branchData = branchData.filter(item => item.val > 0);
+                    branchData.sort((a, b) => b.val - a.val);
+                    const topN = branchData.slice(0, 5);
+
+                    if (topN.length === 0) return;
+
+                    let cardHTML = `
+                        <div class="top5-card">
+                            <div class="top5-header" title="${m.label}">
+                                <i class="fas ${m.icon}"></i> ${m.label}
+                            </div>
+                            <div class="top5-list">`;
+                    
+                    topN.forEach((item, idx) => {
+                        const isGrowth = ['ca','sa','fu'].includes(m.key);
+                        const formatted = formatValue(item.val, m.unit, isGrowth, false, false);
+                        
+                        // MODIFIKASI: Tambahkan class clickable-co dan onclick event jika sedang di view Co-Branch (bukan drilldown)
+                        let nameHtml = item.name;
+                        if (!drillDownCo) {
+                            nameHtml = `<span class="clickable-co" onclick="triggerDrillDown('${item.sub}')">${item.name}</span>`;
+                        }
+
+                        cardHTML += `
+                                <div class="top5-item">
+                                    <div style="display:flex; align-items:center; overflow:hidden; flex:1; min-width:0;">
+                                        <span class="top5-rank">${idx+1}</span>
+                                        <span class="top5-name" title="${item.name} (${item.sub})">${nameHtml}</span>
+                                    </div>
+                                    <span class="top5-val">${formatted}</span>
+                                </div>`;
+                    });
+                    
+                    cardHTML += `</div></div>`;
+                    gridContainer.innerHTML += cardHTML;
+                });
+                return; 
+            }
+
+            const gridContainer = document.getElementById('top5GridContainer');
+            if (gridContainer) gridContainer.style.display = 'none';
+            document.querySelector('.ranking-table').style.display = 'table';
+
+            tbody.innerHTML = '<tr><td colspan="100%" style="text-align:center;">Processing...</td></tr>';
+
+            let groupedData = [];
+            let isDrillDown = !!drillDownCo;
+            if (isDrillDown) {
+                groupedData = rawData.filter(d => d['co'] === drillDownCo).map(d => ({ name: d['br'], sub: d['co'], data: d, isAgg: false }));
+            } else if (currentRankingMode === 'all') {
+                groupedData = rawData.map(d => ({ name: d['br'], sub: d['co'], data: d, isAgg: false }));
+            } else if (currentRankingMode === 'co') {
+                const coMap = {};
+                rawData.forEach(d => {
+                    if (!coMap[d['co']]) coMap[d['co']] = { mtd: {}, tgt: {} };
+                    metrics.forEach(m => {
+                        coMap[d['co']].mtd[m.key] = (coMap[d['co']].mtd[m.key] || 0) + parseFloat(d[m.key+'_mtd']||0);
+                        coMap[d['co']].tgt[m.key] = (coMap[d['co']].tgt[m.key] || 0) + parseFloat(d[m.key+'_tgt']||0);
+                    });
+                });
+                groupedData = Object.keys(coMap).map(co => ({ name: co, sub: '', data: coMap[co], isAgg: true }));
+            }
+
+            let ranked = groupedData.map(g => {
+                const mv = getMetricValues(g.data, g.isAgg);
+                let totalMtd = 0, totalTgt = 0;
+                metrics.forEach(m => { totalMtd += mv[m.key].mtd; totalTgt += mv[m.key].tgt; });
+                let totalAchv = 0;
+                if (totalTgt > 0) totalAchv = (totalMtd / totalTgt) * 100;
+                else if (totalMtd > 0) totalAchv = (totalMtd / 1) * 100;
+                return { ...g, metricVals: mv, totalAchv, totalMtd };
+            });
+
+            ranked.sort((a, b) => {
+                for (let key of activeRankingMetrics) {
+                    let valA, valB;
+                    if (key === 'total') { 
+                        valA = showActualValues ? a.totalMtd : a.totalAchv; 
+                        valB = showActualValues ? b.totalMtd : b.totalAchv; 
+                    } else { 
+                        valA = showActualValues ? a.metricVals[key].mtd : a.metricVals[key].achv; 
+                        valB = showActualValues ? b.metricVals[key].mtd : b.metricVals[key].achv; 
+                    }
+                    if (valB !== valA) return valB - valA;
+                }
+                return a.name.localeCompare(b.name); 
+            });
+
+            let firstVisualSortKey = null;
+            if (!showActualValues) {
+                firstVisualSortKey = 'total';
+            } else {
+                let minIndex = Infinity;
+                metrics.forEach(m => {
+                    const idx = activeRankingMetrics.indexOf(m.key);
+                    if (idx !== -1 && idx < minIndex) {
+                        minIndex = idx;
+                        firstVisualSortKey = m.key;
+                    }
+                });
+            }
+
+            let headerHTML = `<tr>
+                <th><div class="th-content">#</div></th>
+                <th><div class="th-content">${isDrillDown ? 'Branch' : (currentRankingMode === 'co' ? 'Co-Branch' : 'Branch')}</div></th>`;
+            
+            if (!showActualValues) {
+                const totalSortIndex = activeRankingMetrics.indexOf('total');
+                const highlight = totalSortIndex !== -1 ? 'highlight-col' : '';
+                const badge = totalSortIndex !== -1 ? `<span class="sort-priority-badge">${totalSortIndex + 1}</span>` : '';
+                headerHTML += `<th class="${highlight}"><div class="th-content">Total %${badge}</div></th>`;
+            } else if (firstVisualSortKey) {
+                const m = metrics.find(x => x.key === firstVisualSortKey);
+                const sortIndex = activeRankingMetrics.indexOf(firstVisualSortKey);
+                const highlight = 'highlight-col';
+                const badge = `<span class="sort-priority-badge">${sortIndex + 1}</span>`;
+                headerHTML += `<th class="${highlight}" title="${m.label}">
+                    <div class="th-content">
+                        <i class="fas ${m.icon}" style="font-size: 0.9rem;"></i>
+                        <span class="indicator-prefix">${m.key.toUpperCase()}</span>
+                        ${badge}
+                    </div>
+                </th>`;
+            }
+
+            metrics.forEach(m => {
+                if (showActualValues && m.key === firstVisualSortKey) return;
+                const sortIndex = activeRankingMetrics.indexOf(m.key);
+                const highlight = sortIndex !== -1 ? 'highlight-col' : '';
+                const badge = sortIndex !== -1 ? `<span class="sort-priority-badge">${sortIndex + 1}</span>` : '';
+                headerHTML += `<th class="${highlight}" title="${m.label}">
+                    <div class="th-content">
+                        <i class="fas ${m.icon}" style="font-size: 0.9rem;"></i>
+                        <span class="indicator-prefix">${m.key.toUpperCase()}</span>
+                        ${badge}
+                    </div>
+                </th>`; 
+            });
+            
+            headerHTML += `</tr>`;
+            thead.innerHTML = headerHTML;
+
+            tbody.innerHTML = '';
+            ranked.forEach((r, i) => {
+                const rank = i + 1;
+                let badgeClass = 'rank-badge';
+                if(rank===1) badgeClass += ' rank-1';
+                else if(rank===2) badgeClass += ' rank-2';
+                else if(rank===3) badgeClass += ' rank-3';
+
+                const totalColor = r.totalAchv >= 100 ? 'var(--success)' : 'var(--danger)';
+                let nameHtml = `<strong>${r.name}</strong>`;
+                if (!isDrillDown && currentRankingMode === 'co') {
+                    nameHtml = `<span class="clickable-co" onclick="triggerDrillDown('${r.name}')"><strong>${r.name}</strong></span>`;
+                }
+                let displayName = `${nameHtml}<br><small style="color:var(--text-muted)">${r.sub}</small>`;
+
+                let rowHTML = `<tr>
+                    <td><span class="${badgeClass}">${rank}</span></td>
+                    <td>${displayName}</td>`;
+                
+                if (!showActualValues) {
+                    rowHTML += `<td style="color:${totalColor}; font-size:0.75rem;">${r.totalAchv.toFixed(1)}%</td>`;
+                } else if (firstVisualSortKey) {
+                    const m = metrics.find(x => x.key === firstVisualSortKey);
+                    const v = r.metricVals[firstVisualSortKey];
+                    const isGrowthType = ['ca', 'sa', 'fu'].includes(firstVisualSortKey);
+                    const displayVal = formatValue(v.mtd, m.unit, isGrowthType, false, false);
+                    rowHTML += `<td class="highlight-col" style="color:var(--text); font-size:0.7rem;">${displayVal}</td>`;
+                }
+                
+                metrics.forEach(m => {
+                    if (showActualValues && m.key === firstVisualSortKey) return;
+                    const v = r.metricVals[m.key];
+                    const isGrowthType = ['ca', 'sa', 'fu'].includes(m.key);
+                    const displayVal = showActualValues 
+                        ? formatValue(v.mtd, m.unit, isGrowthType, false, false) 
+                        : v.achv.toFixed(0) + '%';
+                    const color = showActualValues ? 'var(--text)' : (v.achv >= 100 ? 'var(--success)' : 'var(--danger)');
+                    const highlight = activeRankingMetrics.includes(m.key) ? 'highlight-col' : '';
+                    rowHTML += `<td class="${highlight}" style="color:${color}; font-size:0.7rem;">${displayVal}</td>`;
+                });
+                rowHTML += `</tr>`;
+                tbody.innerHTML += rowHTML;
+            });
+        }
+
+        window.onclick = function(e) {
+            const modal = document.getElementById('rankingModal');
+            const sortModal = document.getElementById('sortModal');
+            if (e.target == modal) closeRankingModal();
+            if (e.target == sortModal) closeSortModal();
         }
     </script>
 </body>
