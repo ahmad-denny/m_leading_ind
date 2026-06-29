@@ -479,8 +479,8 @@
         window.onload = async function() {
             initTheme();
             try {
-                const res = await fetch('data_juni.json');
-                if (!res.ok) throw new Error('File data_juni.json tidak ditemukan');
+                const res = await fetch('mei.json');
+                if (!res.ok) throw new Error('File mei.json tidak ditemukan');
                 rawData = await res.json();
                 
                 if (!Array.isArray(rawData)) throw new Error("Format JSON tidak valid");
