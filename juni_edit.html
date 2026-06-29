@@ -483,8 +483,7 @@
         // CONFIG ARRAY: Data Juni ditaruh paling atas agar menjadi default saat aplikasi dibuka
         const jsonFiles = [
             { id: 'juni', label: 'Juni', file: 'juni.json', meta: '📅 Per: 25 Juni 2026 | 💼 Workdays: 20' },
-            { id: 'mei', label: 'Mei', file: 'mei.json', meta: '📅 Per: 31 Mei 2026 | 💼 Workdays: 21' },
-            { id: 'april', label: 'April', file: 'april.json', meta: '📅 Per: 30 April 2026 | 💼 Workdays: 22' }
+            { id: 'mei', label: 'Mei', file: 'mei.json', meta: '📅 Per: 31 Mei 2026 | 💼 Workdays: 21' }
         ];
 
         // Default item terpilih: Elemen pertama array (Juni)
@@ -569,7 +568,7 @@
                 populateCoBranchFilter();
                 renderDashboard(rawData);
             } catch (err) {
-                container.innerHTML = `<div style="color:var(--danger); text-align:center; padding:10px;">Error: ${err.message}</div>`;
+                container.innerHTML = `<div style="color:var(--danger); text-align:center; padding:20px;">Error: ${err.message}</div>`;
             }
         }
 
