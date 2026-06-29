@@ -47,10 +47,10 @@
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', system-ui, sans-serif; transition: background-color 0.3s, color 0.3s; }
         
         body.modal-open { overflow: hidden; }
-        body { background-color: var(--bg); color: var(--text); min-height: 100vh; padding-top: 190px; }
+        body { background-color: var(--bg); color: var(--text); min-height: 100vh; padding-top: 195px; }
 
         /* =========================================
-           HEADER FIXED & PERFECTLY CENTERED
+           HEADER FIXED & CENTERED WITH TABS
            ========================================= */
         .header { 
             background: linear-gradient(135deg, var(--primary), #2d1b50); 
@@ -64,7 +64,7 @@
             align-items: center;
             justify-content: center;
             box-shadow: 0 4px 10px rgba(0,0,0,0.2);
-            min-height: 120px;
+            min-height: 125px;
         }
         
         .header-content-wrapper {
@@ -89,20 +89,18 @@
         .header h1 img.logo { object-fit: contain; vertical-align: middle; }
         .header p { font-size: 0.85rem; opacity: 0.9; margin: 2px 0; text-align: center; }
         
-        /* =========================================
-           DYNAMIC DATA TABS CONTAINER
-           ========================================= */
+        /* CONTAINER TAB JSON DINAMIS */
         .data-tabs-container {
             width: 100%;
             display: flex;
             justify-content: center;
-            margin-top: 10px;
-            gap: 5px;
+            margin-top: 12px;
+            gap: 8px;
             overflow-x: auto;
             padding-bottom: 5px;
         }
         .data-tab-btn {
-            padding: 6px 14px;
+            padding: 6px 16px;
             background: rgba(255, 255, 255, 0.15);
             color: rgba(255, 255, 255, 0.8);
             border: 1px solid transparent;
@@ -225,8 +223,6 @@
             box-shadow: 0 2px 4px rgba(0,0,0,0.05);
         }
         
-        .ranking-controls { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; }
-        
         .tab-btn { 
             padding: 8px 16px; 
             background: rgba(0, 0, 0, 0.15); 
@@ -253,10 +249,6 @@
             align-items: center; 
             margin-right: 5px; 
         }
-        
-        .btn-sort-trigger { padding: 6px 12px; border: 1px solid var(--primary); background: transparent; color: var(--primary); border-radius: 4px; cursor: pointer; font-size: 0.8rem; display: inline-flex; align-items: center; gap: 5px; }
-        .btn-export { padding: 6px 12px; border: 1px solid var(--success); background: var(--success); color: white; border-radius: 4px; cursor: pointer; font-size: 0.8rem; display: inline-flex; align-items: center; gap: 5px; }
-        .btn-export:hover { background: #218838; }
 
         .rank-badge { display: inline-block; width: 22px; height: 22px; line-height: 22px; text-align: center; border-radius: 50%; font-weight: bold; font-size: 0.7rem; background: var(--border); }
         .rank-1 { background: #ffd700; color: #333; }
@@ -276,28 +268,6 @@
         .ranking-table th:first-child, .ranking-table td:first-child { position: sticky; left: 0; z-index: 30; width: var(--col-rank-w); min-width: var(--col-rank-w); max-width: var(--col-rank-w); border-right: 1px solid var(--border); background: var(--card-bg); }
         .ranking-table th:nth-child(2), .ranking-table td:nth-child(2) { position: sticky; left: var(--col-rank-w); z-index: 25; width: var(--col-name-w); min-width: var(--col-name-w); max-width: var(--col-name-w); text-align: left !important; border-right: 1px solid var(--border); overflow: hidden; text-overflow: ellipsis; background: var(--card-bg); }
         .ranking-table th:nth-child(3), .ranking-table td:nth-child(3) { position: sticky; left: calc(var(--col-rank-w) + var(--col-name-w)); z-index: 20; font-weight: bold; background: var(--card-bg); border-right: 2px solid var(--primary); width: var(--col-total-w); min-width: var(--col-total-w); max-width: var(--col-total-w); font-size: 0.75rem; box-shadow: 2px 0 5px -2px rgba(0,0,0,0.1); padding-right: 4px !important; }
-        
-        .sort-modal-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 2000; justify-content: center; align-items: center; }
-        .sort-modal-content { background: var(--card-bg); width: 90%; max-width: 400px; border-radius: var(--radius); padding: 20px; box-shadow: 0 5px 15px rgba(0,0,0,0.2); animation: slideUp 0.2s ease; }
-        .sort-modal-header { font-size: 1rem; font-weight: bold; margin-bottom: 15px; color: var(--primary); display: flex; justify-content: space-between; }
-        .sort-checkbox-list { max-height: 300px; overflow-y: auto; display: flex; flex-direction: column; gap: 8px; margin-bottom: 15px; }
-        .sort-item { display: flex; align-items: center; gap: 10px; padding: 8px; border: 1px solid var(--border); border-radius: 4px; cursor: pointer; }
-        .sort-item:hover { background: var(--bg); }
-        .sort-item input[type="checkbox"] { accent-color: var(--primary); width: 16px; height: 16px; }
-        .sort-item label { cursor: pointer; flex: 1; font-size: 0.85rem; }
-        .sort-actions { display: flex; justify-content: flex-end; gap: 10px; }
-        .btn-cancel { background: var(--text-muted); color: white; }
-        .btn-apply { background: var(--primary); color: white; }
-
-        .toggle-container { display: flex; align-items: center; gap: 8px; font-size: 0.75rem; color: var(--text-muted); cursor: pointer; user-select: none; white-space: nowrap; }
-        .toggle-switch { position: relative; display: inline-block; width: 36px; height: 20px; }
-        .toggle-switch input { opacity: 0; width: 0; height: 0; }
-        .slider { position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background-color: #ccc; transition: .3s; border-radius: 20px; }
-        .slider:before { position: absolute; content: ""; height: 14px; width: 14px; left: 3px; bottom: 3px; background-color: white; transition: .3s; border-radius: 50%; }
-        input:checked + .slider { background-color: var(--primary); }
-        input:checked + .slider:before { transform: translateX(16px); }
-        [data-theme="dark"] .slider { background-color: #475569; }
-        [data-theme="dark"] .toggle-container { color: #cbd5e1; }
 
         .top5-grid-container {
             display: grid;
@@ -377,7 +347,7 @@
                 width: 32px; height: 32px; font-size: 0.9rem; 
             }
             
-            body { padding-top: 175px; }
+            body { padding-top: 185px; }
 
             .controls { 
                 flex-wrap: wrap; 
@@ -409,7 +379,7 @@
             .badge-mtd { font-size: 0.75rem; }
             
             :root { --col-name-w: 100px; --col-total-w: 45px; }
-            .ranking-table { font-size: 0.7rem; }
+            .ranking-table { font-size: 0.7 Rules; }
             .ranking-table th:nth-child(2), .ranking-table td:nth-child(2) { left: var(--col-rank-w); width: var(--col-name-w); min-width: var(--col-name-w); max-width: var(--col-name-w); }
             .ranking-table th:nth-child(3), .ranking-table td:nth-child(3) { left: calc(var(--col-rank-w) + var(--col-name-w)); width: var(--col-total-w); min-width: var(--col-total-w); max-width: var(--col-total-w); font-size: 0.65rem; }
             .ranking-table th:not(:first-child):not(:nth-child(2)):not(:nth-child(3)), .ranking-table td:not(:first-child):not(:nth-child(2)):not(:nth-child(3)) { min-width: 36px !important; max-width: 40px !important; padding: 8px 2px !important; font-size: 0.6rem !important; }
@@ -417,7 +387,6 @@
             .ranking-table th { height: 48px; }
             .th-content { padding: 4px 2px; gap: 2px; }
             
-            .ranking-controls { display: flex; flex-direction: column; gap: 8px; width: 100%; }
             .tab-btn.active { 
                 padding: 6px 12px; 
                 border: 1px solid var(--card-bg); 
@@ -426,15 +395,12 @@
                 color: var(--primary); 
                 border-radius: 4px 4px 0 0; 
             }
-
-            .action-row { display: flex; gap: 8px; width: 100%; }
-            .btn-sort-trigger, .btn-export { flex: 1; justify-content: center; font-size: 0.75rem; padding: 8px 4px; }
             .modal-header h3 { font-size: 1.1rem; }
             .close-btn { font-size: 1.2rem; }
             
             .ranking-tabs-wrapper { padding: 10px 15px; }
-
             .modal-content { width: 100%; height: 100%; border-radius: 0; max-width: none; max-height: 100vh; }
+            
             .top5-grid-container { 
                 grid-template-columns: repeat(2, 1fr); 
                 gap: 8px;
@@ -447,29 +413,16 @@
             .top5-val { font-size: 0.6rem; }
             .top5-rank { width: 14px; height: 14px; line-height: 14px; font-size: 0.55rem; margin-right: 4px; }
         }
-        
-        [data-theme="dark"] .sort-modal-content { background: var(--sort-modal-bg); border: 1px solid var(--border); }
-        [data-theme="dark"] .sort-modal-header { color: #ffffff; }
-        [data-theme="dark"] .sort-item { background: transparent; border-color: var(--sort-item-border); color: var(--sort-text-color); }
-        [data-theme="dark"] .sort-item:hover { background: rgba(255, 255, 255, 0.05); }
-        [data-theme="dark"] .sort-item label { color: var(--sort-text-color); }
-        [data-theme="dark"] .sort-item i { color: var(--sort-icon-color) !important; opacity: 1; }
-        [data-theme="dark"] .btn-cancel { background: #475569; color: white; border: none; }
-        [data-theme="dark"] .btn-apply { background: var(--primary); color: white; border: none; }
-        [data-theme="dark"] .btn-sort-trigger { border-color: #6d28d9; color: #c4b5fd; background: rgba(109, 40, 217, 0.1); }
-        [data-theme="dark"] .btn-sort-trigger:hover { background: rgba(109, 40, 217, 0.2); color: white; }
 
         [data-theme="dark"] .tab-btn {
             background: rgba(255, 255, 255, 0.08) !important;
             color: rgba(255, 255, 255, 0.5) !important;
             border: 1px solid rgba(255, 255, 255, 0.1) !important;
         }
-        
         [data-theme="dark"] .tab-btn:hover {
             background: rgba(255, 255, 255, 0.15) !important;
             color: rgba(255, 255, 255, 0.8) !important;
         }
-
         [data-theme="dark"] .tab-btn.active {
             background: #16213e !important; 
             color: #ffffff !important;
@@ -484,7 +437,7 @@
         <div class="header-content-wrapper">
             <button class="theme-toggle" onclick="toggleTheme()" title="Toggle Dark/Light Mode"><i class="fas fa-moon" id="themeIcon"></i></button>
             <div style="width: 100%;">
-                <h1><img src="img/BMI.png" alt="Bank Muamalat Logo" class="logo" width="30" height="30" > Bank Muamalat</h1>
+                <h1><img src="img/BMI.png" alt="Bank Muamalat Logo" class="logo" width="30" height="30"> Bank Muamalat</h1>
                 <p>Leading Indicator Dashboard 📊 Region Sumatera</p>
                 <p id="headerMeta">📅 Per: -- Juni 2026 | 💼 Workdays: --</p>
             </div>
@@ -526,28 +479,16 @@
         </div>
     </div>
 
-    <div id="sortModal" class="sort-modal-overlay">
-        <div class="sort-modal-content">
-            <div class="sort-modal-header">
-                Pilih Kriteria Sortir
-                <i class="fas fa-times" style="cursor:pointer;" onclick="closeSortModal()"></i>
-            </div>
-            <div class="sort-checkbox-list" id="sortCheckboxList"></div>
-            <div class="sort-actions">
-                <button class="btn btn-cancel" onclick="resetSortSelection()">Reset</button>
-                <button class="btn btn-apply" onclick="applySortSelection()">Terapkan</button>
-            </div>
-        </div>
-    </div>
-
     <script>
-        // CONFIG: Tambahkan atau kurangi daftar file JSON Anda di sini
+        // CONFIG ARRAY: Data Juni ditaruh paling atas agar menjadi default saat aplikasi dibuka
         const jsonFiles = [
-            { id: 'mei', label: 'Mei', file: 'mei.json', meta: '📅 Per: 29 Mei 2026 | 💼 Workdays: 16' },
-            { id: 'juni', label: 'Juni', file: 'juni.json', meta: '📅 Per: 25 Juni 2026 | 💼 Workdays: 20' }
+            { id: 'juni', label: 'Juni', file: 'juni.json', meta: '📅 Per: 25 Juni 2026 | 💼 Workdays: 20' },
+            { id: 'mei', label: 'Mei', file: 'mei.json', meta: '📅 Per: 31 Mei 2026 | 💼 Workdays: 21' },
+            { id: 'april', label: 'April', file: 'april.json', meta: '📅 Per: 30 April 2026 | 💼 Workdays: 22' }
         ];
 
-        let currentActiveJson = jsonFiles[0]; // Standar awal memuat file pertama (Juni)
+        // Default item terpilih: Elemen pertama array (Juni)
+        let currentActiveJson = jsonFiles[0]; 
 
         const metrics = [
             { key: 'ca', label: 'Current Account', icon: 'fa-wallet', type: 'MTD Growth', unit: 'M' },
@@ -565,21 +506,20 @@
         let rawData = [];
         let currentRankingMode = 'top5branch';
         let top5Level = 'branch'; 
-        let activeRankingMetrics = ['total'];
-        let showActualValues = false; 
 
         window.onload = function() {
             initTheme();
-            renderDataTabs();
-            loadJsonData(currentActiveJson);
+            renderDataTabs(); // Membuat tombol tab di header
+            loadJsonData(currentActiveJson); // Otomatis muat data default (juni.json)
         };
 
-        // Fungsi membuat tombol-tombol tab JSON dinamis
+        // Menggambar tombol tab secara dinamis berdasarkan isi array jsonFiles
         function renderDataTabs() {
             const container = document.getElementById('dataTabsContainer');
             container.innerHTML = '';
             jsonFiles.forEach((item, index) => {
                 const btn = document.createElement('button');
+                // Index 0 (Juni) otomatis diberikan class 'active' agar langsung menyala saat pertama masuk
                 btn.className = `data-tab-btn ${index === 0 ? 'active' : ''}`;
                 btn.innerText = item.label;
                 btn.onclick = () => switchJsonTab(item, btn);
@@ -587,20 +527,20 @@
             });
         }
 
-        // Fungsi perpindahan tab data JSON
+        // Fungsi perpindahan data saat tab bulan diklik
         async function switchJsonTab(jsonItem, element) {
             document.querySelectorAll('.data-tab-btn').forEach(b => b.classList.remove('active'));
             element.classList.add('active');
             currentActiveJson = jsonItem;
             
-            // Reset filter dropdown saat berganti bulan data
+            // Reset filter dropdown agar tidak bentrok dengan data baru
             document.getElementById('coBranchFilter').value = "";
             document.getElementById('branchFilter').innerHTML = '<option value="">All Branch</option>';
             
             await loadJsonData(jsonItem);
         }
 
-        // Fungsi inti mengambil data Ajax sesuai tab yang aktif
+        // Mengambil berkas JSON lewat AJAX Fetch
         async function loadJsonData(jsonItem) {
             const container = document.getElementById('dashboardContainer');
             container.innerHTML = `
@@ -691,8 +631,7 @@
             let prefix = '';
             if (isTarget) prefix = ''; 
             else if ((isGrowthType || isGap) && val > 0) { if (!isGap) prefix = '+'; } 
-            else if (val > 0 && !isGrowthType && !isGap) prefix = ''; 
-
+            
             let displayVal = isGap ? Math.abs(val) : val;
 
             if (unit === 'M') {
@@ -791,403 +730,108 @@
             } else if (mode === 'top5cobranch') {
                 top5Level = 'co';
             }
-            
-            const sortBtn = document.getElementById('btnSortTrigger');
-            const toggleLabel = document.querySelector('.toggle-container');
-            const exportBtn = document.getElementById('btnExportRanking');
-            
-            if (mode === 'top5branch' || mode === 'top5cobranch') {
-                if(sortBtn) sortBtn.style.display = 'none';
-                if(toggleLabel) toggleLabel.style.display = 'none';
-                if(exportBtn) exportBtn.style.display = 'none';
-            } else {
-                if(sortBtn) sortBtn.style.display = 'inline-flex';
-                if(toggleLabel) toggleLabel.style.display = 'flex';
-                if(exportBtn) exportBtn.style.display = 'inline-flex';
-            }
-
             renderRanking();
-        }
-
-        function getMetricValues(rowOrAgg, isAggregated) {
-            const vals = {};
-            metrics.forEach(m => {
-                let mtd, tgt;
-                if (isAggregated) {
-                    mtd = rowOrAgg.mtd[m.key] || 0;
-                    tgt = rowOrAgg.tgt[m.key] || 0;
-                } else {
-                    mtd = parseFloat(rowOrAgg[m.key+'_mtd'] || 0);
-                    tgt = parseFloat(rowOrAgg[m.key+'_tgt'] || 0);
-                }
-                let achv = 0;
-                if (tgt > 0) achv = (mtd / tgt) * 100;
-                else if (mtd > 0) achv = (mtd / 1) * 100; 
-                vals[m.key] = { mtd, tgt, achv };
-            });
-            return vals;
-        }
-
-        function openSortModal() {
-            const list = document.getElementById('sortCheckboxList');
-            list.innerHTML = '';
-            const totalChecked = activeRankingMetrics.includes('total') ? 'checked' : '';
-            list.innerHTML += `<div class="sort-item"><input type="checkbox" id="chk_total" value="total" ${totalChecked}><label for="chk_total"><strong>Total Achievement</strong></label></div>`;
-            metrics.forEach((m) => {
-                const isChecked = activeRankingMetrics.includes(m.key) ? 'checked' : '';
-                list.innerHTML += `<div class="sort-item"><input type="checkbox" id="chk_${m.key}" value="${m.key}" ${isChecked}><label for="chk_${m.key}"><i class="fas ${m.icon}" style="margin-right:5px; color:var(--primary);"></i> ${m.label} (${m.key.toUpperCase()})</label></div>`;
-            });
-            document.getElementById('sortModal').style.display = 'flex';
-        }
-
-        function closeSortModal() { document.getElementById('sortModal').style.display = 'none'; }
-
-        function resetSortSelection() {
-            activeRankingMetrics = ['total'];
-            document.getElementById('sortCountBadge').textContent = '1';
-            closeSortModal();
-            renderRanking();
-        }
-
-        function applySortSelection() {
-            const checkboxes = document.querySelectorAll('#sortCheckboxList input[type="checkbox"]:checked');
-            const selected = Array.from(checkboxes).map(cb => cb.value);
-            if (selected.length === 0) { alert("Minimal pilih satu kriteria sortir!"); return; }
-            activeRankingMetrics = selected;
-            document.getElementById('sortCountBadge').textContent = selected.length;
-            closeSortModal();
-            renderRanking();
-        }
-
-        function toggleDisplayMode() {
-            showActualValues = document.getElementById('toggleActualValues').checked;
-            renderRanking();
-        }
-
-        function exportToExcel() {
-            let sortedKeys = activeRankingMetrics.filter(k => k !== 'total');
-            let remainingKeys = metrics.map(m => m.key).filter(k => !sortedKeys.includes(k));
-            let finalOrderKeys = [...sortedKeys, ...remainingKeys];
-            
-            let headers = ['#', 'Branch'];
-            if (!showActualValues) headers.push('Total %');
-            
-            finalOrderKeys.forEach(key => {
-                if (key === 'total' && showActualValues) headers.push('TOTAL_ACHV_VAL'); 
-                else if (key !== 'total') headers.push(key.toUpperCase());
-            });
-
-            let ws_data = [headers];
-
-            let groupedData = [];
-            if (currentRankingMode === 'all') {
-                groupedData = rawData.map(d => ({ name: d['br'], sub: d['co'], data: d, isAgg: false }));
-            }
-
-            let ranked = groupedData.map(g => {
-                const mv = getMetricValues(g.data, g.isAgg);
-                let totalMtd = 0, totalTgt = 0;
-                metrics.forEach(m => { totalMtd += mv[m.key].mtd; totalTgt += mv[m.key].tgt; });
-                let totalAchv = 0;
-                if (totalTgt > 0) totalAchv = (totalMtd / totalTgt) * 100;
-                else if (totalMtd > 0) totalAchv = (totalMtd / 1) * 100;
-                return { ...g, metricVals: mv, totalAchv, totalMtd };
-            });
-
-            ranked.sort((a, b) => {
-                for (let key of activeRankingMetrics) {
-                    let valA, valB;
-                    if (key === 'total') { 
-                        valA = showActualValues ? a.totalMtd : a.totalAchv; 
-                        valB = showActualValues ? b.totalMtd : b.totalAchv; 
-                    } else { 
-                        valA = showActualValues ? a.metricVals[key].mtd : a.metricVals[key].achv; 
-                        valB = showActualValues ? b.metricVals[key].mtd : b.metricVals[key].achv; 
-                    }
-                    if (valB !== valA) return valB - valA;
-                }
-                return 0;
-            });
-
-            ranked.forEach((r, i) => {
-                let branchName = `${r.name}\n${r.sub}`;
-                let row = [i + 1, branchName];
-                if (!showActualValues) row.push(r.totalAchv / 100);
-
-                finalOrderKeys.forEach(key => {
-                    if (key === 'total') {
-                        if (showActualValues) row.push(r.totalMtd);
-                    } else {
-                        row.push(showActualValues ? r.metricVals[key].mtd : r.metricVals[key].achv / 100);
-                    }
-                });
-                ws_data.push(row);
-            });
-
-            const ws = XLSX.utils.aoa_to_sheet(ws_data);
-            const range = XLSX.utils.decode_range(ws['!ref']);
-            if(!ws['!cols']) ws['!cols'] = [];
-            ws['!cols'][1] = { wch: 30 };
-
-            for(let R = range.s.r + 1; R <= range.e.r; ++R) {
-                const cellAddrB = XLSX.utils.encode_cell({r: R, c: 1});
-                if(ws[cellAddrB]) ws[cellAddrB].s = { alignment: { wrapText: true } };
-                if (!showActualValues) {
-                    for(let C = 2; C <= range.e.c; ++C) { 
-                        const cellAddr = XLSX.utils.encode_cell({r: R, c: C});
-                        if(ws[cellAddr]) ws[cellAddr].z = '0%';
-                    }
-                } else {
-                    for(let C = 2; C <= range.e.c; ++C) { 
-                        const cellAddr = XLSX.utils.encode_cell({r: R, c: C});
-                        if(ws[cellAddr]) ws[cellAddr].z = '#,##0.0';
-                    }
-                }
-            }
-
-            const wb = XLSX.utils.book_new();
-            XLSX.utils.book_append_sheet(wb, ws, "Performance Ranking");
-            let fileName = `Performance_Ranking_${currentActiveJson.label}_2026`;
-            if (showActualValues) fileName += "_Aktual";
-            else fileName += "_Persentase";
-            XLSX.writeFile(wb, `${fileName}.xlsx`);
         }
 
         function renderRanking() {
             const thead = document.getElementById('rankingThead');
             const tbody = document.getElementById('rankingTableBody');
             
-            if (currentRankingMode === 'top5branch' || currentRankingMode === 'top5cobranch') {
-                thead.innerHTML = ''; 
-                tbody.innerHTML = ''; 
-                
-                let gridContainer = document.getElementById('top5GridContainer');
-                if (!gridContainer) {
-                    gridContainer = document.createElement('div');
-                    gridContainer.id = 'top5GridContainer';
-                    gridContainer.className = 'top5-grid-container';
-                    document.querySelector('.table-wrapper').appendChild(gridContainer);
-                }
-                
-                document.querySelector('.ranking-table').style.display = 'none';
-                gridContainer.style.display = 'grid';
-                gridContainer.innerHTML = '';
-
-                if (top5Level === 'branch') {
-                    metrics.forEach(m => {
-                        let branchData = rawData.map(d => ({
-                            name: d['br'],
-                            sub: d['co'],
-                            val: parseFloat(d[m.key + '_mtd'] || 0)
-                        }));
-
-                        branchData = branchData.filter(item => item.val > 0);
-                        branchData.sort((a, b) => b.val - a.val);
-                        const topN = branchData.slice(0, 5);
-
-                        if (topN.length === 0) return;
-
-                        let cardHTML = `<div class="top5-card"><div class="top5-header" title="${m.label}"><i class="fas ${m.icon}"></i> ${m.label}</div><div class="top5-list">`;
-                        
-                        topN.forEach((item, idx) => {
-                            const isGrowth = ['ca','sa','fu'].includes(m.key);
-                            const formatted = formatValue(item.val, m.unit, isGrowth, false, false);
-                            cardHTML += `
-                                <div class="top5-item">
-                                    <div style="display:flex; align-items:center; overflow:hidden; flex:1; min-width:0;">
-                                        <span class="top5-rank">${idx+1}</span>
-                                        <span class="top5-name" title="${item.name} (${item.sub})">${item.name}</span>
-                                    </div>
-                                    <span class="top5-val">${formatted}</span>
-                                </div>`;
-                        });
-                        cardHTML += `</div></div>`;
-                        gridContainer.innerHTML += cardHTML;
-                    });
-                } else {
-                    const coMap = {};
-                    rawData.forEach(d => {
-                        const coName = d['co'] || 'Unknown Co';
-                        if (!coMap[coName]) {
-                            coMap[coName] = {};
-                            metrics.forEach(m => coMap[coName][m.key] = 0);
-                        }
-                        metrics.forEach(m => {
-                            coMap[coName][m.key] += parseFloat(d[m.key + '_mtd'] || 0);
-                        });
-                    });
-
-                    metrics.forEach(m => {
-                        let coData = Object.keys(coMap).map(coName => ({
-                            name: coName,
-                            sub: 'Region Sumatera',
-                            val: coMap[coName][m.key]
-                        }));
-
-                        coData = coData.filter(item => item.val > 0);
-                        coData.sort((a, b) => b.val - a.val);
-                        const topN = coData.slice(0, 5);
-
-                        if (topN.length === 0) return;
-
-                        let cardHTML = `<div class="top5-card"><div class="top5-header" title="${m.label}"><i class="fas ${m.icon}"></i> ${m.label}</div><div class="top5-list">`;
-                        
-                        topN.forEach((item, idx) => {
-                            const isGrowth = ['ca','sa','fu'].includes(m.key);
-                            const formatted = formatValue(item.val, m.unit, isGrowth, false, false);
-                            cardHTML += `
-                                <div class="top5-item">
-                                    <div style="display:flex; align-items:center; overflow:hidden; flex:1; min-width:0;">
-                                        <span class="top5-rank">${idx+1}</span>
-                                        <span class="top5-name" title="${item.name}">${item.name}</span>
-                                    </div>
-                                    <span class="top5-val">${formatted}</span>
-                                </div>`;
-                        });
-                        cardHTML += `</div></div>`;
-                        gridContainer.innerHTML += cardHTML;
-                    });
-                }
-                return; 
+            thead.innerHTML = ''; 
+            tbody.innerHTML = ''; 
+            
+            let gridContainer = document.getElementById('top5GridContainer');
+            if (!gridContainer) {
+                gridContainer = document.createElement('div');
+                gridContainer.id = 'top5GridContainer';
+                gridContainer.className = 'top5-grid-container';
+                document.querySelector('.table-wrapper').appendChild(gridContainer);
             }
+            
+            document.querySelector('.ranking-table').style.display = 'none';
+            gridContainer.style.display = 'grid';
+            gridContainer.innerHTML = '';
 
-            const gridContainer = document.getElementById('top5GridContainer');
-            if (gridContainer) gridContainer.style.display = 'none';
-            document.querySelector('.ranking-table').style.display = 'table';
+            if (top5Level === 'branch') {
+                metrics.forEach(m => {
+                    let branchData = rawData.map(d => ({
+                        name: d['br'],
+                        sub: d['co'],
+                        val: parseFloat(d[m.key + '_mtd'] || 0)
+                    }));
 
-            tbody.innerHTML = '<tr><td colspan="100%" style="text-align:center;">Processing...</td></tr>';
+                    branchData = branchData.filter(item => item.val > 0);
+                    branchData.sort((a, b) => b.val - a.val);
+                    const topN = branchData.slice(0, 5);
 
-            let groupedData = [];
-            if (currentRankingMode === 'all') {
-                groupedData = rawData.map(d => ({ name: d['br'], sub: d['co'], data: d, isAgg: false }));
-            }
+                    if (topN.length === 0) return;
 
-            let ranked = groupedData.map(g => {
-                const mv = getMetricValues(g.data, g.isAgg);
-                let totalMtd = 0, totalTgt = 0;
-                metrics.forEach(m => { totalMtd += mv[m.key].mtd; totalTgt += mv[m.key].tgt; });
-                let totalAchv = 0;
-                if (totalTgt > 0) totalAchv = (totalMtd / totalTgt) * 100;
-                else if (totalMtd > 0) totalAchv = (totalMtd / 1) * 100;
-                return { ...g, metricVals: mv, totalAchv, totalMtd };
-            });
-
-            ranked.sort((a, b) => {
-                for (let key of activeRankingMetrics) {
-                    let valA, valB;
-                    if (key === 'total') { 
-                        valA = showActualValues ? a.totalMtd : a.totalAchv; 
-                        valB = showActualValues ? b.totalMtd : b.totalAchv; 
-                    } else { 
-                        valA = showActualValues ? a.metricVals[key].mtd : a.metricVals[key].achv; 
-                        valB = showActualValues ? b.metricVals[key].mtd : b.metricVals[key].achv; 
-                    }
-                    if (valB !== valA) return valB - valA;
-                }
-                return a.name.localeCompare(b.name); 
-            });
-
-            let firstVisualSortKey = null;
-            if (!showActualValues) {
-                firstVisualSortKey = 'total';
+                    let cardHTML = `<div class="top5-card"><div class="top5-header" title="${m.label}"><i class="fas ${m.icon}"></i> ${m.label}</div><div class="top5-list">`;
+                    
+                    topN.forEach((item, idx) => {
+                        const isGrowth = ['ca','sa','fu'].includes(m.key);
+                        const formatted = formatValue(item.val, m.unit, isGrowth, false, false);
+                        cardHTML += `
+                            <div class="top5-item">
+                                <div style="display:flex; align-items:center; overflow:hidden; flex:1; min-width:0;">
+                                    <span class="top5-rank">${idx+1}</span>
+                                    <span class="top5-name" title="${item.name} (${item.sub})">${item.name}</span>
+                                </div>
+                                <span class="top5-val">${formatted}</span>
+                            </div>`;
+                    });
+                    cardHTML += `</div></div>`;
+                    gridContainer.innerHTML += cardHTML;
+                });
             } else {
-                let minIndex = Infinity;
-                metrics.forEach(m => {
-                    const idx = activeRankingMetrics.indexOf(m.key);
-                    if (idx !== -1 && idx < minIndex) {
-                        minIndex = idx;
-                        firstVisualSortKey = m.key;
+                const coMap = {};
+                rawData.forEach(d => {
+                    const coName = d['co'] || 'Unknown Co';
+                    if (!coMap[coName]) {
+                        coMap[coName] = {};
+                        metrics.forEach(m => coMap[coName][m.key] = 0);
                     }
+                    metrics.forEach(m => {
+                        coMap[coName][m.key] += parseFloat(d[m.key + '_mtd'] || 0);
+                    });
                 });
-            }
 
-            let headerHTML = `<tr>
-                <th><div class="th-content">#</div></th>
-                <th><div class="th-content">Branch</div></th>`;
-            
-            if (!showActualValues) {
-                const totalSortIndex = activeRankingMetrics.indexOf('total');
-                const highlight = totalSortIndex !== -1 ? 'highlight-col' : '';
-                const badge = totalSortIndex !== -1 ? `<span class="sort-priority-badge">${totalSortIndex + 1}</span>` : '';
-                headerHTML += `<th class="${highlight}"><div class="th-content">Total %${badge}</div></th>`;
-            } else if (firstVisualSortKey) {
-                const m = metrics.find(x => x.key === firstVisualSortKey);
-                const sortIndex = activeRankingMetrics.indexOf(firstVisualSortKey);
-                const highlight = 'highlight-col';
-                const badge = `<span class="sort-priority-badge">${sortIndex + 1}</span>`;
-                headerHTML += `<th class="${highlight}" title="${m.label}">
-                    <div class="th-content">
-                        <i class="fas ${m.icon}" style="font-size: 0.9rem;"></i>
-                        <span class="indicator-prefix">${m.key.toUpperCase()}</span>
-                        ${badge}
-                    </div>
-                </th>`;
-            }
-
-            metrics.forEach(m => {
-                if (showActualValues && m.key === firstVisualSortKey) return;
-                const sortIndex = activeRankingMetrics.indexOf(m.key);
-                const highlight = sortIndex !== -1 ? 'highlight-col' : '';
-                const badge = sortIndex !== -1 ? `<span class="sort-priority-badge">${sortIndex + 1}</span>` : '';
-                headerHTML += `<th class="${highlight}" title="${m.label}">
-                    <div class="th-content">
-                        <i class="fas ${m.icon}" style="font-size: 0.9rem;"></i>
-                        <span class="indicator-prefix">${m.key.toUpperCase()}</span>
-                        ${badge}
-                    </div>
-                </th>`; 
-            });
-            
-            headerHTML += `</tr>`;
-            thead.innerHTML = headerHTML;
-
-            tbody.innerHTML = '';
-            ranked.forEach((r, i) => {
-                const rank = i + 1;
-                let badgeClass = 'rank-badge';
-                if(rank===1) badgeClass += ' rank-1';
-                else if(rank===2) badgeClass += ' rank-2';
-                else if(rank===3) badgeClass += ' rank-3';
-
-                const totalColor = r.totalAchv >= 100 ? 'var(--success)' : 'var(--danger)';
-                let nameHtml = `<strong>${r.name}</strong>`;
-                let displayName = `${nameHtml}<br><small style="color:var(--text-muted)">${r.sub}</small>`;
-
-                let rowHTML = `<tr>
-                    <td><span class="${badgeClass}">${rank}</span></td>
-                    <td>${displayName}</td>`;
-                
-                if (!showActualValues) {
-                    rowHTML += `<td style="color:${totalColor}; font-size:0.75rem;">${r.totalAchv.toFixed(1)}%</td>`;
-                } else if (firstVisualSortKey) {
-                    const m = metrics.find(x => x.key === firstVisualSortKey);
-                    const v = r.metricVals[firstVisualSortKey];
-                    const isGrowthType = ['ca', 'sa', 'fu'].includes(firstVisualSortKey);
-                    const displayVal = formatValue(v.mtd, m.unit, isGrowthType, false, false);
-                    rowHTML += `<td class="highlight-col" style="color:var(--text); font-size:0.7rem;">${displayVal}</td>`;
-                }
-                
                 metrics.forEach(m => {
-                    if (showActualValues && m.key === firstVisualSortKey) return;
-                    const v = r.metricVals[m.key];
-                    const isGrowthType = ['ca', 'sa', 'fu'].includes(m.key);
-                    const displayVal = showActualValues 
-                        ? formatValue(v.mtd, m.unit, isGrowthType, false, false) 
-                        : v.achv.toFixed(0) + '%';
-                    const color = showActualValues ? 'var(--text)' : (v.achv >= 100 ? 'var(--success)' : 'var(--danger)');
-                    const highlight = activeRankingMetrics.includes(m.key) ? 'highlight-col' : '';
-                    rowHTML += `<td class="${highlight}" style="color:${color}; font-size:0.7rem;">${displayVal}</td>`;
+                    let coData = Object.keys(coMap).map(coName => ({
+                        name: coName,
+                        sub: 'Region Sumatera',
+                        val: coMap[coName][m.key]
+                    }));
+
+                    coData = coData.filter(item => item.val > 0);
+                    coData.sort((a, b) => b.val - a.val);
+                    const topN = coData.slice(0, 5);
+
+                    if (topN.length === 0) return;
+
+                    let cardHTML = `<div class="top5-card"><div class="top5-header" title="${m.label}"><i class="fas ${m.icon}"></i> ${m.label}</div><div class="top5-list">`;
+                    
+                    topN.forEach((item, idx) => {
+                        const isGrowth = ['ca','sa','fu'].includes(m.key);
+                        const formatted = formatValue(item.val, m.unit, isGrowth, false, false);
+                        cardHTML += `
+                            <div class="top5-item">
+                                <div style="display:flex; align-items:center; overflow:hidden; flex:1; min-width:0;">
+                                    <span class="top5-rank">${idx+1}</span>
+                                    <span class="top5-name" title="${item.name}">${item.name}</span>
+                                </div>
+                                <span class="top5-val">${formatted}</span>
+                            </div>`;
+                    });
+                    cardHTML += `</div></div>`;
+                    gridContainer.innerHTML += cardHTML;
                 });
-                rowHTML += `</tr>`;
-                tbody.innerHTML += rowHTML;
-            });
+            }
         }
 
         window.onclick = function(e) {
             const modal = document.getElementById('rankingModal');
-            const sortModal = document.getElementById('sortModal');
             if (e.target == modal) closeRankingModal();
-            if (e.target == sortModal) closeSortModal();
         }
     </script>
 </body>
