@@ -47,7 +47,7 @@
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', system-ui, sans-serif; transition: background-color 0.3s, color 0.3s; }
         
         body.modal-open { overflow: hidden; }
-        body { background-color: var(--bg); color: var(--text); min-height: 100vh; padding-top: 140px; }
+        body { background-color: var(--bg); color: var(--text); min-height: 100vh; padding-top: 190px; }
 
         /* =========================================
            HEADER FIXED & PERFECTLY CENTERED
@@ -55,7 +55,7 @@
         .header { 
             background: linear-gradient(135deg, var(--primary), #2d1b50); 
             color: white; 
-            padding: 20px 20px 20px 20px; 
+            padding: 15px 20px 10px 20px; 
             position: fixed; 
             top: 0; left: 0; right: 0;
             z-index: 100;
@@ -88,6 +88,45 @@
         }
         .header h1 img.logo { object-fit: contain; vertical-align: middle; }
         .header p { font-size: 0.85rem; opacity: 0.9; margin: 2px 0; text-align: center; }
+        
+        /* =========================================
+           DYNAMIC DATA TABS CONTAINER
+           ========================================= */
+        .data-tabs-container {
+            width: 100%;
+            display: flex;
+            justify-content: center;
+            margin-top: 10px;
+            gap: 5px;
+            overflow-x: auto;
+            padding-bottom: 5px;
+        }
+        .data-tab-btn {
+            padding: 6px 14px;
+            background: rgba(255, 255, 255, 0.15);
+            color: rgba(255, 255, 255, 0.8);
+            border: 1px solid transparent;
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 0.8rem;
+            font-weight: 600;
+            white-space: nowrap;
+            transition: all 0.2s ease;
+        }
+        .data-tab-btn:hover {
+            background: rgba(255, 255, 255, 0.25);
+            color: #ffffff;
+        }
+        .data-tab-btn.active {
+            background: #ffffff;
+            color: var(--primary);
+            box-shadow: 0 2px 5px rgba(0,0,0,0.15);
+        }
+        [data-theme="dark"] .data-tab-btn.active {
+            background: var(--card-bg);
+            color: #ffffff;
+            border-color: var(--border);
+        }
         
         .theme-toggle { 
             position: fixed; 
@@ -157,15 +196,12 @@
         }
         @keyframes slideUp { from { transform: translateY(20px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
         
-        /* =========================================
-           MODAL HEADER & TAB ADJUSTMENTS
-           ========================================= */
         .modal-header { 
             background: var(--primary); 
             color: white; 
-            padding: 12px 15px 0 15px; /* Diubah: padding bawah 0 agar menempel ke konten */
+            padding: 12px 15px 0 15px; 
             display: flex; 
-            align-items: flex-end; /* Diubah: rata bawah agar tab menempel pas di garis pantai */
+            align-items: flex-end; 
             flex-shrink: 0; 
         }
         
@@ -176,9 +212,9 @@
             font-size: 1.5rem; 
             cursor: pointer;  
             display: flex; 
-            align-self: center; /* Tetap di tengah secara vertikal */
-            margin-left: auto; /* Dorong otomatis ke kanan */
-            padding-bottom: 10px; /* Jarak proporsional khusus tombol close */
+            align-self: center; 
+            margin-left: auto; 
+            padding-bottom: 10px; 
         }
         
         .modal-body { padding: 0; overflow-y: auto; flex: 1; display: flex; flex-direction: column; position: relative; }
@@ -191,13 +227,12 @@
         
         .ranking-controls { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; }
         
-        /* Style tombol dasar */
         .tab-btn { 
             padding: 8px 16px; 
-            background: rgba(0, 0, 0, 0.15); /* Sedikit gelap transparan untuk tab tidak aktif */
+            background: rgba(0, 0, 0, 0.15); 
             color: rgba(255, 255, 255, 0.8); 
             border: 1px solid transparent;
-            border-radius: 4px 4px 0 0; /* Diubah: sudut membulat hanya di atas */
+            border-radius: 4px 4px 0 0; 
             cursor: pointer; 
             font-size: 0.8rem; 
             display: inline-flex;
@@ -205,14 +240,13 @@
             margin-right: 5px;
         }
         
-        /* Style tombol saat aktif */
         .tab-btn.active { 
             padding: 8px 16px; 
             border: 1px solid var(--card-bg); 
-            border-bottom: 1px solid white; /* Diubah: warna putih/card-bg menyatu kebawah */
+            border-bottom: 1px solid white; 
             background: var(--card-bg); 
-            color: var(--primary); /* Diubah ke warna ungu utama agar teks lebih kontras & terbaca */
-            border-radius: 4px 4px 0 0; /* Diubah: bawahnya flat */
+            color: var(--primary); 
+            border-radius: 4px 4px 0 0; 
             cursor: pointer; 
             font-size: 0.8rem; 
             display: inline-flex;
@@ -329,8 +363,8 @@
 
         @media (max-width: 900px) {
             .header { 
-                padding: 15px 15px 15px 15px; 
-                min-height: 110px;
+                padding: 15px 15px 10px 15px; 
+                min-height: 150px;
             }
             .header-content-wrapper { max-width: 100%; }
             .header h1 { font-size: 1.2rem; gap: 8px; }
@@ -338,13 +372,12 @@
             
             .theme-toggle { 
                 position: absolute; 
-                top: 50%; 
-                transform: translateY(-50%); 
+                top: 35px; 
                 right: 0; 
                 width: 32px; height: 32px; font-size: 0.9rem; 
             }
             
-            body { padding-top: 120px; }
+            body { padding-top: 175px; }
 
             .controls { 
                 flex-wrap: wrap; 
@@ -385,7 +418,6 @@
             .th-content { padding: 4px 2px; gap: 2px; }
             
             .ranking-controls { display: flex; flex-direction: column; gap: 8px; width: 100%; }
-            /* Cari baris ini di dalam @media (max-width: 900px) dan sesuaikan nilainya */
             .tab-btn.active { 
                 padding: 6px 12px; 
                 border: 1px solid var(--card-bg); 
@@ -426,9 +458,7 @@
         [data-theme="dark"] .btn-apply { background: var(--primary); color: white; border: none; }
         [data-theme="dark"] .btn-sort-trigger { border-color: #6d28d9; color: #c4b5fd; background: rgba(109, 40, 217, 0.1); }
         [data-theme="dark"] .btn-sort-trigger:hover { background: rgba(109, 40, 217, 0.2); color: white; }
-        /* =========================================
-           FIX TAB PERFORMANCE RANKING (DARK MODE)
-           ========================================= */
+
         [data-theme="dark"] .tab-btn {
             background: rgba(255, 255, 255, 0.08) !important;
             color: rgba(255, 255, 255, 0.5) !important;
@@ -441,7 +471,7 @@
         }
 
         [data-theme="dark"] .tab-btn.active {
-            background: #16213e !important; /* Warna ungu cerah sesuai aksen tombol sortir Anda */
+            background: #16213e !important; 
             color: #ffffff !important;
             border: 1px solid #16213e !important;
             font-weight: bold;
@@ -456,9 +486,10 @@
             <div style="width: 100%;">
                 <h1><img src="img/BMI.png" alt="Bank Muamalat Logo" class="logo" width="30" height="30" > Bank Muamalat</h1>
                 <p>Leading Indicator Dashboard 📊 Region Sumatera</p>
-                <p>📅 Per: 25 Juni 2026 | 💼 Workdays: 20</p>
+                <p id="headerMeta">📅 Per: -- Juni 2026 | 💼 Workdays: --</p>
             </div>
         </div>
+        <div class="data-tabs-container" id="dataTabsContainer"></div>
     </div>
 
     <div class="controls">
@@ -479,7 +510,6 @@
 
     <div id="rankingModal" class="modal-overlay">
         <div class="modal-content">
-            <!-- MODIFIKASI: Menambahkan id="tabTop5Branch" pada tombol Top 5 Branch -->
             <div class="modal-header">
                 <button class="tab-btn" id="tabTop5Branch" onclick="setRankingTab('top5branch', this)"><i class="fas fa-trophy"></i> Top 5 Branch</button>
                 <button class="tab-btn" onclick="setRankingTab('top5cobranch', this)"><i class="fas fa-sitemap"></i> Top 5 Co-Branch</button>
@@ -511,6 +541,15 @@
     </div>
 
     <script>
+        // CONFIG: Tambahkan atau kurangi daftar file JSON Anda di sini
+        const jsonFiles = [
+            { id: 'juni', label: 'Juni', file: 'juni.json', meta: '📅 Per: 25 Juni 2026 | 💼 Workdays: 20' },
+            { id: 'mei', label: 'Mei', file: 'mei.json', meta: '📅 Per: 31 Mei 2026 | 💼 Workdays: 21' },
+            { id: 'april', label: 'April', file: 'april.json', meta: '📅 Per: 30 April 2026 | 💼 Workdays: 22' }
+        ];
+
+        let currentActiveJson = jsonFiles[0]; // Standar awal memuat file pertama (Juni)
+
         const metrics = [
             { key: 'ca', label: 'Current Account', icon: 'fa-wallet', type: 'MTD Growth', unit: 'M' },
             { key: 'sa', label: 'Saving Account', icon: 'fa-sack-dollar', type: 'MTD Growth', unit: 'M' },
@@ -530,11 +569,51 @@
         let activeRankingMetrics = ['total'];
         let showActualValues = false; 
 
-        window.onload = async function() {
+        window.onload = function() {
             initTheme();
+            renderDataTabs();
+            loadJsonData(currentActiveJson);
+        };
+
+        // Fungsi membuat tombol-tombol tab JSON dinamis
+        function renderDataTabs() {
+            const container = document.getElementById('dataTabsContainer');
+            container.innerHTML = '';
+            jsonFiles.forEach((item, index) => {
+                const btn = document.createElement('button');
+                btn.className = `data-tab-btn ${index === 0 ? 'active' : ''}`;
+                btn.innerText = item.label;
+                btn.onclick = () => switchJsonTab(item, btn);
+                container.appendChild(btn);
+            });
+        }
+
+        // Fungsi perpindahan tab data JSON
+        async function switchJsonTab(jsonItem, element) {
+            document.querySelectorAll('.data-tab-btn').forEach(b => b.classList.remove('active'));
+            element.classList.add('active');
+            currentActiveJson = jsonItem;
+            
+            // Reset filter dropdown saat berganti bulan data
+            document.getElementById('coBranchFilter').value = "";
+            document.getElementById('branchFilter').innerHTML = '<option value="">All Branch</option>';
+            
+            await loadJsonData(jsonItem);
+        }
+
+        // Fungsi inti mengambil data Ajax sesuai tab yang aktif
+        async function loadJsonData(jsonItem) {
+            const container = document.getElementById('dashboardContainer');
+            container.innerHTML = `
+                <div style="grid-column: 1/-1; text-align: center; padding: 40px; color: var(--text-muted);">                
+                    <i class="fas fa-spinner fa-spin fa-2x"></i><br><br>Memuat data ${jsonItem.label}...
+                </div>`;
+            
+            document.getElementById('headerMeta').innerHTML = jsonItem.meta;
+
             try {
-                const res = await fetch('juni.json');
-                if (!res.ok) throw new Error('File juni.json tidak ditemukan');
+                const res = await fetch(jsonItem.file);
+                if (!res.ok) throw new Error(`File ${jsonItem.file} tidak ditemukan`);
                 rawData = await res.json();
                 
                 if (!Array.isArray(rawData)) throw new Error("Format JSON tidak valid");
@@ -551,9 +630,9 @@
                 populateCoBranchFilter();
                 renderDashboard(rawData);
             } catch (err) {
-                document.getElementById('dashboardContainer').innerHTML = `<div style="color:var(--danger); text-align:center; padding:20px;">Error: ${err.message}</div>`;
+                container.innerHTML = `<div style="color:var(--danger); text-align:center; padding:20px;">Error: ${err.message}</div>`;
             }
-        };
+        }
 
         function initTheme() {
             const saved = localStorage.getItem('bm_theme');
@@ -577,8 +656,9 @@
         }
 
         function populateCoBranchFilter() {
-            const coSet = new Set(rawData.map(d => d['co']).filter(Boolean));
             const coSelect = document.getElementById('coBranchFilter');
+            coSelect.innerHTML = '<option value="">All Co-Branch</option>';
+            const coSet = new Set(rawData.map(d => d['co']).filter(Boolean));
             [...coSet].sort().forEach(co => { coSelect.innerHTML += `<option value="${co}">${co}</option>`; });
         }
 
@@ -868,7 +948,7 @@
 
             const wb = XLSX.utils.book_new();
             XLSX.utils.book_append_sheet(wb, ws, "Performance Ranking");
-            let fileName = "Performance_Ranking_2026";
+            let fileName = `Performance_Ranking_${currentActiveJson.label}_2026`;
             if (showActualValues) fileName += "_Aktual";
             else fileName += "_Persentase";
             XLSX.writeFile(wb, `${fileName}.xlsx`);
