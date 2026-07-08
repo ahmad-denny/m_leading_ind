@@ -4,7 +4,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Leading Indicator Dashboard - Bank Muamalat</title>
+    <!-- Font Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- SheetJS untuk Export Excel -->
     <script src="https://cdn.sheetjs.com/xlsx-latest/package/dist/xlsx.full.min.js"></script>
     <style>
         :root {
@@ -29,14 +31,14 @@
         }
 
         [data-theme="dark"] {
-            --primary: #3a2266;
+            --primary: #6a4c9c; /* Sedikit lebih terang agar kontras di dark */
             --bg: #1a1a2e;
             --card-bg: #16213e;
             --text: #e0e0e0;
             --text-muted: #a0a0a0;
             --border: #2a2a40;
             --shadow: 0 2px 8px rgba(0,0,0,0.3);
-            --highlight-bg: rgba(58, 34, 102, 0.3);
+            --highlight-bg: rgba(106, 76, 156, 0.2);
             --sort-modal-bg: #1e293b;
             --sort-item-border: #334155;
             --sort-text-color: #e2e8f0;
@@ -49,7 +51,9 @@
         body.modal-open { overflow: hidden; }
         body { background-color: var(--bg); color: var(--text); min-height: 100vh; padding-top: 195px; }
 
-        /* HEADER FIXED */
+        /* =========================================
+           HEADER FIXED & CENTERED WITH TABS
+           ========================================= */
         .header { 
             background: linear-gradient(135deg, var(--primary), #2d1b50); 
             color: white; 
@@ -87,6 +91,7 @@
         .header h1 img.logo { object-fit: contain; vertical-align: middle; }
         .header p { font-size: 0.85rem; opacity: 0.9; margin: 2px 0; text-align: center; }
         
+        /* CONTAINER TAB JSON DINAMIS */
         .data-tabs-container {
             width: 100%;
             display: flex;
@@ -108,24 +113,51 @@
             white-space: nowrap;
             transition: all 0.2s ease;
         }
-        .data-tab-btn:hover { background: rgba(255, 255, 255, 0.25); color: #ffffff; }
-        .data-tab-btn.active { background: #ffffff; color: var(--primary); box-shadow: 0 2px 5px rgba(0,0,0,0.15); }
-        [data-theme="dark"] .data-tab-btn.active { background: var(--card-bg); color: #ffffff; border-color: var(--border); }
+        .data-tab-btn:hover {
+            background: rgba(255, 255, 255, 0.25);
+            color: #ffffff;
+        }
+        .data-tab-btn.active {
+            background: #ffffff;
+            color: var(--primary);
+            box-shadow: 0 2px 5px rgba(0,0,0,0.15);
+        }
+        [data-theme="dark"] .data-tab-btn.active {
+            background: var(--card-bg);
+            color: #ffffff;
+            border-color: var(--border);
+        }
         
         .theme-toggle { 
-            position: fixed; top: 25px; right: 20px; 
-            background: rgba(255,255,255,0.15); border: none; color: white; 
-            width: 38px; height: 38px; border-radius: 50%; cursor: pointer; 
-            display: flex; align-items: center; justify-content: center; 
-            font-size: 1rem; z-index: 101; flex-shrink: 0;
+            position: fixed; 
+            top: 25px; 
+            right: 20px; 
+            background: rgba(255,255,255,0.15); 
+            border: none; 
+            color: white; 
+            width: 38px; 
+            height: 38px; 
+            border-radius: 50%; 
+            cursor: pointer; 
+            display: flex; 
+            align-items: center; 
+            justify-content: center; 
+            font-size: 1rem; 
+            z-index: 101; 
+            flex-shrink: 0;
         }
         .theme-toggle:hover { background: rgba(255,255,255,0.25); }
         
         .controls { 
-            display: flex; align-items: center; padding: 15px 20px; 
-            background: var(--card-bg); margin: 0 20px 15px 20px; 
-            border-radius: var(--radius); box-shadow: var(--shadow); 
-            gap: 10px; flex-wrap: nowrap; 
+            display: flex; 
+            align-items: center; 
+            padding: 15px 20px; 
+            background: var(--card-bg); 
+            margin: 0 20px 15px 20px; 
+            border-radius: var(--radius); 
+            box-shadow: var(--shadow); 
+            gap: 10px; 
+            flex-wrap: nowrap; 
         }
         .filter-group { display: flex; gap: 10px; flex: 2; min-width: 0; } 
         select { padding: 8px 12px; border: 1px solid var(--border); border-radius: 4px; flex: 1; background: var(--card-bg); color: var(--text); min-width: 0; font-size: 0.85rem; }
@@ -152,28 +184,32 @@
         .progress-fill { height: 100%; background: var(--primary); transition: width 0.5s ease; }
         .progress-fill.over { background: var(--success); }
         .progress-fill.under { background: var(--danger); }
+        
+        .footer { text-align: center; padding: 10px; font-size: 0.75rem; color: var(--text-muted); margin-top: 3px; }
 
-        /* =========================================
-           DETAILED BREAKDOWN TABLE STYLES
-           ========================================= */
-        .breakdown-section {
-            margin: 0 20px 40px 20px;
+    /* =========================================
+        DETAILED BREAKDOWN TABLE STYLES (UPDATED)
+        ========================================= */
+        .breakdown-container {
+            padding: 0 20px 40px 20px;
+        }
+
+        .breakdown-card {
             background: var(--card-bg);
             border-radius: var(--radius);
             box-shadow: var(--shadow);
             overflow: hidden;
-            display: flex;
-            flex-direction: column;
+            border-top: 3px solid var(--primary);
         }
+
         .breakdown-header {
             padding: 15px 20px;
             border-bottom: 1px solid var(--border);
             display: flex;
-            align-items: center;
             justify-content: space-between;
-            flex-wrap: wrap;
-            gap: 10px;
+            align-items: center;
         }
+
         .breakdown-title {
             font-size: 1rem;
             font-weight: bold;
@@ -182,89 +218,163 @@
             align-items: center;
             gap: 8px;
         }
-        [data-theme="dark"] .breakdown-title { color: var(--card-title-light); }
-        .breakdown-count {
-            font-size: 0.75rem;
-            background: var(--highlight-bg);
-            color: var(--primary);
-            padding: 3px 10px;
-            border-radius: 12px;
-            font-weight: 600;
-        }
-        [data-theme="dark"] .breakdown-count { color: var(--card-title-light); }
-        
-        .breakdown-table-wrapper {
+
+        .table-responsive {
             overflow-x: auto;
+            width: 100%;
             -webkit-overflow-scrolling: touch;
-            width: 100%;
         }
-        .breakdown-table {
+
+        .detail-table {
             width: 100%;
-            border-collapse: separate;
-            border-spacing: 0;
-            font-size: 0.78rem;
-            min-width: 1100px;
+            border-collapse: collapse;
+            font-size: 0.8rem;
+            white-space: nowrap;
+            table-layout: fixed; /* KUNCI: Agar lebar kolom konsisten dan sejajar */
         }
-        .breakdown-table th {
-            background: var(--bg);
+
+        .detail-table th, .detail-table td {
             padding: 10px 8px;
-            text-align: center;
-            border-bottom: 2px solid var(--border);
+            text-align: right; 
+            border-bottom: 1px solid var(--border);
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        /* Definisi Lebar Kolom Sticky (Wajib sama di TH dan TD) */
+        .detail-table th:nth-child(1), .detail-table td:nth-child(1) { width: 40px; min-width: 40px; }
+        .detail-table th:nth-child(2), .detail-table td:nth-child(2) { width: 100px; min-width: 100px; }
+        .detail-table th:nth-child(3), .detail-table td:nth-child(3) { width: 130px; min-width: 130px; }
+        .detail-table th:nth-child(4), .detail-table td:nth-child(4) { width: 70px; min-width: 70px; }
+
+        /* Logic Sticky Columns */
+        .detail-table th:first-child, .detail-table td:first-child,
+        .detail-table th:nth-child(2), .detail-table td:nth-child(2),
+        .detail-table th:nth-child(3), .detail-table td:nth-child(3),
+        .detail-table th:nth-child(4), .detail-table td:nth-child(4) {
+            text-align: left; 
+            position: sticky;
+            background: var(--card-bg);
+            z-index: 10;
+            border-right: 1px solid var(--border);
+        }
+
+        .detail-table th:first-child, .detail-table td:first-child { left: 0; z-index: 11; }
+        .detail-table th:nth-child(2), .detail-table td:nth-child(2) { left: 40px; z-index: 11; }
+        .detail-table th:nth-child(3), .detail-table td:nth-child(3) { left: 140px; z-index: 11; }
+        .detail-table th:nth-child(4), .detail-table td:nth-child(4) { left: 270px; z-index: 11; border-right: 1px solid var(--border); }
+
+        .detail-table th {
+            background: var(--bg);
+            color: var(--text-muted);
+            font-weight: 600;
             position: sticky;
             top: 0;
             z-index: 5;
-            color: var(--text);
-            font-weight: 700;
-            white-space: nowrap;
-            font-size: 0.72rem;
-            text-transform: uppercase;
-            letter-spacing: 0.3px;
         }
-        .breakdown-table td {
-            padding: 9px 8px;
-            border-bottom: 1px solid var(--border);
-            color: var(--text);
-            text-align: center;
-            white-space: nowrap;
-            background: var(--card-bg);
-        }
-        .breakdown-table tbody tr:hover td {
-            background: var(--highlight-bg);
-        }
-        /* Sticky first 3 columns */
-        .breakdown-table th:nth-child(1), .breakdown-table td:nth-child(1) {
-            position: sticky; left: 0; z-index: 6; min-width: 90px; max-width: 120px;
-            text-align: left !important; font-weight: 600; border-right: 1px solid var(--border);
-        }
-        .breakdown-table th:nth-child(2), .breakdown-table td:nth-child(2) {
-            position: sticky; left: 110px; z-index: 6; min-width: 100px; max-width: 140px;
-            text-align: left !important; border-right: 1px solid var(--border);
-        }
-        .breakdown-table th:nth-child(3), .breakdown-table td:nth-child(3) {
-            position: sticky; left: 220px; z-index: 6; min-width: 60px; max-width: 80px;
-            border-right: 2px solid var(--primary);
-        }
-        .breakdown-table th:nth-child(1), .breakdown-table th:nth-child(2), .breakdown-table th:nth-child(3) {
-            background: var(--card-bg); z-index: 7;
-        }
-        .val-neg { color: var(--danger); font-weight: 600; }
-        .val-pos { color: var(--success); font-weight: 600; }
-        .val-zero { color: var(--text-muted); opacity: 0.6; }
 
-        .footer { text-align: center; padding: 10px; font-size: 0.75rem; color: var(--text-muted); margin-top: 3px; }
+        /* Styling Baris Total - BORDER TIPIS (1px) */
+        .detail-table tr.total-row {
+            background-color: var(--highlight-bg);
+            font-weight: bold;
+            border-top: 1px solid var(--primary); /* Diubah dari 2px ke 1px */
+        }
+        
+        /* Pastikan sel TOTAL mengikuti layout sticky & background warna */
+        .detail-table tr.total-row td:first-child {
+            position: sticky; left: 0; background: var(--highlight-bg); z-index: 11; border-right: 1px solid var(--border);
+        }
+        .detail-table tr.total-row td:nth-child(2) {
+            position: sticky; left: 40px; background: var(--highlight-bg); z-index: 11; border-right: 1px solid var(--border);
+        }
+        .detail-table tr.total-row td:nth-child(3) {
+            position: sticky; left: 140px; background: var(--highlight-bg); z-index: 11; border-right: 1px solid var(--border); text-align: right !important;
+        }
+        .detail-table tr.total-row td:nth-child(4) {
+            position: sticky; left: 270px; background: var(--highlight-bg); z-index: 11; border-right: 1px solid var(--border);
+        }
 
-        /* MODAL STYLES (unchanged) */
+        .detail-table tr:hover td {
+            background-color: rgba(0,0,0,0.02);
+        }
+
+        [data-theme="dark"] .detail-table tr:hover td {
+            background-color: rgba(255,255,255,0.05);
+        }
+
+        /* =========================================
+           MODAL & RANKING STYLES
+           ========================================= */
         .modal-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); z-index: 1000; justify-content: center; align-items: center; }
-        .modal-content { background: var(--card-bg); width: 95%; max-width: 1200px; height: auto; max-height: 85vh; border-radius: var(--radius); overflow: hidden; display: flex; flex-direction: column; animation: slideUp 0.3s ease; color: var(--text); }
+        .modal-content { 
+            background: var(--card-bg); width: 95%; max-width: 1200px; 
+            height: auto; max-height: 85vh; 
+            border-radius: var(--radius); overflow: hidden; 
+            display: flex; flex-direction: column; animation: slideUp 0.3s ease; color: var(--text);
+        }
         @keyframes slideUp { from { transform: translateY(20px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
-        .modal-header { background: var(--primary); color: white; padding: 12px 15px 0 15px; display: flex; align-items: flex-end; flex-shrink: 0; }
-        .close-btn { background: none; border: none; color: white; font-size: 1.5rem; cursor: pointer; display: flex; align-self: center; margin-left: auto; padding-bottom: 10px; }
+        
+        .modal-header { 
+            background: var(--primary); 
+            color: white; 
+            padding: 12px 15px 0 15px; 
+            display: flex; 
+            align-items: flex-end; 
+            flex-shrink: 0; 
+        }
+        
+        .close-btn { 
+            background: none; 
+            border: none; 
+            color: white; 
+            font-size: 1.5rem; 
+            cursor: pointer;  
+            display: flex; 
+            align-self: center; 
+            margin-left: auto; 
+            padding-bottom: 10px; 
+        }
+        
         .modal-body { padding: 0; overflow-y: auto; flex: 1; display: flex; flex-direction: column; position: relative; }
-        .ranking-tabs-wrapper { position: sticky; top: 0; z-index: 40; background: var(--card-bg); padding: 15px 20px; border-bottom: 1px solid var(--border); box-shadow: 0 2px 4px rgba(0,0,0,0.05); }
-        .tab-btn { padding: 8px 16px; background: rgba(0, 0, 0, 0.15); color: rgba(255, 255, 255, 0.8); border: 1px solid transparent; border-radius: 4px 4px 0 0; cursor: pointer; font-size: 0.8rem; display: inline-flex; align-items: center; margin-right: 5px; }
-        .tab-btn.active { padding: 8px 16px; border: 1px solid var(--card-bg); border-bottom: 1px solid white; background: var(--card-bg); color: var(--primary); border-radius: 4px 4px 0 0; cursor: pointer; font-size: 0.8rem; display: inline-flex; align-items: center; margin-right: 5px; }
+        
+        .ranking-tabs-wrapper {
+            position: sticky; top: 0; z-index: 40; background: var(--card-bg);
+            padding: 15px 20px; border-bottom: 1px solid var(--border);
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+        }
+        
+        .tab-btn { 
+            padding: 8px 16px; 
+            background: rgba(0, 0, 0, 0.15); 
+            color: rgba(255, 255, 255, 0.8); 
+            border: 1px solid transparent;
+            border-radius: 4px 4px 0 0; 
+            cursor: pointer; 
+            font-size: 0.8rem; 
+            display: inline-flex;
+            align-items: center; 
+            margin-right: 5px;
+        }
+        
+        .tab-btn.active { 
+            padding: 8px 16px; 
+            border: 1px solid var(--card-bg); 
+            border-bottom: 1px solid white; 
+            background: var(--card-bg); 
+            color: var(--primary); 
+            border-radius: 4px 4px 0 0; 
+            cursor: pointer; 
+            font-size: 0.8rem; 
+            display: inline-flex;
+            align-items: center; 
+            margin-right: 5px; 
+        }
+
         .rank-badge { display: inline-block; width: 22px; height: 22px; line-height: 22px; text-align: center; border-radius: 50%; font-weight: bold; font-size: 0.7rem; background: var(--border); }
-        .rank-1 { background: #ffd700; color: #333; } .rank-2 { background: #c0c0c0; color: #333; } .rank-3 { background: #cd7f32; color: white; }
+        .rank-1 { background: #ffd700; color: #333; }
+        .rank-2 { background: #c0c0c0; color: #333; }
+        .rank-3 { background: #cd7f32; color: white; }
+
         .table-wrapper { overflow-x: auto; -webkit-overflow-scrolling: touch; width: 100%; flex: 1; position: relative; }
         .ranking-table { width: 100%; border-collapse: separate; border-spacing: 0; font-size: 0.8rem; min-width: 800px; }
         .ranking-table th { background: var(--bg); padding: 0; text-align: center; border-bottom: 2px solid var(--border); position: sticky; top: 0; z-index: 5; color: var(--text); vertical-align: middle; height: 55px; }
@@ -274,65 +384,176 @@
         .sort-priority-badge { position: absolute; top: 2px; right: 2px; background: var(--primary); color: white; font-size: 0.55rem; width: 14px; height: 14px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: bold; }
         .ranking-table td { padding: 10px 4px; border-bottom: 1px solid var(--border); color: var(--text); text-align: center; white-space: nowrap; background: var(--card-bg); }
         .ranking-table td.highlight-col { background: var(--highlight-bg); font-weight: bold; }
+
         .ranking-table th:first-child, .ranking-table td:first-child { position: sticky; left: 0; z-index: 30; width: var(--col-rank-w); min-width: var(--col-rank-w); max-width: var(--col-rank-w); border-right: 1px solid var(--border); background: var(--card-bg); }
         .ranking-table th:nth-child(2), .ranking-table td:nth-child(2) { position: sticky; left: var(--col-rank-w); z-index: 25; width: var(--col-name-w); min-width: var(--col-name-w); max-width: var(--col-name-w); text-align: left !important; border-right: 1px solid var(--border); overflow: hidden; text-overflow: ellipsis; background: var(--card-bg); }
         .ranking-table th:nth-child(3), .ranking-table td:nth-child(3) { position: sticky; left: calc(var(--col-rank-w) + var(--col-name-w)); z-index: 20; font-weight: bold; background: var(--card-bg); border-right: 2px solid var(--primary); width: var(--col-total-w); min-width: var(--col-total-w); max-width: var(--col-total-w); font-size: 0.75rem; box-shadow: 2px 0 5px -2px rgba(0,0,0,0.1); padding-right: 4px !important; }
-        .top5-grid-container { display: grid; grid-template-columns: repeat(5, 1fr); gap: 12px; padding: 15px; overflow-y: auto; width: 100%; }
-        .top5-card { background: var(--card-bg); border: 1px solid var(--border); border-radius: var(--radius); padding: 10px; box-shadow: var(--shadow); display: flex; flex-direction: column; min-height: 0; min-width: 0; }
-        .top5-header { display: flex; align-items: center; gap: 5px; margin-bottom: 8px; padding-bottom: 6px; border-bottom: 1px dashed var(--border); color: var(--top5-header-color); font-weight: bold; font-size: 0.75rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-        .top5-item { display: flex; justify-content: space-between; align-items: center; padding: 3px 0; font-size: 0.7rem; border-bottom: 1px solid rgba(0,0,0,0.05); min-width: 0; }
+
+        .top5-grid-container {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 12px;
+            padding: 15px;
+            overflow-y: auto;
+            width: 100%;
+        }
+        .top5-card {
+            background: var(--card-bg);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 10px;
+            box-shadow: var(--shadow);
+            display: flex;
+            flex-direction: column;
+            min-height: 0;
+            min-width: 0;
+        }
+        .top5-header {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            margin-bottom: 8px;
+            padding-bottom: 6px;
+            border-bottom: 1px dashed var(--border);
+            color: var(--top5-header-color);
+            font-weight: bold;
+            font-size: 0.75rem;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        .top5-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 3px 0;
+            font-size: 0.7rem;
+            border-bottom: 1px solid rgba(0,0,0,0.05);
+            min-width: 0;
+        }
         .top5-item:last-child { border-bottom: none; }
-        .top5-rank { width: 16px; height: 16px; background: var(--bg); border-radius: 50%; text-align: center; line-height: 16px; font-size: 0.6rem; font-weight: bold; color: var(--text-muted); margin-right: 5px; flex-shrink: 0; }
-        .top5-item:nth-child(1) .top5-rank { background: #ffd700; color: #333; } .top5-item:nth-child(2) .top5-rank { background: #c0c0c0; color: #333; } .top5-item:nth-child(3) .top5-rank { background: #cd7f32; color: white; }
-        .top5-name { flex: 1; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; margin-right: 5px; font-size: 0.65rem; min-width: 0; }
+        .top5-rank {
+            width: 16px; height: 16px; background: var(--bg); border-radius: 50%;
+            text-align: center; line-height: 16px; font-size: 0.6rem;
+            font-weight: bold; color: var(--text-muted); margin-right: 5px; flex-shrink: 0;
+        }
+        .top5-item:nth-child(1) .top5-rank { background: #ffd700; color: #333; }
+        .top5-item:nth-child(2) .top5-rank { background: #c0c0c0; color: #333; }
+        .top5-item:nth-child(3) .top5-rank { background: #cd7f32; color: white; }
+        .top5-name { 
+            flex: 1; 
+            white-space: nowrap; 
+            overflow: hidden; 
+            text-overflow: ellipsis; 
+            margin-right: 5px; 
+            font-size: 0.65rem; 
+            min-width: 0;
+        }
         .top5-val { font-weight: bold; color: var(--text); font-size: 0.65rem; flex-shrink: 0; }
 
+        /* RESPONSIVE MEDIA QUERIES */
         @media (max-width: 900px) {
-            .header { padding: 15px 15px 10px 15px; min-height: 150px; }
+            .header { 
+                padding: 15px 15px 10px 15px; 
+                min-height: 150px;
+            }
             .header-content-wrapper { max-width: 100%; }
             .header h1 { font-size: 1.2rem; gap: 8px; }
             .header p { font-size: 0.75rem; }
-            .theme-toggle { position: absolute; top: 35px; right: 0; width: 32px; height: 32px; font-size: 0.9rem; }
-            body { padding-top: 185px; }
-            .controls { flex-wrap: wrap; flex-direction: row; align-items: stretch; padding: 10px; gap: 8px; margin: 0 10px 15px 10px; }
-            .filter-group { flex-basis: 100%; flex-direction: row; gap: 5px; }
-            .filter-group select { font-size: 0.85rem; padding: 8px; }
-            .btn { flex: 1; justify-content: center; font-size: 0.85rem; padding: 8px; }
-            .btn-reset { flex-basis: 40%; } .btn-ranking { flex-basis: 55%; margin-top: 0; } 
-            .dashboard-grid { grid-template-columns: repeat(2, 1fr); gap: 10px; padding: 0 10px 15px 10px; }
-            .card { padding: 12px; }
-            .card-title { font-size: 0.85rem; } .metric-row { font-size: 0.85rem; margin-bottom: 6px; }
-            .metric-val { font-size: 0.85rem; } .achv-label { font-size: 0.85rem; } .achv-val { font-size: 1.3rem; } .badge-mtd { font-size: 0.75rem; }
             
-            /* Breakdown table mobile adjustments */
-            .breakdown-section { margin: 0 10px 30px 10px; }
-            .breakdown-header { padding: 12px 15px; }
-            .breakdown-title { font-size: 0.9rem; }
-            .breakdown-table { font-size: 0.7rem; }
-            .breakdown-table th, .breakdown-table td { padding: 7px 5px; }
-            .breakdown-table th:nth-child(1), .breakdown-table td:nth-child(1) { min-width: 70px; max-width: 90px; left: 0; }
-            .breakdown-table th:nth-child(2), .breakdown-table td:nth-child(2) { min-width: 80px; max-width: 100px; left: 80px; }
-            .breakdown-table th:nth-child(3), .breakdown-table td:nth-child(3) { min-width: 50px; max-width: 60px; left: 170px; }
+            .theme-toggle { 
+                position: absolute; 
+                top: 35px; 
+                right: 0; 
+                width: 32px; height: 32px; font-size: 0.9rem; 
+            }
+            
+            body { padding-top: 185px; }
 
+            .controls { 
+                flex-wrap: wrap; 
+                flex-direction: row; 
+                align-items: stretch; 
+                padding: 10px; 
+                gap: 8px; 
+                margin: 0 10px 15px 10px; 
+            }
+            .filter-group { 
+                flex-basis: 100%; 
+                flex-direction: row; 
+                gap: 5px;
+            }
+            .filter-group select { font-size: 0.85rem; padding: 8px; }
+            
+            .btn { flex: 1; justify-content: center; font-size: 0.85rem; padding: 8px; }
+            .btn-reset { flex-basis: 40%; }
+            .btn-ranking { flex-basis: 55%; margin-top: 0; } 
+            
+            .dashboard-grid { grid-template-columns: repeat(2, 1fr); gap: 10px; padding: 0 10px 20px 10px; }
+            .card { padding: 12px; }
+            
+            .card-title { font-size: 0.85rem; }
+            .metric-row { font-size: 0.85rem; margin-bottom: 6px; }
+            .metric-val { font-size: 0.85rem; }
+            .achv-label { font-size: 0.85rem; }
+            .achv-val { font-size: 1.3rem; }
+            .badge-mtd { font-size: 0.75rem; }
+            
             :root { --col-name-w: 100px; --col-total-w: 45px; }
             .ranking-table { font-size: 0.7rem; }
             .ranking-table th:nth-child(2), .ranking-table td:nth-child(2) { left: var(--col-rank-w); width: var(--col-name-w); min-width: var(--col-name-w); max-width: var(--col-name-w); }
             .ranking-table th:nth-child(3), .ranking-table td:nth-child(3) { left: calc(var(--col-rank-w) + var(--col-name-w)); width: var(--col-total-w); min-width: var(--col-total-w); max-width: var(--col-total-w); font-size: 0.65rem; }
             .ranking-table th:not(:first-child):not(:nth-child(2)):not(:nth-child(3)), .ranking-table td:not(:first-child):not(:nth-child(2)):not(:nth-child(3)) { min-width: 36px !important; max-width: 40px !important; padding: 8px 2px !important; font-size: 0.6rem !important; }
-            .indicator-prefix { font-size: 0.45rem; } .ranking-table th { height: 48px; } .th-content { padding: 4px 2px; gap: 2px; }
-            .tab-btn.active { padding: 6px 12px; border: 1px solid var(--card-bg); border-bottom: 1px solid var(--card-bg); background: var(--card-bg); color: var(--primary); border-radius: 4px 4px 0 0; }
-            .modal-header h3 { font-size: 1.1rem; } .close-btn { font-size: 1.2rem; }
+            .indicator-prefix { font-size: 0.45rem; }
+            .ranking-table th { height: 48px; }
+            .th-content { padding: 4px 2px; gap: 2px; }
+            
+            .tab-btn.active { 
+                padding: 6px 12px; 
+                border: 1px solid var(--card-bg); 
+                border-bottom: 1px solid var(--card-bg);
+                background: var(--card-bg); 
+                color: var(--primary); 
+                border-radius: 4px 4px 0 0; 
+            }
+            .modal-header h3 { font-size: 1.1rem; }
+            .close-btn { font-size: 1.2rem; }
+            
             .ranking-tabs-wrapper { padding: 10px 15px; }
             .modal-content { width: 100%; height: 100%; border-radius: 0; max-width: none; max-height: 100vh; }
-            .top5-grid-container { grid-template-columns: repeat(2, 1fr); gap: 8px; padding: 10px; }
-            .top5-card { padding: 8px; } .top5-header { font-size: 0.7rem; margin-bottom: 5px; padding-bottom: 4px; }
-            .top5-item { padding: 2px 0; } .top5-name { font-size: 0.6rem; } .top5-val { font-size: 0.6rem; }
+            
+            .top5-grid-container { 
+                grid-template-columns: repeat(2, 1fr); 
+                gap: 8px;
+                padding: 10px;
+            }
+            .top5-card { padding: 8px; }
+            .top5-header { font-size: 0.7rem; margin-bottom: 5px; padding-bottom: 4px; }
+            .top5-item { padding: 2px 0; }
+            .top5-name { font-size: 0.6rem; }
+            .top5-val { font-size: 0.6rem; }
             .top5-rank { width: 14px; height: 14px; line-height: 14px; font-size: 0.55rem; margin-right: 4px; }
+
+            /* Mobile adjustment for detail table */
+            .breakdown-container { padding: 0 10px 40px 10px; }
+            .detail-table th, .detail-table td { padding: 8px 6px; font-size: 0.75rem; }
         }
 
-        [data-theme="dark"] .tab-btn { background: rgba(255, 255, 255, 0.08) !important; color: rgba(255, 255, 255, 0.5) !important; border: 1px solid rgba(255, 255, 255, 0.1) !important; }
-        [data-theme="dark"] .tab-btn:hover { background: rgba(255, 255, 255, 0.15) !important; color: rgba(255, 255, 255, 0.8) !important; }
-        [data-theme="dark"] .tab-btn.active { background: #16213e !important; color: #ffffff !important; border: 1px solid #16213e !important; font-weight: bold; }
+        [data-theme="dark"] .tab-btn {
+            background: rgba(255, 255, 255, 0.08) !important;
+            color: rgba(255, 255, 255, 0.5) !important;
+            border: 1px solid rgba(255, 255, 255, 0.1) !important;
+        }
+        [data-theme="dark"] .tab-btn:hover {
+            background: rgba(255, 255, 255, 0.15) !important;
+            color: rgba(255, 255, 255, 0.8) !important;
+        }
+        [data-theme="dark"] .tab-btn.active {
+            background: #16213e !important; 
+            color: #ffffff !important;
+            border: 1px solid #16213e !important;
+            font-weight: bold;
+        }
     </style>
 </head>
 <body>
@@ -364,33 +585,29 @@
         </div>        
     </div>
 
-    <!-- DETAILED BREAKDOWN TABLE SECTION -->
-    <div class="breakdown-section" id="breakdownSection" style="display:none;">
-        <div class="breakdown-header">
-            <div class="breakdown-title"><i class="fas fa-table"></i> Detailed Breakdown</div>
-            <div class="breakdown-count" id="breakdownCount">0 rows</div>
-        </div>
-        <div class="breakdown-table-wrapper">
-            <table class="breakdown-table">
-                <thead>
-                    <tr>
-                        <th>Co-Branch</th>
-                        <th>Branch</th>
-                        <th>Type</th>
-                        <th>CA MTD</th>
-                        <th>SA MTD</th>
-                        <th>FU MTD</th>
-                        <th>CON MTD</th>
-                        <th>SME MTD</th>
-                        <th>PH MTD</th>
-                        <th>MDIN MTD</th>
-                        <th>QRIS MTD</th>
-                        <th>SLI MTD</th>
-                        <th>CIF MTD</th>
-                    </tr>
-                </thead>
-                <tbody id="breakdownBody"></tbody>
-            </table>
+    <!-- Detailed Breakdown Section -->
+    <div class="breakdown-container" id="breakdownSection" style="display:none;">
+        <div class="breakdown-card">
+            <div class="breakdown-header">
+                <span class="breakdown-title"><i class="fas fa-table"></i> Detailed Data Breakdown</span>
+<!--                
+                <button class="btn btn-reset" onclick="exportTableToExcel()" style="padding: 5px 10px; font-size: 0.75rem;">
+                    <i class="fas fa-file-excel"></i> Export Excel
+                </button>
+-->    
+            </div>
+            <div class="table-responsive">
+                <table class="detail-table" id="detailTable">
+                    <thead>
+                        <tr id="detailTableHead">
+                            <!-- Header akan diisi oleh JS -->
+                        </tr>
+                    </thead>
+                    <tbody id="detailTableBody">
+                        <!-- Data akan diisi oleh JS -->
+                    </tbody>
+                </table>
+            </div>
         </div>
     </div>
 
@@ -415,12 +632,14 @@
     </div>
 
     <script>
+        // CONFIG ARRAY: Data Juli ditaruh paling atas agar menjadi default saat aplikasi dibuka
         const jsonFiles = [
             { id: 'juli', label: 'Juli', file: 'juli.json', meta: '📅 Per: 03 Juli 2026 | 💼 Workdays: 23' },
             { id: 'juni', label: 'Juni', file: 'juni.json', meta: '📅 Per: 30 Juni 2026 | 💼 Workdays: 20' },
             { id: 'mei', label: 'Mei', file: 'mei.json', meta: '📅 Per: 29 Mei 2026 | 💼 Workdays: 16' }            
         ];
 
+        // Default item terpilih: Elemen pertama array (Juli)
         let currentActiveJson = jsonFiles[0]; 
 
         const metrics = [
@@ -436,24 +655,23 @@
             { key: 'cif', label: 'New CIF', icon: 'fa-id-card', type: 'Acquisition MTD', unit: '' }
         ];
 
-        // Kolom-kolom MTD yang ditampilkan di tabel breakdown
-        const breakdownCols = ['ca_mtd','sa_mtd','fu_mtd','con_mtd','sme_mtd','ph_mtd','mdin_mtd','qris_mtd','sli_mtd','cif_mtd'];
-
         let rawData = [];
         let currentRankingMode = 'top5branch';
         let top5Level = 'branch'; 
 
         window.onload = function() {
             initTheme();
-            renderDataTabs();
-            loadJsonData(currentActiveJson);
+            renderDataTabs(); // Membuat tombol tab di header
+            loadJsonData(currentActiveJson); // Otomatis muat data default (juli.json)
         };
 
+        // Menggambar tombol tab secara dinamis berdasarkan isi array jsonFiles
         function renderDataTabs() {
             const container = document.getElementById('dataTabsContainer');
             container.innerHTML = '';
             jsonFiles.forEach((item, index) => {
                 const btn = document.createElement('button');
+                // Index 0 (Juli) otomatis diberikan class 'active' agar langsung menyala saat pertama masuk
                 btn.className = `data-tab-btn ${index === 0 ? 'active' : ''}`;
                 btn.innerText = item.label;
                 btn.onclick = () => switchJsonTab(item, btn);
@@ -461,27 +679,34 @@
             });
         }
 
+        // Fungsi perpindahan data saat tab bulan diklik
         async function switchJsonTab(jsonItem, element) {
             document.querySelectorAll('.data-tab-btn').forEach(b => b.classList.remove('active'));
             element.classList.add('active');
             currentActiveJson = jsonItem;
+            
+            // Reset filter dropdown agar tidak bentrok dengan data baru
             document.getElementById('coBranchFilter').value = "";
             document.getElementById('branchFilter').innerHTML = '<option value="">All Branch</option>';
+            
             await loadJsonData(jsonItem);
         }
 
+        // Mengambil berkas JSON lewat AJAX Fetch
         async function loadJsonData(jsonItem) {
             const container = document.getElementById('dashboardContainer');
             container.innerHTML = `
                 <div style="grid-column: 1/-1; text-align: center; padding: 40px; color: var(--text-muted);">                
                     <i class="fas fa-spinner fa-spin fa-2x"></i><br><br>Memuat data ${jsonItem.label}...
                 </div>`;
+            
             document.getElementById('headerMeta').innerHTML = jsonItem.meta;
 
             try {
                 const res = await fetch(jsonItem.file);
                 if (!res.ok) throw new Error(`File ${jsonItem.file} tidak ditemukan`);
                 rawData = await res.json();
+                
                 if (!Array.isArray(rawData)) throw new Error("Format JSON tidak valid");
 
                 rawData = rawData.map(item => {
@@ -496,8 +721,7 @@
                 populateCoBranchFilter();
                 renderDashboard(rawData);
             } catch (err) {
-                container.innerHTML = `<div style="color:var(--danger); text-align:center; padding:20px;">Error: ${err.message}</div>`;
-                document.getElementById('breakdownSection').style.display = 'none';
+                container.innerHTML = `<div style="color:var(--danger); text-align:center; padding:20px; align:center;">Error: ${err.message}</div>`;
             }
         }
 
@@ -559,7 +783,9 @@
             let prefix = '';
             if (isTarget) prefix = ''; 
             else if ((isGrowthType || isGap) && val > 0) { if (!isGap) prefix = '+'; } 
+            
             let displayVal = isGap ? Math.abs(val) : val;
+
             if (unit === 'M') {
                 if (isTarget) return prefix + displayVal.toLocaleString('id-ID', { minimumFractionDigits: 1, maximumFractionDigits: 1 }) + ' M';
                 if (displayVal === 0) return prefix + '0 M';
@@ -568,74 +794,13 @@
                 return prefix + Math.round(displayVal).toLocaleString('id-ID');
             }
         }
-
-        /**
-         * Format nilai khusus untuk sel tabel breakdown
-         * Lebih ringkas, tanpa prefix +/- untuk growth, hanya angka murni
-         */
-        function formatBreakdownVal(val, unit) {
-            const num = parseFloat(val || 0);
-            if (unit === 'M') {
-                if (num === 0) return '-';
-                return num.toLocaleString('id-ID', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
-            } else {
-                if (num === 0) return '-';
-                return Math.round(num).toLocaleString('id-ID');
-            }
-        }
-
-        /**
-         * Render tabel Detailed Breakdown berdasarkan data yang sedang difilter
-         */
-        function renderBreakdownTable(data) {
-            const section = document.getElementById('breakdownSection');
-            const tbody = document.getElementById('breakdownBody');
-            const countEl = document.getElementById('breakdownCount');
-
-            if (!data || data.length === 0) {
-                section.style.display = 'none';
-                return;
-            }
-
-            section.style.display = 'flex';
-            countEl.textContent = `${data.length} row${data.length !== 1 ? 's' : ''}`;
-
-            // Map kolom ke unit-nya untuk formatting yang benar
-            const colUnitMap = {};
-            metrics.forEach(m => { colUnitMap[m.key + '_mtd'] = m.unit; });
-
-            let html = '';
-            data.forEach(row => {
-                html += '<tr>';
-                html += `<td>${row['co'] || '-'}</td>`;
-                html += `<td>${row['br'] || '-'}</td>`;
-                html += `<td>${row['tp'] || '-'}</td>`;
-                
-                breakdownCols.forEach(col => {
-                    const val = parseFloat(row[col] || 0);
-                    const unit = colUnitMap[col] || '';
-                    const formatted = formatBreakdownVal(val, unit);
-                    
-                    // Tentukan class warna berdasarkan nilai
-                    let cls = '';
-                    if (val < 0) cls = 'val-neg';
-                    else if (val > 0) cls = 'val-pos';
-                    else cls = 'val-zero';
-                    
-                    html += `<td class="${cls}">${formatted}</td>`;
-                });
-                html += '</tr>';
-            });
-
-            tbody.innerHTML = html;
-        }
         
         function renderDashboard(data) {
             const container = document.getElementById('dashboardContainer');
             container.innerHTML = '';
             if (data.length === 0) {
                 container.innerHTML = '<div style="grid-column:1/-1; text-align:center; padding:20px; color:var(--text-muted);">Tidak ada data.</div>';
-                document.getElementById('breakdownSection').style.display = 'none';
+                renderDetailTable([]); // Kosongkan tabel juga
                 return;
             }
 
@@ -696,8 +861,84 @@
                     </div>`;
             });
 
-            // Render tabel breakdown di bawah kartu
-            renderBreakdownTable(data);
+            // Panggil fungsi render tabel detail setelah kartu selesai dibuat
+            renderDetailTable(data);
+        }
+
+        function renderDetailTable(data) {
+            const section = document.getElementById('breakdownSection');
+            const thead = document.getElementById('detailTableHead');
+            const tbody = document.getElementById('detailTableBody');
+            
+            if (!data || data.length === 0) {
+                section.style.display = 'none';
+                return;
+            }
+            
+            section.style.display = 'block';
+            thead.innerHTML = '';
+            tbody.innerHTML = '';
+
+            // 1. Buat Header
+            let headerHTML = '<th>No</th><th>Co-Branch</th><th>Branch</th><th>TP</th>';
+            metrics.forEach(m => {
+                headerHTML += `<th>${m.label}</th>`;
+            });
+            thead.innerHTML = headerHTML;
+
+            // 2. Siapkan variabel untuk Total
+            let totals = {};
+            metrics.forEach(m => totals[m.key] = 0);
+
+            // 3. Loop Data untuk Baris
+            data.forEach((row, index) => {
+                let rowHTML = `<tr>`;
+                rowHTML += `<td>${index + 1}</td>`;
+                rowHTML += `<td>${row['co'] || '-'}</td>`;
+                rowHTML += `<td>${row['br'] || '-'}</td>`;
+                rowHTML += `<td>${row['tp'] || '-'}</td>`;
+
+                metrics.forEach(m => {
+                    let val = parseFloat(row[m.key + '_mtd'] || 0);
+                    totals[m.key] += val; 
+                    
+                    let isGrowth = ['ca', 'sa', 'fu'].includes(m.key);
+                    let formatted = formatValue(val, m.unit, isGrowth, false, false);
+                    let colorClass = (isGrowth && val < 0) ? 'neg' : '';
+                    rowHTML += `<td class="${colorClass}">${formatted}</td>`;
+                });
+                rowHTML += `</tr>`;
+                tbody.innerHTML += rowHTML;
+            });
+
+            // 4. PERBAIKAN BARIS TOTAL (Tanpa Colspan, pakai 4 sel terpisah agar sejajar)
+            let totalRowHTML = `<tr class="total-row">`;
+            
+            // Sel 1 (No): Kosong
+            totalRowHTML += `<td></td>`; 
+            // Sel 2 (Co-Branch): Kosong
+            totalRowHTML += `<td></td>`; 
+            // Sel 3 (Branch): Tulisan TOTAL rata kanan
+            totalRowHTML += `<td style="text-align: right;">TOTAL</td>`; 
+            // Sel 4 (TP): Kosong
+            totalRowHTML += `<td></td>`; 
+            
+            // Lanjutkan dengan data metric totals
+            metrics.forEach(m => {
+                let isGrowth = ['ca', 'sa', 'fu'].includes(m.key);
+                let formatted = formatValue(totals[m.key], m.unit, isGrowth, false, false);
+                totalRowHTML += `<td>${formatted}</td>`;
+            });
+            totalRowHTML += `</tr>`;
+            
+            tbody.innerHTML += totalRowHTML;
+        }
+
+        // FUNGSI BARU: Export ke Excel
+        function exportTableToExcel() {
+            const table = document.getElementById("detailTable");
+            const wb = XLSX.utils.table_to_book(table, {sheet: "Breakdown Data"});
+            XLSX.writeFile(wb, `BankMuamalat_Breakdown_${currentActiveJson.label}.xlsx`);
         }
 
         function openRankingModal() {
@@ -715,14 +956,19 @@
             currentRankingMode = mode;
             document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
             if(btn) btn.classList.add('active');
-            if (mode === 'top5branch') top5Level = 'branch';
-            else if (mode === 'top5cobranch') top5Level = 'co';
+            
+            if (mode === 'top5branch') {
+                top5Level = 'branch';
+            } else if (mode === 'top5cobranch') {
+                top5Level = 'co';
+            }
             renderRanking();
         }
 
         function renderRanking() {
             const thead = document.getElementById('rankingThead');
             const tbody = document.getElementById('rankingTableBody');
+            
             thead.innerHTML = ''; 
             tbody.innerHTML = ''; 
             
@@ -741,14 +987,19 @@
             if (top5Level === 'branch') {
                 metrics.forEach(m => {
                     let branchData = rawData.map(d => ({
-                        name: d['br'], sub: d['co'], val: parseFloat(d[m.key + '_mtd'] || 0)
+                        name: d['br'],
+                        sub: d['co'],
+                        val: parseFloat(d[m.key + '_mtd'] || 0)
                     }));
+
                     branchData = branchData.filter(item => item.val > 0);
                     branchData.sort((a, b) => b.val - a.val);
                     const topN = branchData.slice(0, 5);
+
                     if (topN.length === 0) return;
 
                     let cardHTML = `<div class="top5-card"><div class="top5-header" title="${m.label}"><i class="fas ${m.icon}"></i> ${m.label}</div><div class="top5-list">`;
+                    
                     topN.forEach((item, idx) => {
                         const isGrowth = ['ca','sa','fu'].includes(m.key);
                         const formatted = formatValue(item.val, m.unit, isGrowth, false, false);
@@ -768,20 +1019,30 @@
                 const coMap = {};
                 rawData.forEach(d => {
                     const coName = d['co'] || 'Unknown Co';
-                    if (!coMap[coName]) { coMap[coName] = {}; metrics.forEach(m => coMap[coName][m.key] = 0); }
-                    metrics.forEach(m => { coMap[coName][m.key] += parseFloat(d[m.key + '_mtd'] || 0); });
+                    if (!coMap[coName]) {
+                        coMap[coName] = {};
+                        metrics.forEach(m => coMap[coName][m.key] = 0);
+                    }
+                    metrics.forEach(m => {
+                        coMap[coName][m.key] += parseFloat(d[m.key + '_mtd'] || 0);
+                    });
                 });
 
                 metrics.forEach(m => {
                     let coData = Object.keys(coMap).map(coName => ({
-                        name: coName, sub: 'Region Sumatera', val: coMap[coName][m.key]
+                        name: coName,
+                        sub: 'Region Sumatera',
+                        val: coMap[coName][m.key]
                     }));
+
                     coData = coData.filter(item => item.val > 0);
                     coData.sort((a, b) => b.val - a.val);
                     const topN = coData.slice(0, 5);
+
                     if (topN.length === 0) return;
 
                     let cardHTML = `<div class="top5-card"><div class="top5-header" title="${m.label}"><i class="fas ${m.icon}"></i> ${m.label}</div><div class="top5-list">`;
+                    
                     topN.forEach((item, idx) => {
                         const isGrowth = ['ca','sa','fu'].includes(m.key);
                         const formatted = formatValue(item.val, m.unit, isGrowth, false, false);
