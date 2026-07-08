@@ -1161,6 +1161,61 @@
             const modal = document.getElementById('rankingModal');
             if (e.target == modal) closeRankingModal();
         }
+        // 1. Mencegah Klik Kanan (Context Menu)
+        document.addEventListener('contextmenu', function(e) {
+            e.preventDefault();
+        });
+
+        // 2. Mencegah Shortcut Keyboard (F12, View Source, Inspect Element)
+        document.addEventListener('keydown', function(e) {
+            // Mencegah F12
+            if (e.key === 'F12') {
+                e.preventDefault();
+                return false;
+            }
+            
+            // Mencegah Ctrl+U (View Source)
+            if (e.ctrlKey && e.key === 'u') {
+                e.preventDefault();
+                return false;
+            }
+            
+            // Mencegah Ctrl+Shift+I (Inspect Element)
+            if (e.ctrlKey && e.shiftKey && e.key === 'I') {
+                e.preventDefault();
+                return false;
+            }
+            
+            // Mencegah Ctrl+Shift+J (Console)
+            if (e.ctrlKey && e.shiftKey && e.key === 'J') {
+                e.preventDefault();
+                return false;
+            }
+
+            // Mencegah Ctrl+Shift+C (Inspect Element Selector)
+            if (e.ctrlKey && e.shiftKey && e.key === 'C') {
+                e.preventDefault();
+                return false;
+            }
+
+            // Mencegah Ctrl+S (Mencegah simpan halaman sebagai HTML mentah)
+            if (e.ctrlKey && e.key === 's') {
+                e.preventDefault();
+                return false;
+            }
+        });
+
+        // 3. Proteksi Tambahan: Menutup halaman/Mereset jika Developer Tools terbuka (opsional)
+        // Fungsi ini mendeteksi jika ada perubahan ukuran layar ekstrim akibat konsol terbuka
+        setInterval(function() {
+            const threshold = 160;
+            if (window.outerWidth - window.innerWidth > threshold || 
+                window.outerHeight - window.innerHeight > threshold) {
+                // Jika devtools terbuka, Anda bisa mengarahkan halaman atau memicu aksi lain
+                // Contoh: Lewati atau kosongkan konten demi keamanan
+                console.clear();
+            }
+        }, 1000);        
     </script>
 </body>
 </html>
