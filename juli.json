@@ -19,7 +19,7 @@
       "mdin_tgt": "345",
       "qris_mtd": "0",
       "qris_tgt": "92",
-      "sli_mtd": "3.6",
+      "sli_mtd": "0",
       "sli_tgt": "161",
       "cif_mtd": "14",
       "cif_tgt": "368"
@@ -44,7 +44,7 @@
       "mdin_tgt": "345",
       "qris_mtd": "0",
       "qris_tgt": "92",
-      "sli_mtd": "92.6",
+      "sli_mtd": "0",
       "sli_tgt": "161",
       "cif_mtd": "7",
       "cif_tgt": "368"
@@ -69,7 +69,7 @@
       "mdin_tgt": "345",
       "qris_mtd": "0",
       "qris_tgt": "92",
-      "sli_mtd": "50.8964",
+      "sli_mtd": "0",
       "sli_tgt": "161",
       "cif_mtd": "12",
       "cif_tgt": "368"
@@ -94,7 +94,7 @@
       "mdin_tgt": "345",
       "qris_mtd": "2",
       "qris_tgt": "92",
-      "sli_mtd": "81.1365",
+      "sli_mtd": "0",
       "sli_tgt": "161",
       "cif_mtd": "25",
       "cif_tgt": "368"
@@ -119,7 +119,7 @@
       "mdin_tgt": "345",
       "qris_mtd": "1",
       "qris_tgt": "92",
-      "sli_mtd": "16",
+      "sli_mtd": "0",
       "sli_tgt": "161",
       "cif_mtd": "7",
       "cif_tgt": "368"
@@ -144,7 +144,7 @@
       "mdin_tgt": "345",
       "qris_mtd": "3",
       "qris_tgt": "92",
-      "sli_mtd": "7.5",
+      "sli_mtd": "0",
       "sli_tgt": "161",
       "cif_mtd": "1",
       "cif_tgt": "368"
@@ -219,7 +219,7 @@
       "mdin_tgt": "345",
       "qris_mtd": "1",
       "qris_tgt": "92",
-      "sli_mtd": "16",
+      "sli_mtd": "0",
       "sli_tgt": "161",
       "cif_mtd": "8",
       "cif_tgt": "368"
@@ -244,7 +244,7 @@
       "mdin_tgt": "345",
       "qris_mtd": "0",
       "qris_tgt": "92",
-      "sli_mtd": "36.6588",
+      "sli_mtd": "0",
       "sli_tgt": "161",
       "cif_mtd": "16",
       "cif_tgt": "368"
@@ -269,7 +269,7 @@
       "mdin_tgt": "345",
       "qris_mtd": "0",
       "qris_tgt": "92",
-      "sli_mtd": "44.5",
+      "sli_mtd": "0",
       "sli_tgt": "161",
       "cif_mtd": "22",
       "cif_tgt": "368"
@@ -319,7 +319,7 @@
       "mdin_tgt": "345",
       "qris_mtd": "0",
       "qris_tgt": "92",
-      "sli_mtd": "60",
+      "sli_mtd": "0",
       "sli_tgt": "161",
       "cif_mtd": "7",
       "cif_tgt": "368"
@@ -344,7 +344,7 @@
       "mdin_tgt": "345",
       "qris_mtd": "0",
       "qris_tgt": "92",
-      "sli_mtd": "8",
+      "sli_mtd": "0",
       "sli_tgt": "161",
       "cif_mtd": "14",
       "cif_tgt": "368"
@@ -369,7 +369,7 @@
       "mdin_tgt": "345",
       "qris_mtd": "3",
       "qris_tgt": "92",
-      "sli_mtd": "20",
+      "sli_mtd": "0",
       "sli_tgt": "161",
       "cif_mtd": "14",
       "cif_tgt": "368"
@@ -544,7 +544,7 @@
       "mdin_tgt": "345",
       "qris_mtd": "0",
       "qris_tgt": "92",
-      "sli_mtd": "50",
+      "sli_mtd": "0",
       "sli_tgt": "161",
       "cif_mtd": "10",
       "cif_tgt": "368"
@@ -719,7 +719,7 @@
       "mdin_tgt": "345",
       "qris_mtd": "0",
       "qris_tgt": "92",
-      "sli_mtd": "57.5",
+      "sli_mtd": "0",
       "sli_tgt": "161",
       "cif_mtd": "7",
       "cif_tgt": "368"
@@ -744,7 +744,7 @@
       "mdin_tgt": "345",
       "qris_mtd": "1",
       "qris_tgt": "92",
-      "sli_mtd": "16",
+      "sli_mtd": "0",
       "sli_tgt": "161",
       "cif_mtd": "10",
       "cif_tgt": "368"
@@ -769,7 +769,7 @@
       "mdin_tgt": "345",
       "qris_mtd": "1",
       "qris_tgt": "92",
-      "sli_mtd": "20",
+      "sli_mtd": "0",
       "sli_tgt": "161",
       "cif_mtd": "1",
       "cif_tgt": "368"
@@ -819,7 +819,7 @@
       "mdin_tgt": "345",
       "qris_mtd": "0",
       "qris_tgt": "92",
-      "sli_mtd": "45",
+      "sli_mtd": "0",
       "sli_tgt": "161",
       "cif_mtd": "7",
       "cif_tgt": "368"
@@ -869,7 +869,7 @@
       "mdin_tgt": "345",
       "qris_mtd": "1",
       "qris_tgt": "92",
-      "sli_mtd": "90",
+      "sli_mtd": "0",
       "sli_tgt": "161",
       "cif_mtd": "1",
       "cif_tgt": "368"
@@ -944,7 +944,7 @@
       "mdin_tgt": "345",
       "qris_mtd": "0",
       "qris_tgt": "92",
-      "sli_mtd": "16",
+      "sli_mtd": "0",
       "sli_tgt": "161",
       "cif_mtd": "12",
       "cif_tgt": "368"
@@ -969,7 +969,7 @@
       "mdin_tgt": "345",
       "qris_mtd": "0",
       "qris_tgt": "92",
-      "sli_mtd": "12",
+      "sli_mtd": "0",
       "sli_tgt": "161",
       "cif_mtd": "5",
       "cif_tgt": "368"
