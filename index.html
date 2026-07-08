@@ -4,9 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Leading Indicator Dashboard - Bank Muamalat</title>
-    <!-- Font Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <!-- SheetJS untuk Export Excel -->
     <script src="https://cdn.sheetjs.com/xlsx-latest/package/dist/xlsx.full.min.js"></script>
     <style>
         :root {
@@ -50,6 +48,99 @@
         
         body.modal-open { overflow: hidden; }
         body { background-color: var(--bg); color: var(--text); min-height: 100vh; padding-top: 195px; }
+
+        /* =========================================
+           LOGIN GATE STYLES (MATCHING IMAGE)
+           ========================================= */
+        .login-overlay {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background-color: #1a2332;
+            z-index: 99999;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        .login-card {
+            background: #ffffff;
+            padding: 35px 30px;
+            border-radius: 20px;
+            width: 90%;
+            max-width: 440px;
+            text-align: center;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+        }
+        .login-icon-circle {
+            width: 65px; height: 65px;
+            background: #e8ebfa;
+            color: #4f46e5;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 20px auto;
+            font-size: 1.6rem;
+        }
+        .login-card h2 {
+            font-size: 1.65rem;
+            color: #111827;
+            margin-bottom: 6px;
+            font-weight: 700;
+        }
+        .login-card p {
+            font-size: 0.9rem;
+            color: #6b7280;
+            margin-bottom: 25px;
+        }
+        .password-field-container {
+            position: relative;
+            margin-bottom: 20px;
+        }
+        .password-field-container input {
+            width: 100%;
+            padding: 14px 45px 14px 16px;
+            border: 2px solid #6366f1;
+            border-radius: 12px;
+            font-size: 0.95rem;
+            outline: none;
+            color: #1f2937;
+            background: #ffffff;
+        }
+        .password-field-container i {
+            position: absolute;
+            right: 16px; top: 50%;
+            transform: translateY(-50%);
+            color: #9ca3af;
+            cursor: pointer;
+            font-size: 1.1rem;
+        }
+        .login-card button {
+            width: 100%;
+            padding: 14px;
+            background: #4f46e5;
+            color: #ffffff;
+            border: none;
+            border-radius: 12px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            transition: background 0.2s;
+        }
+        .login-card button:hover { background: #4338ca; }
+        .login-error-msg {
+            color: #dc3545;
+            font-size: 0.8rem;
+            margin-top: -12px;
+            margin-bottom: 15px;
+            text-align: left;
+            padding-left: 4px;
+            display: none;
+        }
+        .main-content { display: none; }
 
         /* =========================================
            HEADER FIXED & CENTERED WITH TABS
@@ -187,7 +278,7 @@
         
         .footer { text-align: center; padding: 10px; font-size: 0.75rem; color: var(--text-muted); margin-top: 3px; }
 
-    /* =========================================
+        /* =========================================
         DETAILED BREAKDOWN TABLE STYLES (UPDATED)
         ========================================= */
         .breakdown-container {
@@ -230,7 +321,7 @@
             border-collapse: collapse;
             font-size: 0.8rem;
             white-space: nowrap;
-            table-layout: fixed; /* KUNCI: Agar lebar kolom konsisten dan sejajar */
+            table-layout: fixed;
         }
 
         .detail-table th, .detail-table td {
@@ -241,13 +332,11 @@
             text-overflow: ellipsis;
         }
 
-        /* Definisi Lebar Kolom Sticky (Wajib sama di TH dan TD) */
         .detail-table th:nth-child(1), .detail-table td:nth-child(1) { width: 40px; min-width: 40px; }
         .detail-table th:nth-child(2), .detail-table td:nth-child(2) { width: 100px; min-width: 100px; }
         .detail-table th:nth-child(3), .detail-table td:nth-child(3) { width: 130px; min-width: 130px; }
         .detail-table th:nth-child(4), .detail-table td:nth-child(4) { width: 70px; min-width: 70px; }
 
-        /* Logic Sticky Columns */
         .detail-table th:first-child, .detail-table td:first-child,
         .detail-table th:nth-child(2), .detail-table td:nth-child(2),
         .detail-table th:nth-child(3), .detail-table td:nth-child(3),
@@ -273,14 +362,12 @@
             z-index: 5;
         }
 
-        /* Styling Baris Total - BORDER TIPIS (1px) */
         .detail-table tr.total-row {
             background-color: var(--highlight-bg);
             font-weight: bold;
-            border-top: 1px solid var(--primary); /* Diubah dari 2px ke 1px */
+            border-top: 1px solid var(--primary);
         }
         
-        /* Pastikan sel TOTAL mengikuti layout sticky & background warna */
         .detail-table tr.total-row td:first-child {
             position: sticky; left: 0; background: var(--highlight-bg); z-index: 11; border-right: 1px solid var(--border);
         }
@@ -294,13 +381,8 @@
             position: sticky; left: 270px; background: var(--highlight-bg); z-index: 11; border-right: 1px solid var(--border);
         }
 
-        .detail-table tr:hover td {
-            background-color: rgba(0,0,0,0.02);
-        }
-
-        [data-theme="dark"] .detail-table tr:hover td {
-            background-color: rgba(255,255,255,0.05);
-        }
+        .detail-table tr:hover td { background-color: rgba(0,0,0,0.02); }
+        [data-theme="dark"] .detail-table tr:hover td { background-color: rgba(255,255,255,0.05); }
 
         /* =========================================
            MODAL & RANKING STYLES
@@ -534,7 +616,6 @@
             .top5-val { font-size: 0.6rem; }
             .top5-rank { width: 14px; height: 14px; line-height: 14px; font-size: 0.55rem; margin-right: 4px; }
 
-            /* Mobile adjustment for detail table */
             .breakdown-container { padding: 0 10px 40px 10px; }
             .detail-table th, .detail-table td { padding: 8px 6px; font-size: 0.75rem; }
             .breakdown-container { display: none !important; }
@@ -559,88 +640,95 @@
 </head>
 <body>
 
-    <div class="header">
-        <div class="header-content-wrapper">
-            <button class="theme-toggle" onclick="toggleTheme()" title="Toggle Dark/Light Mode"><i class="fas fa-moon" id="themeIcon"></i></button>
-            <div style="width: 100%;">
-                <h1><img src="img/BMI.png" alt="Bank Muamalat Logo" class="logo" width="30" height="30"> Bank Muamalat</h1>
-                <p>Leading Indicator Dashboard 📊 Region Sumatera</p>
-                <p id="headerMeta">📅 Per: -- Juni 2026 | 💼 Workdays: --</p>
+    <div id="loginGate" class="login-overlay">
+        <div class="login-card">
+            <div class="login-icon-circle">
+                <i class="fas fa-lock"></i>
             </div>
-        </div>
-        <div class="data-tabs-container" id="dataTabsContainer"></div>
-    </div>
-
-    <div class="controls">
-        <div class="filter-group">
-            <select id="coBranchFilter" onchange="handleCoBranchChange()"><option value="">All Co-Branch</option></select>
-            <select id="branchFilter" onchange="applyFilters()"><option value="">All Branch</option></select>
-        </div>
-        <button class="btn btn-reset" onclick="resetFilters()"><i class="fas fa-sync-alt"></i> Filter Reset</button>
-        <button class="btn btn-ranking" onclick="openRankingModal()"><i class="fas fa-trophy"></i> Performance Ranking</button>
-    </div>
-
-    <div class="dashboard-grid" id="dashboardContainer">
-        <div style="grid-column: 1/-1; text-align: center; padding: 40px; color: var(--text-muted);">                
-            <i class="fas fa-spinner fa-spin fa-2x"></i><br><br>Memuat data...
-        </div>        
-    </div>
-
-    <!-- Detailed Breakdown Section -->
-    <div class="breakdown-container" id="breakdownSection" style="display:none;">
-        <div class="breakdown-card">
-            <div class="breakdown-header">
-                <span class="breakdown-title"><i class="fas fa-table"></i> Detailed Data Breakdown</span>
-<!--                
-                <button class="btn btn-reset" onclick="exportTableToExcel()" style="padding: 5px 10px; font-size: 0.75rem;">
-                    <i class="fas fa-file-excel"></i> Export Excel
-                </button>
--->    
+            <h2>Dashboard Login</h2>
+            <p>Masukkan password untuk akses</p>
+            <div class="password-field-container">
+                <input type="password" id="loginPassword" placeholder="Enter password..." onkeydown="if(event.key === 'Enter') checkLoginPassword()">
+                <i class="fas fa-eye" id="passwordToggleIcon" onclick="togglePasswordVisibility()"></i>
             </div>
-            <div class="table-responsive">
-                <table class="detail-table" id="detailTable">
-                    <thead>
-                        <tr id="detailTableHead">
-                            <!-- Header akan diisi oleh JS -->
-                        </tr>
-                    </thead>
-                    <tbody id="detailTableBody">
-                        <!-- Data akan diisi oleh JS -->
-                    </tbody>
-                </table>
-            </div>
+            <div class="login-error-msg" id="loginError">Password salah, silahkan coba lagi!</div>
+            <button onclick="checkLoginPassword()"><i class="fas fa-sign-in-alt"></i> Masuk</button>
         </div>
     </div>
 
-    <div class="footer">Typing, Create, Update, Repeat | Optimized for Mobile & Web | Theme: Light/Dark | RBPM - Region Sumatera</div>
-
-    <div id="rankingModal" class="modal-overlay">
-        <div class="modal-content">
-            <div class="modal-header">
-                <button class="tab-btn" id="tabTop5Branch" onclick="setRankingTab('top5branch', this)"><i class="fas fa-trophy"></i>Top 5 Branch</button>
-                <button class="tab-btn" onclick="setRankingTab('top5cobranch', this)"><i class="fas fa-sitemap"></i>Top 5 Co-Branch</button>
-                <button class="close-btn" onclick="closeRankingModal()">&times;</button>
+    <div id="mainContentWrapper" class="main-content">
+        <div class="header">
+            <div class="header-content-wrapper">
+                <button class="theme-toggle" onclick="toggleTheme()" title="Toggle Dark/Light Mode"><i class="fas fa-moon" id="themeIcon"></i></button>
+                <div style="width: 100%;">
+                    <h1><img src="img/BMI.png" alt="Bank Muamalat Logo" class="logo" width="30" height="30"> Bank Muamalat</h1>
+                    <p>Leading Indicator Dashboard 📊 Region Sumatera</p>
+                    <p id="headerMeta">📅 Per: -- Juni 2026 | 💼 Workdays: --</p>
+                </div>
             </div>
-            <div class="modal-body">                
-                <div class="table-wrapper">
-                    <table class="ranking-table" id="rankingTable">
-                        <thead id="rankingThead"></thead>
-                        <tbody id="rankingTableBody"></tbody>
+            <div class="data-tabs-container" id="dataTabsContainer"></div>
+        </div>
+
+        <div class="controls">
+            <div class="filter-group">
+                <select id="coBranchFilter" onchange="handleCoBranchChange()"><option value="">All Co-Branch</option></select>
+                <select id="branchFilter" onchange="applyFilters()"><option value="">All Branch</option></select>
+            </div>
+            <button class="btn btn-reset" onclick="resetFilters()"><i class="fas fa-sync-alt"></i> Filter Reset</button>
+            <button class="btn btn-ranking" onclick="openRankingModal()"><i class="fas fa-trophy"></i> Performance Ranking</button>
+        </div>
+
+        <div class="dashboard-grid" id="dashboardContainer">
+            <div style="grid-column: 1/-1; text-align: center; padding: 40px; color: var(--text-muted);">                
+                <i class="fas fa-spinner fa-spin fa-2x"></i><br><br>Memuat data...
+            </div>        
+        </div>
+
+        <div class="breakdown-container" id="breakdownSection" style="display:none;">
+            <div class="breakdown-card">
+                <div class="breakdown-header">
+                    <span class="breakdown-title"><i class="fas fa-table"></i> Detailed Data Breakdown</span>
+                </div>
+                <div class="table-responsive">
+                    <table class="detail-table" id="detailTable">
+                        <thead>
+                            <tr id="detailTableHead"></tr>
+                        </thead>
+                        <tbody id="detailTableBody"></tbody>
                     </table>
+                </div>
+            </div>
+        </div>
+
+        <div class="footer">Typing, Create, Update, Repeat | Optimized for Mobile & Web | Theme: Light/Dark | RBPM - Region Sumatera</div>
+
+        <div id="rankingModal" class="modal-overlay">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button class="tab-btn" id="tabTop5Branch" onclick="setRankingTab('top5branch', this)"><i class="fas fa-trophy"></i>Top 5 Branch</button>
+                    <button class="tab-btn" onclick="setRankingTab('top5cobranch', this)"><i class="fas fa-sitemap"></i>Top 5 Co-Branch</button>
+                    <button class="close-btn" onclick="closeRankingModal()">&times;</button>
+                </div>
+                <div class="modal-body">                
+                    <div class="table-wrapper">
+                        <table class="ranking-table" id="rankingTable">
+                            <thead id="rankingThead"></thead>
+                            <tbody id="rankingTableBody"></tbody>
+                        </table>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
 
     <script>
-        // CONFIG ARRAY: Data Juli ditaruh paling atas agar menjadi default saat aplikasi dibuka
+        // CONFIG ARRAY
         const jsonFiles = [
             { id: 'juli', label: 'Juli', file: 'juli.json', meta: '📅 Per: 03 Juli 2026 | 💼 Workdays: 23' },
             { id: 'juni', label: 'Juni', file: 'juni.json', meta: '📅 Per: 30 Juni 2026 | 💼 Workdays: 20' },
             { id: 'mei', label: 'Mei', file: 'mei.json', meta: '📅 Per: 29 Mei 2026 | 💼 Workdays: 16' }            
         ];
 
-        // Default item terpilih: Elemen pertama array (Juli)
         let currentActiveJson = jsonFiles[0]; 
 
         const metrics = [
@@ -662,17 +750,56 @@
 
         window.onload = function() {
             initTheme();
-            renderDataTabs(); // Membuat tombol tab di header
-            loadJsonData(currentActiveJson); // Otomatis muat data default (juli.json)
+            // Cek jika sudah terautentikasi sebelumnya dalam sesi ini
+            if (sessionStorage.getItem('dashboard_authed') === 'true') {
+                document.getElementById('loginGate').style.display = 'none';
+                document.getElementById('mainContentWrapper').style.display = 'block';
+                renderDataTabs();
+                loadJsonData(currentActiveJson);
+            }
         };
 
-        // Menggambar tombol tab secara dinamis berdasarkan isi array jsonFiles
+        // FUNCTIONS FOR LOGIN SYSTEM
+        function togglePasswordVisibility() {
+            const pwdInput = document.getElementById('loginPassword');
+            const icon = document.getElementById('passwordToggleIcon');
+            if (pwdInput.type === 'password') {
+                pwdInput.type = 'text';
+                icon.className = 'fas fa-eye-slash';
+            } else {
+                pwdInput.type = 'password';
+                icon.className = 'fas fa-eye';
+            }
+        }
+
+        function checkLoginPassword() {
+            const inputVal = document.getElementById('loginPassword').value;
+            const errorMsg = document.getElementById('loginError');
+            
+            if (inputVal === 'rbpm') {
+                errorMsg.style.display = 'none';
+                document.getElementById('loginGate').style.fadeOut = "slow";
+                document.getElementById('loginGate').style.display = 'none';
+                document.getElementById('mainContentWrapper').style.display = 'block';
+                
+                // Simpan status login di session storage
+                sessionStorage.setItem('dashboard_authed', 'true');
+                
+                // Jalankan inisialisasi dashboard asli
+                renderDataTabs();
+                loadJsonData(currentActiveJson);
+            } else {
+                errorMsg.style.display = 'block';
+                document.getElementById('loginPassword').value = '';
+                document.getElementById('loginPassword').focus();
+            }
+        }
+
         function renderDataTabs() {
             const container = document.getElementById('dataTabsContainer');
             container.innerHTML = '';
             jsonFiles.forEach((item, index) => {
                 const btn = document.createElement('button');
-                // Index 0 (Juli) otomatis diberikan class 'active' agar langsung menyala saat pertama masuk
                 btn.className = `data-tab-btn ${index === 0 ? 'active' : ''}`;
                 btn.innerText = item.label;
                 btn.onclick = () => switchJsonTab(item, btn);
@@ -680,20 +807,17 @@
             });
         }
 
-        // Fungsi perpindahan data saat tab bulan diklik
         async function switchJsonTab(jsonItem, element) {
             document.querySelectorAll('.data-tab-btn').forEach(b => b.classList.remove('active'));
             element.classList.add('active');
             currentActiveJson = jsonItem;
             
-            // Reset filter dropdown agar tidak bentrok dengan data baru
             document.getElementById('coBranchFilter').value = "";
             document.getElementById('branchFilter').innerHTML = '<option value="">All Branch</option>';
             
             await loadJsonData(jsonItem);
         }
 
-        // Mengambil berkas JSON lewat AJAX Fetch
         async function loadJsonData(jsonItem) {
             const container = document.getElementById('dashboardContainer');
             container.innerHTML = `
@@ -801,7 +925,7 @@
             container.innerHTML = '';
             if (data.length === 0) {
                 container.innerHTML = '<div style="grid-column:1/-1; text-align:center; padding:20px; color:var(--text-muted);">Tidak ada data.</div>';
-                renderDetailTable([]); // Kosongkan tabel juga
+                renderDetailTable([]); 
                 return;
             }
 
@@ -862,7 +986,6 @@
                     </div>`;
             });
 
-            // Panggil fungsi render tabel detail setelah kartu selesai dibuat
             renderDetailTable(data);
         }
 
@@ -880,18 +1003,13 @@
             thead.innerHTML = '';
             tbody.innerHTML = '';
 
-            // 1. Buat Header
             let headerHTML = '<th>No</th><th>Co-Branch</th><th>Branch</th><th>TP</th>';
-            metrics.forEach(m => {
-                headerHTML += `<th>${m.label}</th>`;
-            });
+            metrics.forEach(m => { headerHTML += `<th>${m.label}</th>`; });
             thead.innerHTML = headerHTML;
 
-            // 2. Siapkan variabel untuk Total
             let totals = {};
             metrics.forEach(m => totals[m.key] = 0);
 
-            // 3. Loop Data untuk Baris
             data.forEach((row, index) => {
                 let rowHTML = `<tr>`;
                 rowHTML += `<td>${index + 1}</td>`;
@@ -912,34 +1030,16 @@
                 tbody.innerHTML += rowHTML;
             });
 
-            // 4. PERBAIKAN BARIS TOTAL (Tanpa Colspan, pakai 4 sel terpisah agar sejajar)
             let totalRowHTML = `<tr class="total-row">`;
+            totalRowHTML += `<td></td><td></td><td style="text-align: right;">TOTAL</td><td></td>`; 
             
-            // Sel 1 (No): Kosong
-            totalRowHTML += `<td></td>`; 
-            // Sel 2 (Co-Branch): Kosong
-            totalRowHTML += `<td></td>`; 
-            // Sel 3 (Branch): Tulisan TOTAL rata kanan
-            totalRowHTML += `<td style="text-align: right;">TOTAL</td>`; 
-            // Sel 4 (TP): Kosong
-            totalRowHTML += `<td></td>`; 
-            
-            // Lanjutkan dengan data metric totals
             metrics.forEach(m => {
                 let isGrowth = ['ca', 'sa', 'fu'].includes(m.key);
                 let formatted = formatValue(totals[m.key], m.unit, isGrowth, false, false);
                 totalRowHTML += `<td>${formatted}</td>`;
             });
             totalRowHTML += `</tr>`;
-            
             tbody.innerHTML += totalRowHTML;
-        }
-
-        // FUNGSI BARU: Export ke Excel
-        function exportTableToExcel() {
-            const table = document.getElementById("detailTable");
-            const wb = XLSX.utils.table_to_book(table, {sheet: "Breakdown Data"});
-            XLSX.writeFile(wb, `BankMuamalat_Breakdown_${currentActiveJson.label}.xlsx`);
         }
 
         function openRankingModal() {
@@ -958,11 +1058,8 @@
             document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
             if(btn) btn.classList.add('active');
             
-            if (mode === 'top5branch') {
-                top5Level = 'branch';
-            } else if (mode === 'top5cobranch') {
-                top5Level = 'co';
-            }
+            if (mode === 'top5branch') { top5Level = 'branch'; } 
+            else if (mode === 'top5cobranch') { top5Level = 'co'; }
             renderRanking();
         }
 
@@ -1024,9 +1121,7 @@
                         coMap[coName] = {};
                         metrics.forEach(m => coMap[coName][m.key] = 0);
                     }
-                    metrics.forEach(m => {
-                        coMap[coName][m.key] += parseFloat(d[m.key + '_mtd'] || 0);
-                    });
+                    metrics.forEach(m => { coMap[coName][m.key] += parseFloat(d[m.key + '_mtd'] || 0); });
                 });
 
                 metrics.forEach(m => {
