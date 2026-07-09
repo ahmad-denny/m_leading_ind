@@ -290,8 +290,8 @@
             border-radius: var(--radius);
             box-shadow: var(--shadow);
             overflow: hidden;
-            border-top: 3px solid var(--primary);
-        }
+            border-top: 1px solid var(--primary);
+            border-left: 1px solid var(--primary);        }
 
         .breakdown-header {
             padding: 15px 20px;
@@ -648,7 +648,7 @@
             <h2>Dashboard Login</h2>
             <p>Masukkan password untuk akses</p>
             <div class="password-field-container">
-                <input type="password" id="loginPassword" placeholder="Enter password..." onkeydown="if(event.key === 'Enter') checkLoginPassword()">
+                <input type="password" id="loginPassword" placeholder="Enter password..." onkeydown="if(event.key === 'Enter') checkLoginPassword()" autofocus>
                 <i class="fas fa-eye" id="passwordToggleIcon" onclick="togglePasswordVisibility()"></i>
             </div>
             <div class="login-error-msg" id="loginError">Password salah, silahkan coba lagi!</div>
@@ -669,7 +669,7 @@
             <div class="data-tabs-container" id="dataTabsContainer"></div>
         </div>
 
-        <div class="controls">
+        <div class="controls" style="border-left: 1px solid var(--primary); border-top: 1px solid var(--primary);">
             <div class="filter-group">
                 <select id="coBranchFilter" onchange="handleCoBranchChange()"><option value="">All Co-Branch</option></select>
                 <select id="branchFilter" onchange="applyFilters()"><option value="">All Branch</option></select>
@@ -732,15 +732,15 @@
         let currentActiveJson = jsonFiles[0]; 
 
         const metrics = [
-            { key: 'ca', label: 'Current Account', icon: 'fa-wallet', type: 'MTD Growth', unit: 'M' },
-            { key: 'sa', label: 'Saving Account', icon: 'fa-sack-dollar', type: 'MTD Growth', unit: 'M' },
+            { key: 'ca', label: 'Current Acc', icon: 'fa-wallet', type: 'MTD Growth', unit: 'M' },
+            { key: 'sa', label: 'Saving Acc', icon: 'fa-sack-dollar', type: 'MTD Growth', unit: 'M' },
             { key: 'fu', label: 'Funding', icon: 'fa-chart-line', type: 'MTD Growth', unit: 'M' },
-            { key: 'con', label: 'Consumer Booking', icon: 'fa-users', type: 'MTD Booking', unit: 'M' },
-            { key: 'sme', label: 'SME - Region', icon: 'fa-building', type: 'MTD Booking', unit: 'M' },
+            { key: 'con', label: 'Consumer', icon: 'fa-users', type: 'MTD Booking', unit: 'M' },
+            { key: 'sme', label: 'SME', icon: 'fa-building', type: 'MTD Booking', unit: 'M' },
             { key: 'ph', label: 'Porsi Haji', icon: 'fa-kaaba', type: 'MTD Booking', unit: '' },
             { key: 'mdin', label: 'MDIN', icon: 'fa-mobile-alt', type: 'Acquisition MTD', unit: '' },
             { key: 'qris', label: 'QRIS', icon: 'fa-qrcode', type: 'Acquisition MTD', unit: '' },
-            { key: 'sli', label: 'Sunlife (SLI)', icon: 'fa-umbrella', type: 'MTD Booking', unit: '' },
+            { key: 'sli', label: 'Sunlife', icon: 'fa-umbrella', type: 'MTD Booking', unit: '' },
             { key: 'cif', label: 'New CIF', icon: 'fa-id-card', type: 'Acquisition MTD', unit: '' }
         ];
 
@@ -1031,7 +1031,7 @@
             });
 
             let totalRowHTML = `<tr class="total-row">`;
-            totalRowHTML += `<td></td><td></td><td style="text-align: right;">TOTAL</td><td></td>`; 
+            totalRowHTML += `<td></td><td></td><td></td><td style="text-align: right;">TOTAL</td>`; 
             
             metrics.forEach(m => {
                 let isGrowth = ['ca', 'sa', 'fu'].includes(m.key);
