@@ -26,6 +26,8 @@
             --col-rank-w: 40px;
             --col-name-w: 120px;
             --col-total-w: 60px;
+
+            --text-primary: #6a4c9c;
         }
 
         [data-theme="dark"] {
@@ -42,6 +44,8 @@
             --sort-text-color: #e2e8f0;
             --sort-icon-color: #a78bfa;
             --top5-header-color: #ffffff;
+            
+            --text-primary: #D4C4F0;
         }
 
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', system-ui, sans-serif; transition: background-color 0.3s, color 0.3s; }
@@ -294,11 +298,12 @@
             border-left: 1px solid var(--primary);        }
 
         .breakdown-header {
+            font-weight: bold;
             padding: 15px 20px;
             border-bottom: 1px solid var(--border);
             display: flex;
             justify-content: space-between;
-            align-items: center;
+            align-items: center;            
         }
 
         .breakdown-title {
@@ -308,6 +313,8 @@
             display: flex;
             align-items: center;
             gap: 8px;
+            color: var(--text-primary);
+            transition: color 0.3s ease;
         }
 
         .table-responsive {
@@ -329,7 +336,7 @@
             text-align: right; 
             border-bottom: 1px solid var(--border);
             overflow: hidden;
-            text-overflow: ellipsis;
+            text-overflow: ellipsis;            
         }
 
         .detail-table th:nth-child(1), .detail-table td:nth-child(1) { width: 40px; min-width: 40px; }
@@ -639,7 +646,6 @@
     </style>
 </head>
 <body>
-
     <div id="loginGate" class="login-overlay">
         <div class="login-card">
             <div class="login-icon-circle">
@@ -668,7 +674,6 @@
             </div>
             <div class="data-tabs-container" id="dataTabsContainer"></div>
         </div>
-
         <div class="controls" style="border-left: 1px solid var(--primary); border-top: 1px solid var(--primary);">
             <div class="filter-group">
                 <select id="coBranchFilter" onchange="handleCoBranchChange()"><option value="">All Co-Branch</option></select>
