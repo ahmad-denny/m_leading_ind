@@ -31,7 +31,7 @@
         }
 
         [data-theme="dark"] {
-            --primary: #6a4c9c; 
+            --primary: #6a4c9c; /* Sedikit lebih terang agar kontras di dark */
             --bg: #1a1a2e;
             --card-bg: #16213e;
             --text: #e0e0e0;
@@ -51,10 +51,11 @@
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', system-ui, sans-serif; transition: background-color 0.3s, color 0.3s; }
         
         body.modal-open { overflow: hidden; }
-        body { background-color: var(--bg); color: var(--text); min-height: 100vh; padding-top: 195px; user-select: none;}
+        /* UPDATED: Padding top disesuaikan untuk mengakomodasi header dan controls */
+        body { background-color: var(--bg); color: var(--text); min-height: 100vh; padding-top: 210px; user-select: none;}
 
         /* =========================================
-           LOGIN GATE STYLES
+           LOGIN GATE STYLES (MATCHING IMAGE)
            ========================================= */
         .login-overlay {
             position: fixed;
@@ -85,26 +86,64 @@
             margin: 0 auto 20px auto;
             font-size: 1.6rem;
         }
-        .login-card h2 { font-size: 1.65rem; color: #111827; margin-bottom: 6px; font-weight: 700; }
-        .login-card p { font-size: 0.9rem; color: #6b7280; margin-bottom: 25px; }
-        .password-field-container { position: relative; margin-bottom: 20px; }
+        .login-card h2 {
+            font-size: 1.65rem;
+            color: #111827;
+            margin-bottom: 6px;
+            font-weight: 700;
+        }
+        .login-card p {
+            font-size: 0.9rem;
+            color: #6b7280;
+            margin-bottom: 25px;
+        }
+        .password-field-container {
+            position: relative;
+            margin-bottom: 20px;
+        }
         .password-field-container input {
-            width: 100%; padding: 14px 45px 14px 16px; border: 2px solid #6366f1;
-            border-radius: 12px; font-size: 0.95rem; outline: none; color: #1f2937; background: #ffffff;
+            width: 100%;
+            padding: 14px 45px 14px 16px;
+            border: 2px solid #6366f1;
+            border-radius: 12px;
+            font-size: 0.95rem;
+            outline: none;
+            color: #1f2937;
+            background: #ffffff;
         }
         .password-field-container i {
-            position: absolute; right: 16px; top: 50%; transform: translateY(-50%);
-            color: #9ca3af; cursor: pointer; font-size: 1.1rem;
+            position: absolute;
+            right: 16px; top: 50%;
+            transform: translateY(-50%);
+            color: #9ca3af;
+            cursor: pointer;
+            font-size: 1.1rem;
         }
         .login-card button {
-            width: 100%; padding: 14px; background: #4f46e5; color: #ffffff; border: none;
-            border-radius: 12px; font-size: 1rem; font-weight: 600; cursor: pointer;
-            display: flex; align-items: center; justify-content: center; gap: 8px; transition: background 0.2s;
+            width: 100%;
+            padding: 14px;
+            background: #4f46e5;
+            color: #ffffff;
+            border: none;
+            border-radius: 12px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            transition: background 0.2s;
         }
         .login-card button:hover { background: #4338ca; }
         .login-error-msg {
-            color: #dc3545; font-size: 0.8rem; margin-top: -12px; margin-bottom: 15px;
-            text-align: left; padding-left: 4px; display: none;
+            color: #dc3545;
+            font-size: 0.8rem;
+            margin-top: -12px;
+            margin-bottom: 15px;
+            text-align: left;
+            padding-left: 4px;
+            display: none;
         }
         .main-content { display: none; }
 
@@ -113,90 +152,134 @@
            ========================================= */
         .header { 
             background: linear-gradient(135deg, var(--primary), #2d1b50); 
-            color: white; padding: 15px 20px 10px 20px; position: fixed; 
-            top: 0; left: 0; right: 0; z-index: 100;
-            display: flex; flex-direction: column; align-items: center; justify-content: center;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.2); min-height: 125px;
+            color: white; 
+            padding: 15px 20px 10px 20px; 
+            position: fixed; 
+            top: 0; left: 0; right: 0;
+            z-index: 100;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+            min-height: 125px;
         }
         
         .header-content-wrapper {
-            position: relative; width: 100%; max-width: 600px;
-            display: flex; align-items: center; justify-content: center;
+            position: relative;
+            width: 100%;
+            max-width: 600px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
 
         .header h1 { 
-            font-size: 1.4rem; margin-bottom: 5px; display: flex; align-items: center; 
-            justify-content: center; gap: 12px; text-align: center; line-height: 1.2;
+            font-size: 1.4rem; 
+            margin-bottom: 5px; 
+            display: flex; 
+            align-items: center; 
+            justify-content: center; 
+            gap: 12px; 
+            text-align: center;
+            line-height: 1.2;
         }
         .header h1 img.logo { object-fit: contain; vertical-align: middle; }
         .header p { font-size: 0.85rem; opacity: 0.9; margin: 2px 0; text-align: center; }
         
+        /* CONTAINER TAB JSON DINAMIS */
         .data-tabs-container {
-            width: 100%; display: flex; justify-content: center; margin-top: 12px;
-            gap: 8px; overflow-x: auto; padding-bottom: 5px;
+            width: 100%;
+            display: flex;
+            justify-content: center;
+            margin-top: 12px;
+            gap: 8px;
+            overflow-x: auto;
+            padding-bottom: 5px;
         }
         .data-tab-btn {
-            padding: 6px 16px; background: rgba(255, 255, 255, 0.15); color: rgba(255, 255, 255, 0.8);
-            border: 1px solid transparent; border-radius: 20px; cursor: pointer;
-            font-size: 0.8rem; font-weight: 600; white-space: nowrap; transition: all 0.2s ease;
+            padding: 6px 16px;
+            background: rgba(255, 255, 255, 0.15);
+            color: rgba(255, 255, 255, 0.8);
+            border: 1px solid transparent;
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 0.8rem;
+            font-weight: 600;
+            white-space: nowrap;
+            transition: all 0.2s ease;
         }
-        .data-tab-btn:hover { background: rgba(255, 255, 255, 0.25); color: #ffffff; }
-        .data-tab-btn.active { background: #ffffff; color: var(--primary); box-shadow: 0 2px 5px rgba(0,0,0,0.15); }
-        [data-theme="dark"] .data-tab-btn.active { background: var(--card-bg); color: #ffffff; border-color: var(--border); }
-        
-        .theme-toggle { 
-            position: fixed; top: 25px; right: 20px; background: rgba(255,255,255,0.15); 
-            border: none; color: white; width: 38px; height: 38px; border-radius: 50%; 
-            cursor: pointer; display: flex; align-items: center; justify-content: center; 
-            font-size: 1rem; z-index: 101; flex-shrink: 0;
+        .data-tab-btn:hover {
+            background: rgba(255, 255, 255, 0.25);
+            color: #ffffff;
         }
-        .theme-toggle:hover { background: rgba(255,255,255,0.25); }
+        .data-tab-btn.active {
+            background: #ffffff;
+            color: var(--primary);
+            box-shadow: 0 2px 5px rgba(0,0,0,0.15);
+        }
+        [data-theme="dark"] .data-tab-btn.active {
+            background: var(--card-bg);
+            color: #ffffff;
+            border-color: var(--border);
+        }
         
-        /* CONTROLS AREA UPDATE */
+        /* BUTTON GROUP (FILTER & THEME) */
+        .header-actions {
+            position: fixed;
+            top: 25px;
+            right: 20px;
+            display: flex;
+            gap: 10px;
+            z-index: 101;
+        }
+
+        .theme-toggle, .filter-toggle { 
+            background: rgba(255,255,255,0.15); 
+            border: none; 
+            color: white; 
+            width: 38px; 
+            height: 38px; 
+            border-radius: 50%; 
+            cursor: pointer; 
+            display: flex; 
+            align-items: center; 
+            justify-content: center; 
+            font-size: 1rem; 
+            flex-shrink: 0;
+            transition: background 0.2s;
+        }
+        .theme-toggle:hover, .filter-toggle:hover { background: rgba(255,255,255,0.25); }
+        .filter-toggle.active { background: var(--warning); color: #333; }
+        
         .controls { 
-            display: flex; flex-direction: column; /* Changed to column to handle toggle logic better */
-            padding: 15px 20px; background: var(--card-bg); margin: 0 20px 15px 20px; 
-            border-radius: var(--radius); box-shadow: var(--shadow); gap: 10px; 
-        }
-
-        .controls-top-row {
-            display: flex; align-items: center; gap: 10px; width: 100%;
-        }
-
-        /* Filter Wrapper for Show/Hide */
-        .filter-wrapper {
-            display: none; /* Default Hidden */
-            width: 100%;
-            margin-top: 5px;
+            display: none; /* Hidden by default */
+            align-items: center; 
+            padding: 15px 20px; 
+            background: var(--card-bg); 
+            margin: 10px 20px 15px 20px; 
+            border-radius: var(--radius); 
+            box-shadow: var(--shadow); 
+            gap: 10px; 
+            flex-wrap: nowrap; 
             animation: slideDown 0.3s ease;
         }
-        .filter-wrapper.show { display: block; }
 
         @keyframes slideDown {
             from { opacity: 0; transform: translateY(-10px); }
             to { opacity: 1; transform: translateY(0); }
         }
 
-        .filter-group { display: flex; gap: 10px; width: 100%; } 
+        .filter-group { display: flex; gap: 10px; flex: 2; min-width: 0; } 
         select { padding: 8px 12px; border: 1px solid var(--border); border-radius: 4px; flex: 1; background: var(--card-bg); color: var(--text); min-width: 0; font-size: 0.85rem; }
-        
         .btn { padding: 8px 16px; border: none; border-radius: 4px; cursor: pointer; font-weight: 600; font-size: 0.85rem; display: inline-flex; align-items: center; gap: 6px; white-space: nowrap; }
-        
-        /* New Toggle Button Style */
-        .btn-filter-toggle {
-            background: var(--primary); color: white;
-        }
-        .btn-filter-toggle.active {
-            background: var(--text-muted);
-        }
-
         .btn-reset { background: var(--text-muted); color: white; flex: 1; justify-content: center; flex-shrink: 0; } 
         .btn-ranking { background: var(--warning); color: #333; flex: 1; justify-content: center; } 
         .btn:hover { opacity: 0.9; transform: translateY(-1px); }
 
         .dashboard-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 15px; padding: 0 20px 20px 20px; }
         
-        .card { background: var(--card-bg); padding: 16px; border-radius: var(--radius); box-shadow: var(--shadow); display: flex; flex-direction: column; }        
+        .card { background: var(--card-bg); padding: 16px; border-radius: var(--radius); box-shadow: var(--shadow); border-top: 0px solid var(--primary); border-left: 0px solid var(--primary); display: flex; flex-direction: column; }        
         .card-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; }
         .card-title { font-size: 0.95rem; font-weight: bold; color: var(--primary); display: flex; align-items: center; gap: 6px; }
         [data-theme="dark"] .card-title { color: var(--card-title-light); }
@@ -215,51 +298,188 @@
         
         .footer { text-align: center; padding: 10px; font-size: 0.75rem; color: var(--text-muted); margin-top: 3px; }
 
-        /* DETAILED BREAKDOWN TABLE STYLES */
-        .breakdown-container { padding: 0 20px 40px 20px; }
-        .breakdown-card { background: var(--card-bg); border-radius: var(--radius); box-shadow: var(--shadow); overflow: hidden; }
-        .breakdown-header { font-weight: bold; padding: 15px 20px; border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; }
-        .breakdown-title { font-size: 1rem; font-weight: bold; color: var(--text-primary); display: flex; align-items: center; gap: 8px; transition: color 0.3s ease; }
-        .table-responsive { overflow-x: auto; width: 100%; -webkit-overflow-scrolling: touch; }
-        .detail-table { width: 100%; border-collapse: collapse; font-size: 0.8rem; white-space: nowrap; table-layout: fixed; }
-        .detail-table th, .detail-table td { padding: 10px 8px; text-align: right; border-bottom: 1px solid var(--border); overflow: hidden; text-overflow: ellipsis; }
+        /* =========================================
+        DETAILED BREAKDOWN TABLE STYLES (UPDATED)
+        ========================================= */
+        .breakdown-container {
+            padding: 0 20px 40px 20px;
+        }
+
+        .breakdown-card {
+            background: var(--card-bg);
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+            overflow: hidden;
+            border-top: 0px solid var(--primary);
+            border-left: 0px solid var(--primary);        }
+
+        .breakdown-header {
+            font-weight: bold;
+            padding: 15px 20px;
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;            
+        }
+
+        .breakdown-title {
+            font-size: 1rem;
+            font-weight: bold;
+            color: var(--primary);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            color: var(--text-primary);
+            transition: color 0.3s ease;
+        }
+
+        .table-responsive {
+            overflow-x: auto;
+            width: 100%;
+            -webkit-overflow-scrolling: touch;
+        }
+
+        .detail-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.8rem;
+            white-space: nowrap;
+            table-layout: fixed;
+        }
+
+        .detail-table th, .detail-table td {
+            padding: 10px 8px;
+            text-align: right; 
+            border-bottom: 1px solid var(--border);
+            overflow: hidden;
+            text-overflow: ellipsis;            
+        }
+
         .detail-table th:nth-child(1), .detail-table td:nth-child(1) { width: 40px; min-width: 40px; }
         .detail-table th:nth-child(2), .detail-table td:nth-child(2) { width: 100px; min-width: 100px; }
         .detail-table th:nth-child(3), .detail-table td:nth-child(3) { width: 130px; min-width: 130px; }
         .detail-table th:nth-child(4), .detail-table td:nth-child(4) { width: 70px; min-width: 70px; }
+
         .detail-table th:first-child, .detail-table td:first-child,
         .detail-table th:nth-child(2), .detail-table td:nth-child(2),
         .detail-table th:nth-child(3), .detail-table td:nth-child(3),
         .detail-table th:nth-child(4), .detail-table td:nth-child(4) {
-            text-align: left; position: sticky; background: var(--card-bg); z-index: 10; border-right: 1px solid var(--border);
+            text-align: left; 
+            position: sticky;
+            background: var(--card-bg);
+            z-index: 10;
+            border-right: 1px solid var(--border);
         }
+
         .detail-table th:first-child, .detail-table td:first-child { left: 0; z-index: 11; }
         .detail-table th:nth-child(2), .detail-table td:nth-child(2) { left: 40px; z-index: 11; }
         .detail-table th:nth-child(3), .detail-table td:nth-child(3) { left: 140px; z-index: 11; }
         .detail-table th:nth-child(4), .detail-table td:nth-child(4) { left: 270px; z-index: 11; border-right: 1px solid var(--border); }
-        .detail-table th { background: var(--bg); color: var(--text-muted); font-weight: 600; position: sticky; top: 0; z-index: 5; }
-        .detail-table tr.total-row { background-color: var(--highlight-bg); font-weight: bold; }
-        .detail-table tr.total-row td:first-child { position: sticky; left: 0; background: var(--highlight-bg); z-index: 11; border-right: 1px solid var(--border); }
-        .detail-table tr.total-row td:nth-child(2) { position: sticky; left: 40px; background: var(--highlight-bg); z-index: 11; border-right: 1px solid var(--border); }
-        .detail-table tr.total-row td:nth-child(3) { position: sticky; left: 140px; background: var(--highlight-bg); z-index: 11; border-right: 1px solid var(--border); text-align: right !important; }
-        .detail-table tr.total-row td:nth-child(4) { position: sticky; left: 270px; background: var(--highlight-bg); z-index: 11; border-right: 1px solid var(--border); }
+
+        .detail-table th {
+            background: var(--bg);
+            color: var(--text-muted);
+            font-weight: 600;
+            position: sticky;
+            top: 0;
+            z-index: 5;
+        }
+
+        .detail-table tr.total-row {
+            background-color: var(--highlight-bg);
+            font-weight: bold;
+            border-top: 0px solid var(--primary);
+        }
+        
+        .detail-table tr.total-row td:first-child {
+            position: sticky; left: 0; background: var(--highlight-bg); z-index: 11; border-right: 1px solid var(--border);
+        }
+        .detail-table tr.total-row td:nth-child(2) {
+            position: sticky; left: 40px; background: var(--highlight-bg); z-index: 11; border-right: 1px solid var(--border);
+        }
+        .detail-table tr.total-row td:nth-child(3) {
+            position: sticky; left: 140px; background: var(--highlight-bg); z-index: 11; border-right: 1px solid var(--border); text-align: right !important;
+        }
+        .detail-table tr.total-row td:nth-child(4) {
+            position: sticky; left: 270px; background: var(--highlight-bg); z-index: 11; border-right: 1px solid var(--border);
+        }
+
         .detail-table tr:hover td { background-color: rgba(0,0,0,0.02); }
         [data-theme="dark"] .detail-table tr:hover td { background-color: rgba(255,255,255,0.05); }
 
-        /* MODAL & RANKING STYLES */
+        /* =========================================
+           MODAL & RANKING STYLES
+           ========================================= */
         .modal-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); z-index: 1000; justify-content: center; align-items: center; }
-        .modal-content { background: var(--card-bg); width: 95%; max-width: 1200px; height: auto; max-height: 85vh; border-radius: var(--radius); overflow: hidden; display: flex; flex-direction: column; animation: slideUp 0.3s ease; color: var(--text); }
+        .modal-content { 
+            background: var(--card-bg); width: 95%; max-width: 1200px; 
+            height: auto; max-height: 85vh; 
+            border-radius: var(--radius); overflow: hidden; 
+            display: flex; flex-direction: column; animation: slideUp 0.3s ease; color: var(--text);
+        }
         @keyframes slideUp { from { transform: translateY(20px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
-        .modal-header { background: var(--primary); color: white; padding: 12px 15px 0 15px; display: flex; align-items: flex-end; flex-shrink: 0; }
-        .close-btn { background: none; border: none; color: white; font-size: 1.5rem; cursor: pointer; display: flex; align-self: center; margin-left: auto; padding-bottom: 10px; }
+        
+        .modal-header { 
+            background: var(--primary); 
+            color: white; 
+            padding: 12px 15px 0 15px; 
+            display: flex; 
+            align-items: flex-end; 
+            flex-shrink: 0; 
+        }
+        
+        .close-btn { 
+            background: none; 
+            border: none; 
+            color: white; 
+            font-size: 1.5rem; 
+            cursor: pointer;  
+            display: flex; 
+            align-self: center; 
+            margin-left: auto; 
+            padding-bottom: 10px; 
+        }
+        
         .modal-body { padding: 0; overflow-y: auto; flex: 1; display: flex; flex-direction: column; position: relative; }
-        .ranking-tabs-wrapper { position: sticky; top: 0; z-index: 40; background: var(--card-bg); padding: 15px 20px; border-bottom: 1px solid var(--border); box-shadow: 0 2px 4px rgba(0,0,0,0.05); }
-        .tab-btn { padding: 8px 16px; background: rgba(0, 0, 0, 0.15); color: rgba(255, 255, 255, 0.8); border: 1px solid transparent; border-radius: 4px 4px 0 0; cursor: pointer; font-size: 0.8rem; display: inline-flex; align-items: center; margin-right: 5px; }
-        .tab-btn.active { padding: 8px 16px; border: 1px solid var(--card-bg); border-bottom: 1px solid white; background: var(--card-bg); color: var(--primary); border-radius: 4px 4px 0 0; cursor: pointer; font-size: 0.8rem; display: inline-flex; align-items: center; margin-right: 5px; }
+        
+        .ranking-tabs-wrapper {
+            position: sticky; top: 0; z-index: 40; background: var(--card-bg);
+            padding: 15px 20px; border-bottom: 1px solid var(--border);
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+        }
+        
+        .tab-btn { 
+            padding: 8px 16px; 
+            background: rgba(0, 0, 0, 0.15); 
+            color: rgba(255, 255, 255, 0.8); 
+            border: 1px solid transparent;
+            border-radius: 4px 4px 0 0; 
+            cursor: pointer; 
+            font-size: 0.8rem; 
+            display: inline-flex;
+            align-items: center; 
+            margin-right: 5px;
+        }
+        
+        .tab-btn.active { 
+            padding: 8px 16px; 
+            border: 1px solid var(--card-bg); 
+            border-bottom: 1px solid white; 
+            background: var(--card-bg); 
+            color: var(--primary); 
+            border-radius: 4px 4px 0 0; 
+            cursor: pointer; 
+            font-size: 0.8rem; 
+            display: inline-flex;
+            align-items: center; 
+            margin-right: 5px; 
+        }
+
         .rank-badge { display: inline-block; width: 22px; height: 22px; line-height: 22px; text-align: center; border-radius: 50%; font-weight: bold; font-size: 0.7rem; background: var(--border); }
         .rank-1 { background: #ffd700; color: #333; }
         .rank-2 { background: #c0c0c0; color: #333; }
         .rank-3 { background: #cd7f32; color: white; }
+
         .table-wrapper { overflow-x: auto; -webkit-overflow-scrolling: touch; width: 100%; flex: 1; position: relative; }
         .ranking-table { width: 100%; border-collapse: separate; border-spacing: 0; font-size: 0.8rem; min-width: 800px; }
         .ranking-table th { background: var(--bg); padding: 0; text-align: center; border-bottom: 2px solid var(--border); position: sticky; top: 0; z-index: 5; color: var(--text); vertical-align: middle; height: 55px; }
@@ -269,61 +489,113 @@
         .sort-priority-badge { position: absolute; top: 2px; right: 2px; background: var(--primary); color: white; font-size: 0.55rem; width: 14px; height: 14px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: bold; }
         .ranking-table td { padding: 10px 4px; border-bottom: 1px solid var(--border); color: var(--text); text-align: center; white-space: nowrap; background: var(--card-bg); }
         .ranking-table td.highlight-col { background: var(--highlight-bg); font-weight: bold; }
+
         .ranking-table th:first-child, .ranking-table td:first-child { position: sticky; left: 0; z-index: 30; width: var(--col-rank-w); min-width: var(--col-rank-w); max-width: var(--col-rank-w); border-right: 1px solid var(--border); background: var(--card-bg); }
         .ranking-table th:nth-child(2), .ranking-table td:nth-child(2) { position: sticky; left: var(--col-rank-w); z-index: 25; width: var(--col-name-w); min-width: var(--col-name-w); max-width: var(--col-name-w); text-align: left !important; border-right: 1px solid var(--border); overflow: hidden; text-overflow: ellipsis; background: var(--card-bg); }
         .ranking-table th:nth-child(3), .ranking-table td:nth-child(3) { position: sticky; left: calc(var(--col-rank-w) + var(--col-name-w)); z-index: 20; font-weight: bold; background: var(--card-bg); border-right: 2px solid var(--primary); width: var(--col-total-w); min-width: var(--col-total-w); max-width: var(--col-total-w); font-size: 0.75rem; box-shadow: 2px 0 5px -2px rgba(0,0,0,0.1); padding-right: 4px !important; }
-        .top5-grid-container { display: grid; grid-template-columns: repeat(5, 1fr); gap: 12px; padding: 15px; overflow-y: auto; width: 100%; }
-        .top5-card { background: var(--card-bg); border: 1px solid var(--border); border-radius: var(--radius); padding: 10px; box-shadow: var(--shadow); display: flex; flex-direction: column; min-height: 0; min-width: 0; }
-        .top5-header { display: flex; align-items: center; gap: 5px; margin-bottom: 8px; padding-bottom: 6px; border-bottom: 1px dashed var(--border); color: var(--top5-header-color); font-weight: bold; font-size: 0.75rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-        .top5-item { display: flex; justify-content: space-between; align-items: center; padding: 3px 0; font-size: 0.7rem; border-bottom: 1px solid rgba(0,0,0,0.05); min-width: 0; }
+
+        .top5-grid-container {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 12px;
+            padding: 15px;
+            overflow-y: auto;
+            width: 100%;
+        }
+        .top5-card {
+            background: var(--card-bg);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 10px;
+            box-shadow: var(--shadow);
+            display: flex;
+            flex-direction: column;
+            min-height: 0;
+            min-width: 0;
+        }
+        .top5-header {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            margin-bottom: 8px;
+            padding-bottom: 6px;
+            border-bottom: 1px dashed var(--border);
+            color: var(--top5-header-color);
+            font-weight: bold;
+            font-size: 0.75rem;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        .top5-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 3px 0;
+            font-size: 0.7rem;
+            border-bottom: 1px solid rgba(0,0,0,0.05);
+            min-width: 0;
+        }
         .top5-item:last-child { border-bottom: none; }
-        .top5-rank { width: 16px; height: 16px; background: var(--bg); border-radius: 50%; text-align: center; line-height: 16px; font-size: 0.6rem; font-weight: bold; color: var(--text-muted); margin-right: 5px; flex-shrink: 0; }
+        .top5-rank {
+            width: 16px; height: 16px; background: var(--bg); border-radius: 50%;
+            text-align: center; line-height: 16px; font-size: 0.6rem;
+            font-weight: bold; color: var(--text-muted); margin-right: 5px; flex-shrink: 0;
+        }
         .top5-item:nth-child(1) .top5-rank { background: #ffd700; color: #333; }
         .top5-item:nth-child(2) .top5-rank { background: #c0c0c0; color: #333; }
         .top5-item:nth-child(3) .top5-rank { background: #cd7f32; color: white; }
-        .top5-name { flex: 1; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; margin-right: 5px; font-size: 0.65rem; min-width: 0; }
+        .top5-name { 
+            flex: 1; 
+            white-space: nowrap; 
+            overflow: hidden; 
+            text-overflow: ellipsis; 
+            margin-right: 5px; 
+            font-size: 0.65rem; 
+            min-width: 0;
+        }
         .top5-val { font-weight: bold; color: var(--text); font-size: 0.65rem; flex-shrink: 0; }
 
         /* RESPONSIVE MEDIA QUERIES */
         @media (max-width: 900px) {
-            .header { padding: 15px 15px 10px 15px; min-height: 150px; }
+            .header { 
+                padding: 15px 15px 10px 15px; 
+                min-height: 150px;
+            }
             .header-content-wrapper { max-width: 100%; }
             .header h1 { font-size: 1.2rem; gap: 8px; }
             .header p { font-size: 0.75rem; }
             
-            .theme-toggle { position: absolute; top: 35px; right: 0; width: 32px; height: 32px; font-size: 0.9rem; }
+            .header-actions { 
+                position: absolute; 
+                top: 35px; 
+                right: 0; 
+            }
+            .theme-toggle, .filter-toggle {
+                width: 32px; height: 32px; font-size: 0.9rem; 
+            }
             
+            /* Mobile spacing adjustment */
             body { padding-top: 185px; }
 
             .controls { 
-                padding: 10px; gap: 8px; margin: 0 10px 15px 10px; 
+                flex-wrap: wrap; 
+                flex-direction: row; 
+                align-items: stretch; 
+                padding: 10px; 
+                gap: 8px; 
+                margin: 10px 10px 15px 10px; 
             }
-            
-            /* Mobile Controls Layout Adjustment */
-            .controls-top-row {
-                flex-wrap: nowrap;
-            }
-            
-            .btn-filter-toggle {
-                flex: 0 0 auto; /* Don't grow, just fit content */
-            }
-
-            .btn-ranking {
-                flex: 1; /* Take remaining space */
-            }
-
-            .filter-wrapper.show {
-                margin-top: 10px;
-            }
-
             .filter-group { 
-                flex-direction: row; gap: 5px;
+                flex-basis: 100%; 
+                flex-direction: row; 
+                gap: 5px;
             }
             .filter-group select { font-size: 0.85rem; padding: 8px; }
             
-            .btn-reset { 
-                width: 100%; margin-top: 5px; flex: none; 
-            }
+            .btn { flex: 1; justify-content: center; font-size: 0.85rem; padding: 8px; }
+            .btn-reset { flex-basis: 40%; }
+            .btn-ranking { flex-basis: 55%; margin-top: 0; } 
             
             .dashboard-grid { grid-template-columns: repeat(2, 1fr); gap: 10px; padding: 0 10px 20px 10px; }
             .card { padding: 12px; }
@@ -344,14 +616,25 @@
             .ranking-table th { height: 48px; }
             .th-content { padding: 4px 2px; gap: 2px; }
             
-            .tab-btn.active { padding: 6px 12px; border: 1px solid var(--card-bg); border-bottom: 1px solid var(--card-bg); background: var(--card-bg); color: var(--primary); border-radius: 4px 4px 0 0; }
+            .tab-btn.active { 
+                padding: 6px 12px; 
+                border: 1px solid var(--card-bg); 
+                border-bottom: 1px solid var(--card-bg);
+                background: var(--card-bg); 
+                color: var(--primary); 
+                border-radius: 4px 4px 0 0; 
+            }
             .modal-header h3 { font-size: 1.1rem; }
             .close-btn { font-size: 1.2rem; }
             
             .ranking-tabs-wrapper { padding: 10px 15px; }
             .modal-content { width: 100%; height: 100%; border-radius: 0; max-width: none; max-height: 100vh; }
             
-            .top5-grid-container { grid-template-columns: repeat(2, 1fr); gap: 8px; padding: 10px; }
+            .top5-grid-container { 
+                grid-template-columns: repeat(2, 1fr); 
+                gap: 8px;
+                padding: 10px;
+            }
             .top5-card { padding: 8px; }
             .top5-header { font-size: 0.7rem; margin-bottom: 5px; padding-bottom: 4px; }
             .top5-item { padding: 2px 0; }
@@ -359,18 +642,34 @@
             .top5-val { font-size: 0.6rem; }
             .top5-rank { width: 14px; height: 14px; line-height: 14px; font-size: 0.55rem; margin-right: 4px; }
 
-            .breakdown-container { padding: 0 10px 40px 10px; display: none !important; }
+            .breakdown-container { padding: 0 10px 40px 10px; }
+            .detail-table th, .detail-table td { padding: 8px 6px; font-size: 0.75rem; }
+            .breakdown-container { display: none !important; }
         }
 
-        [data-theme="dark"] .tab-btn { background: rgba(255, 255, 255, 0.08) !important; color: rgba(255, 255, 255, 0.5) !important; border: 1px solid rgba(255, 255, 255, 0.1) !important; }
-        [data-theme="dark"] .tab-btn:hover { background: rgba(255, 255, 255, 0.15) !important; color: rgba(255, 255, 255, 0.8) !important; }
-        [data-theme="dark"] .tab-btn.active { background: #16213e !important; color: #ffffff !important; border: 1px solid #16213e !important; font-weight: bold; }
+        [data-theme="dark"] .tab-btn {
+            background: rgba(255, 255, 255, 0.08) !important;
+            color: rgba(255, 255, 255, 0.5) !important;
+            border: 1px solid rgba(255, 255, 255, 0.1) !important;
+        }
+        [data-theme="dark"] .tab-btn:hover {
+            background: rgba(255, 255, 255, 0.15) !important;
+            color: rgba(255, 255, 255, 0.8) !important;
+        }
+        [data-theme="dark"] .tab-btn.active {
+            background: #16213e !important; 
+            color: #ffffff !important;
+            border: 1px solid #16213e !important;
+            font-weight: bold;
+        }
     </style>
 </head>
 <body oncontextmenu="return false;" onkeydown="return blockShortcuts(event);" ondragstart="return false;">
     <div id="loginGate" class="login-overlay">
         <div class="login-card">
-            <div class="login-icon-circle"><i class="fas fa-lock"></i></div>
+            <div class="login-icon-circle">
+                <i class="fas fa-lock"></i>
+            </div>
             <h2>Dashboard Login</h2>
             <p>Masukkan password untuk akses</p>
             <div class="password-field-container">
@@ -385,7 +684,12 @@
     <div id="mainContentWrapper" class="main-content">
         <div class="header">
             <div class="header-content-wrapper">
-                <button class="theme-toggle" onclick="toggleTheme()" title="Toggle Dark/Light Mode"><i class="fas fa-moon" id="themeIcon"></i></button>
+                <!-- Button Group Container -->
+                <div class="header-actions">
+                    <button class="filter-toggle" onclick="toggleFilterMenu()" title="Show/Hide Filter"><i class="fas fa-filter" id="filterIcon"></i></button>
+                    <button class="theme-toggle" onclick="toggleTheme()" title="Toggle Dark/Light Mode"><i class="fas fa-moon" id="themeIcon"></i></button>
+                </div>
+                
                 <div style="width: 100%;">
                     <h1><img src="img/BMI.png" alt="Bank Muamalat Logo" class="logo" width="30" height="30"> Bank Muamalat</h1>
                     <p>Leading Indicator Dashboard 📊 Region Sumatera</p>
@@ -395,28 +699,14 @@
             <div class="data-tabs-container" id="dataTabsContainer"></div>
         </div>
         
-        <!-- UPDATED CONTROLS SECTION -->
-        <div class="controls" style="border-left: 0px solid var(--primary); border-top: 0px solid var(--primary);">
-            <!-- Top Row: Toggle Button (Left) & Ranking Button (Right/Fill) -->
-            <div class="controls-top-row">
-                <button class="btn btn-filter-toggle" onclick="toggleFilterMenu()" title="Show/Hide Filter">
-                    <i class="fas fa-filter"></i> Filter
-                </button>
-                <button class="btn btn-ranking" onclick="openRankingModal()">
-                    <i class="fas fa-trophy"></i> Performance Ranking
-                </button>
+        <!-- Controls now hidden by default and animated -->
+        <div class="controls" id="filterControls" style="border-left: 0px solid var(--primary); border-top: 0px solid var(--primary);">
+            <div class="filter-group">
+                <select id="coBranchFilter" onchange="handleCoBranchChange()"><option value="">All Co-Branch</option></select>
+                <select id="branchFilter" onchange="applyFilters()"><option value="">All Branch</option></select>
             </div>
-
-            <!-- Hidden Filter Wrapper -->
-            <div class="filter-wrapper" id="filterMenuWrapper">
-                <div class="filter-group">
-                    <select id="coBranchFilter" onchange="handleCoBranchChange()"><option value="">All Co-Branch</option></select>
-                    <select id="branchFilter" onchange="applyFilters()"><option value="">All Branch</option></select>
-                </div>
-                <button class="btn btn-reset" onclick="resetFilters()" style="margin-top: 8px; width: 100%;">
-                    <i class="fas fa-sync-alt"></i> Reset Filter
-                </button>
-            </div>
+            <button class="btn btn-reset" onclick="resetFilters()"><i class="fas fa-sync-alt"></i> Filter Reset</button>
+            <button class="btn btn-ranking" onclick="openRankingModal()"><i class="fas fa-trophy"></i> Performance Ranking</button>
         </div>
 
         <div class="dashboard-grid" id="dashboardContainer">
@@ -432,7 +722,9 @@
                 </div>
                 <div class="table-responsive">
                     <table class="detail-table" id="detailTable">
-                        <thead><tr id="detailTableHead"></tr></thead>
+                        <thead>
+                            <tr id="detailTableHead"></tr>
+                        </thead>
                         <tbody id="detailTableBody"></tbody>
                     </table>
                 </div>
@@ -489,6 +781,7 @@
 
         window.onload = function() {
             initTheme();
+            // Cek jika sudah terautentikasi sebelumnya dalam sesi ini
             if (sessionStorage.getItem('dashboard_authed') === 'true') {
                 document.getElementById('loginGate').style.display = 'none';
                 document.getElementById('mainContentWrapper').style.display = 'block';
@@ -496,22 +789,6 @@
                 loadJsonData(currentActiveJson);
             }
         };
-
-        // --- NEW FILTER TOGGLE FUNCTION ---
-        function toggleFilterMenu() {
-            const wrapper = document.getElementById('filterMenuWrapper');
-            const btn = document.querySelector('.btn-filter-toggle');
-            wrapper.classList.toggle('show');
-            
-            // Optional: Change button appearance when active
-            if(wrapper.classList.contains('show')) {
-                btn.classList.add('active');
-                btn.innerHTML = '<i class="fas fa-times"></i> Tutup Filter';
-            } else {
-                btn.classList.remove('active');
-                btn.innerHTML = '<i class="fas fa-filter"></i> Filter';
-            }
-        }
 
         // FUNCTIONS FOR LOGIN SYSTEM
         function togglePasswordVisibility() {
@@ -535,7 +812,11 @@
                 document.getElementById('loginGate').style.fadeOut = "slow";
                 document.getElementById('loginGate').style.display = 'none';
                 document.getElementById('mainContentWrapper').style.display = 'block';
+                
+                // Simpan status login di session storage
                 sessionStorage.setItem('dashboard_authed', 'true');
+                
+                // Jalankan inisialisasi dashboard asli
                 renderDataTabs();
                 loadJsonData(currentActiveJson);
             } else {
@@ -561,20 +842,27 @@
             document.querySelectorAll('.data-tab-btn').forEach(b => b.classList.remove('active'));
             element.classList.add('active');
             currentActiveJson = jsonItem;
+            
             document.getElementById('coBranchFilter').value = "";
             document.getElementById('branchFilter').innerHTML = '<option value="">All Branch</option>';
+            
             await loadJsonData(jsonItem);
         }
 
         async function loadJsonData(jsonItem) {
             const container = document.getElementById('dashboardContainer');
-            container.innerHTML = `<div style="grid-column: 1/-1; text-align: center; padding: 40px; color: var(--text-muted);"><i class="fas fa-spinner fa-spin fa-2x"></i><br><br>Memuat data ${jsonItem.label}...</div>`;
+            container.innerHTML = `
+                <div style="grid-column: 1/-1; text-align: center; padding: 40px; color: var(--text-muted);">                
+                    <i class="fas fa-spinner fa-spin fa-2x"></i><br><br>Memuat data ${jsonItem.label}...
+                </div>`;
+            
             document.getElementById('headerMeta').innerHTML = jsonItem.meta;
 
             try {
                 const res = await fetch(jsonItem.file);
                 if (!res.ok) throw new Error(`File ${jsonItem.file} tidak ditemukan`);
                 rawData = await res.json();
+                
                 if (!Array.isArray(rawData)) throw new Error("Format JSON tidak valid");
 
                 rawData = rawData.map(item => {
@@ -611,6 +899,23 @@
                 document.documentElement.setAttribute('data-theme', 'dark');
                 document.getElementById('themeIcon').className = 'fas fa-sun';
                 localStorage.setItem('bm_theme', 'dark');
+            }
+        }
+
+        // NEW FUNCTION: Toggle Filter Menu
+        function toggleFilterMenu() {
+            const controls = document.getElementById('filterControls');
+            const btn = document.querySelector('.filter-toggle');
+            const icon = document.getElementById('filterIcon');
+            
+            if (controls.style.display === 'none' || controls.style.display === '') {
+                controls.style.display = 'flex';
+                btn.classList.add('active');
+                icon.className = 'fas fa-times'; // Change icon to X
+            } else {
+                controls.style.display = 'none';
+                btn.classList.remove('active');
+                icon.className = 'fas fa-filter'; // Change icon back to Filter
             }
         }
 
@@ -651,7 +956,9 @@
             let prefix = '';
             if (isTarget) prefix = ''; 
             else if ((isGrowthType || isGap) && val > 0) { if (!isGap) prefix = '+'; } 
+            
             let displayVal = isGap ? Math.abs(val) : val;
+
             if (unit === 'M') {
                 if (isTarget) return prefix + displayVal.toLocaleString('id-ID', { minimumFractionDigits: 1, maximumFractionDigits: 1 }) + ' M';
                 if (displayVal === 0) return prefix + '0 M';
@@ -761,6 +1068,7 @@
                 metrics.forEach(m => {
                     let val = parseFloat(row[m.key + '_mtd'] || 0);
                     totals[m.key] += val; 
+                    
                     let isGrowth = ['ca', 'sa', 'fu'].includes(m.key);
                     let formatted = formatValue(val, m.unit, isGrowth, false, false);
                     let colorClass = (isGrowth && val < 0) ? 'neg' : '';
@@ -772,6 +1080,7 @@
 
             let totalRowHTML = `<tr class="total-row">`;
             totalRowHTML += `<td></td><td></td><td></td><td style="text-align: right;">TOTAL</td>`; 
+            
             metrics.forEach(m => {
                 let isGrowth = ['ca', 'sa', 'fu'].includes(m.key);
                 let formatted = formatValue(totals[m.key], m.unit, isGrowth, false, false);
@@ -796,6 +1105,7 @@
             currentRankingMode = mode;
             document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
             if(btn) btn.classList.add('active');
+            
             if (mode === 'top5branch') { top5Level = 'branch'; } 
             else if (mode === 'top5cobranch') { top5Level = 'co'; }
             renderRanking();
@@ -804,6 +1114,7 @@
         function renderRanking() {
             const thead = document.getElementById('rankingThead');
             const tbody = document.getElementById('rankingTableBody');
+            
             thead.innerHTML = ''; 
             tbody.innerHTML = ''; 
             
@@ -821,17 +1132,31 @@
 
             if (top5Level === 'branch') {
                 metrics.forEach(m => {
-                    let branchData = rawData.map(d => ({ name: d['br'], sub: d['co'], val: parseFloat(d[m.key + '_mtd'] || 0) }));
+                    let branchData = rawData.map(d => ({
+                        name: d['br'],
+                        sub: d['co'],
+                        val: parseFloat(d[m.key + '_mtd'] || 0)
+                    }));
+
                     branchData = branchData.filter(item => item.val > 0);
                     branchData.sort((a, b) => b.val - a.val);
                     const topN = branchData.slice(0, 5);
+
                     if (topN.length === 0) return;
 
                     let cardHTML = `<div class="top5-card"><div class="top5-header" title="${m.label}"><i class="fas ${m.icon}"></i> ${m.label}</div><div class="top5-list">`;
+                    
                     topN.forEach((item, idx) => {
                         const isGrowth = ['ca','sa','fu'].includes(m.key);
                         const formatted = formatValue(item.val, m.unit, isGrowth, false, false);
-                        cardHTML += `<div class="top5-item"><div style="display:flex; align-items:center; overflow:hidden; flex:1; min-width:0;"><span class="top5-rank">${idx+1}</span><span class="top5-name" title="${item.name} (${item.sub})">${item.name}</span></div><span class="top5-val">${formatted}</span></div>`;
+                        cardHTML += `
+                            <div class="top5-item">
+                                <div style="display:flex; align-items:center; overflow:hidden; flex:1; min-width:0;">
+                                    <span class="top5-rank">${idx+1}</span>
+                                    <span class="top5-name" title="${item.name} (${item.sub})">${item.name}</span>
+                                </div>
+                                <span class="top5-val">${formatted}</span>
+                            </div>`;
                     });
                     cardHTML += `</div></div>`;
                     gridContainer.innerHTML += cardHTML;
@@ -840,22 +1165,39 @@
                 const coMap = {};
                 rawData.forEach(d => {
                     const coName = d['co'] || 'Unknown Co';
-                    if (!coMap[coName]) { coMap[coName] = {}; metrics.forEach(m => coMap[coName][m.key] = 0); }
+                    if (!coMap[coName]) {
+                        coMap[coName] = {};
+                        metrics.forEach(m => coMap[coName][m.key] = 0);
+                    }
                     metrics.forEach(m => { coMap[coName][m.key] += parseFloat(d[m.key + '_mtd'] || 0); });
                 });
 
                 metrics.forEach(m => {
-                    let coData = Object.keys(coMap).map(coName => ({ name: coName, sub: 'Region Sumatera', val: coMap[coName][m.key] }));
+                    let coData = Object.keys(coMap).map(coName => ({
+                        name: coName,
+                        sub: 'Region Sumatera',
+                        val: coMap[coName][m.key]
+                    }));
+
                     coData = coData.filter(item => item.val > 0);
                     coData.sort((a, b) => b.val - a.val);
                     const topN = coData.slice(0, 5);
+
                     if (topN.length === 0) return;
 
                     let cardHTML = `<div class="top5-card"><div class="top5-header" title="${m.label}"><i class="fas ${m.icon}"></i> ${m.label}</div><div class="top5-list">`;
+                    
                     topN.forEach((item, idx) => {
                         const isGrowth = ['ca','sa','fu'].includes(m.key);
                         const formatted = formatValue(item.val, m.unit, isGrowth, false, false);
-                        cardHTML += `<div class="top5-item"><div style="display:flex; align-items:center; overflow:hidden; flex:1; min-width:0;"><span class="top5-rank">${idx+1}</span><span class="top5-name" title="${item.name}">${item.name}</span></div><span class="top5-val">${formatted}</span></div>`;
+                        cardHTML += `
+                            <div class="top5-item">
+                                <div style="display:flex; align-items:center; overflow:hidden; flex:1; min-width:0;">
+                                    <span class="top5-rank">${idx+1}</span>
+                                    <span class="top5-name" title="${item.name}">${item.name}</span>
+                                </div>
+                                <span class="top5-val">${formatted}</span>
+                            </div>`;
                     });
                     cardHTML += `</div></div>`;
                     gridContainer.innerHTML += cardHTML;
@@ -867,18 +1209,60 @@
             const modal = document.getElementById('rankingModal');
             if (e.target == modal) closeRankingModal();
         }
-        document.addEventListener('contextmenu', function(e) { e.preventDefault(); });
-        document.addEventListener('keydown', function(e) {
-            if (e.key === 'F12') { e.preventDefault(); return false; }
-            if (e.ctrlKey && e.key === 'u') { e.preventDefault(); return false; }
-            if (e.ctrlKey && e.shiftKey && e.key === 'I') { e.preventDefault(); return false; }
-            if (e.ctrlKey && e.shiftKey && e.key === 'J') { e.preventDefault(); return false; }
-            if (e.ctrlKey && e.shiftKey && e.key === 'C') { e.preventDefault(); return false; }
-            if (e.ctrlKey && e.key === 's') { e.preventDefault(); return false; }
+        // 1. Mencegah Klik Kanan (Context Menu)
+        document.addEventListener('contextmenu', function(e) {
+            e.preventDefault();
         });
+
+        // 2. Mencegah Shortcut Keyboard (F12, View Source, Inspect Element)
+        document.addEventListener('keydown', function(e) {
+            // Mencegah F12
+            if (e.key === 'F12') {
+                e.preventDefault();
+                return false;
+            }
+            
+            // Mencegah Ctrl+U (View Source)
+            if (e.ctrlKey && e.key === 'u') {
+                e.preventDefault();
+                return false;
+            }
+            
+            // Mencegah Ctrl+Shift+I (Inspect Element)
+            if (e.ctrlKey && e.shiftKey && e.key === 'I') {
+                e.preventDefault();
+                return false;
+            }
+            
+            // Mencegah Ctrl+Shift+J (Console)
+            if (e.ctrlKey && e.shiftKey && e.key === 'J') {
+                e.preventDefault();
+                return false;
+            }
+
+            // Mencegah Ctrl+Shift+C (Inspect Element Selector)
+            if (e.ctrlKey && e.shiftKey && e.key === 'C') {
+                e.preventDefault();
+                return false;
+            }
+
+            // Mencegah Ctrl+S (Mencegah simpan halaman sebagai HTML mentah)
+            if (e.ctrlKey && e.key === 's') {
+                e.preventDefault();
+                return false;
+            }
+        });
+
+        // 3. Proteksi Tambahan: Menutup halaman/Mereset jika Developer Tools terbuka (opsional)
+        // Fungsi ini mendeteksi jika ada perubahan ukuran layar ekstrim akibat konsol terbuka
         setInterval(function() {
             const threshold = 160;
-            if (window.outerWidth - window.innerWidth > threshold || window.outerHeight - window.innerHeight > threshold) { console.clear(); }
+            if (window.outerWidth - window.innerWidth > threshold || 
+                window.outerHeight - window.innerHeight > threshold) {
+                // Jika devtools terbuka, Anda bisa mengarahkan halaman atau memicu aksi lain
+                // Contoh: Lewati atau kosongkan konten demi keamanan
+                console.clear();
+            }
         }, 1000);        
     </script>
 </body>
