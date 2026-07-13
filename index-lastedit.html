@@ -276,123 +276,123 @@
         .top5-name { flex: 1; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; margin-right: 5px; font-size: 0.65rem; min-width: 0; }
         .top5-val { font-weight: bold; color: var(--text); font-size: 0.65rem; flex-shrink: 0; }
 
-        /* RESPONSIVE MEDIA QUERIES - PERBAIKAN DI SINI */
+        /* RESPONSIVE MEDIA QUERIES - FINAL FIX */
         @media (max-width: 900px) {
             .header { 
-                padding: 15px 70px 10px 15px; 
-                min-height: 160px; 
-                align-items: flex-start; 
+                padding: 15px 70px 10px 15px !important; 
+                min-height: 160px !important; 
+                align-items: flex-start !important; 
             }
             .header-content-wrapper { 
-                max-width: 100%; 
-                justify-content: flex-start; 
+                max-width: 100% !important; 
+                justify-content: flex-start !important; 
             }
             .header h1 { 
-                font-size: 1.2rem; 
-                gap: 8px; 
-                justify-content: flex-start; 
-                width: 100%;
-                padding-right: 10px; 
-                margin-bottom: 2px; /* Jarak ke Region Sumatera */
+                font-size: 1.2rem !important; 
+                gap: 8px !important; 
+                justify-content: flex-start !important; 
+                width: 100% !important;
+                padding-right: 10px !important; 
+                margin-bottom: 2px !important; 
             }
             
             /* Reset default paragraph styles for mobile */
             .header p { 
-                text-align: left; 
-                width: 100%;
-                margin: 0;
-                opacity: 1;
+                text-align: left !important; 
+                width: 100% !important;
+                margin: 0 !important;
+                opacity: 1 !important;
             }
 
             /* KHUSUS MOBILE: Region Sumatera (p ke-2) */
             .header p:nth-child(2) {
                 font-size: 1.2rem !important; /* Sama dengan H1 */
-                font-weight: 600;
-                margin-bottom: 4px;
-                line-height: 1.3;
+                font-weight: 600 !important;
+                margin-bottom: 4px !important;
+                line-height: 1.3 !important;
             }
 
             /* KHUSUS MOBILE: Leading Indicator (p ke-3) */
             .header p:nth-child(3) {
                 font-size: 0.8rem !important; /* Kembali kecil */
-                opacity: 0.9;
-                margin-bottom: 4px;
+                opacity: 0.9 !important;
+                margin-bottom: 4px !important;
             }
 
             /* KHUSUS MOBILE: Meta Data (p ke-4) */
             .header p:nth-child(4) {
                 font-size: 0.75rem !important;
-                opacity: 0.8;
+                opacity: 0.8 !important;
             }
 
             .data-tabs-container {
                 justify-content: flex-start !important;
-                padding-left: 5px;
+                padding-left: 5px !important;
             }
             
             .theme-toggle { 
-                position: fixed; 
-                top: 20px; 
-                right: 15px; 
-                width: 34px; height: 34px; font-size: 0.9rem; 
-                z-index: 1000; 
+                position: fixed !important; 
+                top: 20px !important; 
+                right: 15px !important; 
+                width: 34px !important; height: 34px !important; font-size: 0.9rem !important; 
+                z-index: 1000 !important; 
             }
             
             .filter-toggle { 
-                position: fixed; 
-                top: 20px; 
-                right: 55px; 
-                width: 34px; height: 34px; font-size: 0.9rem; 
-                z-index: 1000; 
+                position: fixed !important; 
+                top: 20px !important; 
+                right: 55px !important; 
+                width: 34px !important; height: 34px !important; font-size: 0.9rem !important; 
+                z-index: 1000 !important; 
             }
             
-            body { padding-top: 170px; }
+            body { padding-top: 170px !important; }
 
             .controls { 
-                flex-wrap: wrap; 
-                flex-direction: row; 
-                align-items: stretch; 
-                padding: 10px; 
-                gap: 8px; 
-                margin: 0 10px 10px 10px; 
+                flex-wrap: wrap !important; 
+                flex-direction: row !important; 
+                align-items: stretch !important; 
+                padding: 10px !important; 
+                gap: 8px !important; 
+                margin: 0 10px 10px 10px !important; 
             }
-            .filter-group { flex-basis: 100%; flex-direction: row; gap: 5px; }
-            .filter-group select { font-size: 0.85rem; padding: 8px; }
-            .btn { flex: 1; justify-content: center; font-size: 0.85rem; padding: 8px; }
-            .btn-reset { flex-basis: 40%; }
-            .btn-ranking { flex-basis: 55%; margin-top: 0; } 
+            .filter-group { flex-basis: 100% !important; flex-direction: row !important; gap: 5px !important; }
+            .filter-group select { font-size: 0.85rem !important; padding: 8px !important; }
+            .btn { flex: 1 !important; justify-content: center !important; font-size: 0.85rem !important; padding: 8px !important; }
+            .btn-reset { flex-basis: 40% !important; }
+            .btn-ranking { flex-basis: 55% !important; margin-top: 0 !important; } 
             
-            .dashboard-grid { grid-template-columns: repeat(2, 1fr); gap: 10px; padding: 0 10px 20px 10px; }
-            .card { padding: 12px; }
-            .card-title { font-size: 0.85rem; }
-            .metric-row { font-size: 0.85rem; margin-bottom: 6px; }
-            .metric-val { font-size: 0.85rem; }
-            .achv-label { font-size: 0.85rem; }
-            .achv-val { font-size: 1.3rem; }
-            .badge-mtd { font-size: 0.75rem; }
+            .dashboard-grid { grid-template-columns: repeat(2, 1fr) !important; gap: 10px !important; padding: 0 10px 20px 10px !important; }
+            .card { padding: 12px !important; }
+            .card-title { font-size: 0.85rem !important; }
+            .metric-row { font-size: 0.85rem !important; margin-bottom: 6px !important; }
+            .metric-val { font-size: 0.85rem !important; }
+            .achv-label { font-size: 0.85rem !important; }
+            .achv-val { font-size: 1.3rem !important; }
+            .badge-mtd { font-size: 0.75rem !important; }
             
             :root { --col-name-w: 100px; --col-total-w: 45px; }
-            .ranking-table { font-size: 0.7rem; }
-            .ranking-table th:nth-child(2), .ranking-table td:nth-child(2) { left: var(--col-rank-w); width: var(--col-name-w); min-width: var(--col-name-w); max-width: var(--col-name-w); }
-            .ranking-table th:nth-child(3), .ranking-table td:nth-child(3) { left: calc(var(--col-rank-w) + var(--col-name-w)); width: var(--col-total-w); min-width: var(--col-total-w); max-width: var(--col-total-w); font-size: 0.65rem; }
+            .ranking-table { font-size: 0.7rem !important; }
+            .ranking-table th:nth-child(2), .ranking-table td:nth-child(2) { left: var(--col-rank-w) !important; width: var(--col-name-w) !important; min-width: var(--col-name-w) !important; max-width: var(--col-name-w) !important; }
+            .ranking-table th:nth-child(3), .ranking-table td:nth-child(3) { left: calc(var(--col-rank-w) + var(--col-name-w)) !important; width: var(--col-total-w) !important; min-width: var(--col-total-w) !important; max-width: var(--col-total-w) !important; font-size: 0.65rem !important; }
             .ranking-table th:not(:first-child):not(:nth-child(2)):not(:nth-child(3)), .ranking-table td:not(:first-child):not(:nth-child(2)):not(:nth-child(3)) { min-width: 36px !important; max-width: 40px !important; padding: 8px 2px !important; font-size: 0.6rem !important; }
-            .indicator-prefix { font-size: 0.45rem; }
-            .ranking-table th { height: 48px; }
-            .th-content { padding: 4px 2px; gap: 2px; }
-            .tab-btn.active { padding: 6px 12px; border: 1px solid var(--card-bg); border-bottom: 1px solid var(--card-bg); background: var(--card-bg); color: var(--primary); border-radius: 4px 4px 0 0; }
-            .modal-header h3 { font-size: 1.1rem; }
-            .close-btn { font-size: 1.2rem; }
-            .ranking-tabs-wrapper { padding: 10px 15px; }
-            .modal-content { width: 100%; height: 100%; border-radius: 0; max-width: none; max-height: 100vh; }
-            .top5-grid-container { grid-template-columns: repeat(2, 1fr); gap: 8px; padding: 10px; }
-            .top5-card { padding: 8px; }
-            .top5-header { font-size: 0.7rem; margin-bottom: 5px; padding-bottom: 4px; }
-            .top5-item { padding: 2px 0; }
-            .top5-name { font-size: 0.6rem; }
-            .top5-val { font-size: 0.6rem; }
-            .top5-rank { width: 14px; height: 14px; line-height: 14px; font-size: 0.55rem; margin-right: 4px; }
-            .breakdown-container { padding: 0 10px 40px 10px; }
-            .detail-table th, .detail-table td { padding: 8px 6px; font-size: 0.75rem; }
+            .indicator-prefix { font-size: 0.45rem !important; }
+            .ranking-table th { height: 48px !important; }
+            .th-content { padding: 4px 2px !important; gap: 2px !important; }
+            .tab-btn.active { padding: 6px 12px !important; border: 1px solid var(--card-bg) !important; border-bottom: 1px solid var(--card-bg) !important; background: var(--card-bg) !important; color: var(--primary) !important; border-radius: 4px 4px 0 0 !important; }
+            .modal-header h3 { font-size: 1.1rem !important; }
+            .close-btn { font-size: 1.2rem !important; }
+            .ranking-tabs-wrapper { padding: 10px 15px !important; }
+            .modal-content { width: 100% !important; height: 100% !important; border-radius: 0 !important; max-width: none !important; max-height: 100vh !important; }
+            .top5-grid-container { grid-template-columns: repeat(2, 1fr) !important; gap: 8px !important; padding: 10px !important; }
+            .top5-card { padding: 8px !important; }
+            .top5-header { font-size: 0.7rem !important; margin-bottom: 5px !important; padding-bottom: 4px !important; }
+            .top5-item { padding: 2px 0 !important; }
+            .top5-name { font-size: 0.6rem !important; }
+            .top5-val { font-size: 0.6rem !important; }
+            .top5-rank { width: 14px !important; height: 14px !important; line-height: 14px !important; font-size: 0.55rem !important; margin-right: 4px !important; }
+            .breakdown-container { padding: 0 10px 40px 10px !important; }
+            .detail-table th, .detail-table td { padding: 8px 6px !important; font-size: 0.75rem !important; }
             .breakdown-container { display: none !important; }
         }
 
@@ -487,7 +487,7 @@
         const jsonFiles = [
             { id: 'juli', label: 'Juli', file: 'juli.json', meta: '📅 Per: 08 Juli 2026 |  Workdays: 23' },
             { id: 'juni', label: 'Juni', file: 'juni.json', meta: ' Per: 30 Juni 2026 | 💼 Workdays: 20' },
-            { id: 'mei', label: 'Mei', file: 'mei.json', meta: '📅 Per: 29 Mei 2026 | 💼 Workdays: 16' }            
+            { id: 'mei', label: 'Mei', file: 'mei.json', meta: '📅 Per: 29 Mei 2026 |  Workdays: 16' }            
         ];
         let currentActiveJson = jsonFiles[0]; 
         const metrics = [
