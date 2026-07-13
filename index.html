@@ -31,7 +31,7 @@
         }
 
         [data-theme="dark"] {
-            --primary: #6a4c9c; /* Sedikit lebih terang agar kontras di dark */
+            --primary: #6a4c9c;
             --bg: #1a1a2e;
             --card-bg: #16213e;
             --text: #e0e0e0;
@@ -51,10 +51,11 @@
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', system-ui, sans-serif; transition: background-color 0.3s, color 0.3s; }
         
         body.modal-open { overflow: hidden; }
-        body { background-color: var(--bg); color: var(--text); min-height: 100vh; padding-top: 160px; user-select: none;}
+        /* Padding top disesuaikan untuk mengakomodasi header dan controls */
+        body { background-color: var(--bg); color: var(--text); min-height: 100vh; padding-top: 170px; user-select: none;}
 
         /* =========================================
-           LOGIN GATE STYLES (MATCHING IMAGE)
+           LOGIN GATE STYLES
            ========================================= */
         .login-overlay {
             position: fixed;
@@ -223,10 +224,26 @@
             border-color: var(--border);
         }
         
-        .theme-toggle { 
-            position: fixed; 
-            top: 25px; 
-            right: 20px; 
+        /* BUTTON GROUP (FILTER & THEME) - UPDATED FOR LEFT/RIGHT SPLIT */
+        .header-actions {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 100%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            pointer-events: none; /* Allow clicks to pass through empty space */
+            z-index: 101;
+        }
+
+        .left-actions, .right-actions {
+            pointer-events: auto; /* Re-enable clicks on buttons */
+            display: flex;
+            gap: 10px;
+        }
+
+        .theme-toggle, .filter-toggle { 
             background: rgba(255,255,255,0.15); 
             border: none; 
             color: white; 
@@ -238,27 +255,35 @@
             align-items: center; 
             justify-content: center; 
             font-size: 1rem; 
-            z-index: 101; 
             flex-shrink: 0;
+            transition: background 0.2s;
         }
-        .theme-toggle:hover { background: rgba(255,255,255,0.25); }
+        .theme-toggle:hover, .filter-toggle:hover { background: rgba(255,255,255,0.25); }
+        .filter-toggle.active { background: var(--warning); color: #333; }
         
         .controls { 
-            display: flex; 
+            display: none; /* Hidden by default */
             align-items: center; 
             padding: 15px 20px; 
             background: var(--card-bg); 
-            margin: 0 20px 15px 20px; 
+            margin: 10px 20px 15px 20px; 
             border-radius: var(--radius); 
             box-shadow: var(--shadow); 
             gap: 10px; 
             flex-wrap: nowrap; 
+            animation: slideDown 0.3s ease;
         }
+
+        @keyframes slideDown {
+            from { opacity: 0; transform: translateY(-10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
         .filter-group { display: flex; gap: 10px; flex: 2; min-width: 0; } 
         select { padding: 8px 12px; border: 1px solid var(--border); border-radius: 4px; flex: 1; background: var(--card-bg); color: var(--text); min-width: 0; font-size: 0.85rem; }
         .btn { padding: 8px 16px; border: none; border-radius: 4px; cursor: pointer; font-weight: 600; font-size: 0.85rem; display: inline-flex; align-items: center; gap: 6px; white-space: nowrap; }
-        .btn-reset { background: var(--text-muted); color: white; flex: 1; justify-content: center; flex-shrink: 0; } 
-        .btn-ranking { background: var(--warning); color: #333; flex: 1; justify-content: center; } 
+        .btn-ranking { background: green; color: white; flex: 1; justify-content: center; flex-shrink: 0; } 
+        .btn-reset { background: var(--warning); color: #333; flex: 1; justify-content: center; } 
         .btn:hover { opacity: 0.9; transform: translateY(-1px); }
 
         .dashboard-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 15px; padding: 0 20px 20px 20px; }
@@ -283,7 +308,7 @@
         .footer { text-align: center; padding: 10px; font-size: 0.75rem; color: var(--text-muted); margin-top: 3px; }
 
         /* =========================================
-        DETAILED BREAKDOWN TABLE STYLES (UPDATED)
+        DETAILED BREAKDOWN TABLE STYLES
         ========================================= */
         .breakdown-container {
             padding: 0 20px 40px 20px;
@@ -550,13 +575,19 @@
             .header h1 { font-size: 1.2rem; gap: 8px; }
             .header p { font-size: 0.75rem; }
             
-            .theme-toggle { 
+            /* Mobile adjustments for split buttons */
+            .header-actions { 
                 position: absolute; 
-                top: 35px; 
-                right: 0; 
+                top: 25px; /* Adjusted for mobile header height */
+                transform: none;
+/*                padding: 0 10px; */
+                padding: 5 5px;
+            }
+            .theme-toggle, .filter-toggle {
                 width: 32px; height: 32px; font-size: 0.9rem; 
             }
             
+            /* Mobile spacing adjustment */
             body { padding-top: 160px; }
 
             .controls { 
@@ -565,7 +596,7 @@
                 align-items: stretch; 
                 padding: 10px; 
                 gap: 8px; 
-                margin: 0 10px 15px 10px; 
+                margin: 10px 10px 15px 10px; 
             }
             .filter-group { 
                 flex-basis: 100%; 
@@ -665,7 +696,16 @@
     <div id="mainContentWrapper" class="main-content">
         <div class="header">
             <div class="header-content-wrapper">
-                <button class="theme-toggle" onclick="toggleTheme()" title="Toggle Dark/Light Mode"><i class="fas fa-moon" id="themeIcon"></i></button>
+                <!-- Split Actions: Left (Filter) and Right (Theme) -->
+                <div class="header-actions">
+                    <div class="left-actions">
+                        <button class="filter-toggle" onclick="toggleFilterMenu()" title="Show/Hide Filter"><i class="fas fa-filter" id="filterIcon"></i></button>
+                    </div>
+                    <div class="right-actions">
+                        <button class="theme-toggle" onclick="toggleTheme()" title="Toggle Dark/Light Mode"><i class="fas fa-moon" id="themeIcon"></i></button>
+                    </div>
+                </div>
+                
                 <div style="width: 100%;">
                     <h1><img src="img/BMI.png" alt="Bank Muamalat Logo" class="logo" width="30" height="30"> Bank Muamalat</h1>
                     <p>Leading Indicator Dashboard 📊 Region Sumatera</p>
@@ -674,7 +714,9 @@
             </div>
             <div class="data-tabs-container" id="dataTabsContainer"></div>
         </div>
-        <div class="controls" style="border-left: 0px solid var(--primary); border-top: 0px solid var(--primary);">
+        
+        <!-- Controls now hidden by default and animated -->
+        <div class="controls" id="filterControls" style="border-left: 0px solid var(--primary); border-top: 0px solid var(--primary);">
             <div class="filter-group">
                 <select id="coBranchFilter" onchange="handleCoBranchChange()"><option value="">All Co-Branch</option></select>
                 <select id="branchFilter" onchange="applyFilters()"><option value="">All Branch</option></select>
@@ -729,7 +771,7 @@
     <script>
         // CONFIG ARRAY
         const jsonFiles = [
-            { id: 'juli', label: 'Juli', file: 'juli.json', meta: '📅 Per: 09 Juli 2026 | 💼 Workdays: 23' },
+            { id: 'juli', label: 'Juli', file: 'juli.json', meta: '📅 Per: 08 Juli 2026 | 💼 Workdays: 23' },
             { id: 'juni', label: 'Juni', file: 'juni.json', meta: '📅 Per: 30 Juni 2026 | 💼 Workdays: 20' },
             { id: 'mei', label: 'Mei', file: 'mei.json', meta: '📅 Per: 29 Mei 2026 | 💼 Workdays: 16' }            
         ];
@@ -873,6 +915,23 @@
                 document.documentElement.setAttribute('data-theme', 'dark');
                 document.getElementById('themeIcon').className = 'fas fa-sun';
                 localStorage.setItem('bm_theme', 'dark');
+            }
+        }
+
+        // NEW FUNCTION: Toggle Filter Menu
+        function toggleFilterMenu() {
+            const controls = document.getElementById('filterControls');
+            const btn = document.querySelector('.filter-toggle');
+            const icon = document.getElementById('filterIcon');
+            
+            if (controls.style.display === 'none' || controls.style.display === '') {
+                controls.style.display = 'flex';
+                btn.classList.add('active');
+                icon.className = 'fas fa-times'; // Change icon to X
+            } else {
+                controls.style.display = 'none';
+                btn.classList.remove('active');
+                icon.className = 'fas fa-filter'; // Change icon back to Filter
             }
         }
 
