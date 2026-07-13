@@ -4,7 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Leading Indicator Dashboard - Bank Muamalat</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- CACHE BUSTER: v=2.0 memaksa browser load ulang CSS -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css?v=2.0">
     <script src="https://cdn.sheetjs.com/xlsx-latest/package/dist/xlsx.full.min.js"></script>
     <style>
         :root {
@@ -49,6 +50,7 @@
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', system-ui, sans-serif; transition: background-color 0.3s, color 0.3s; }
         
         body.modal-open { overflow: hidden; }
+        /* SPACING FIX: Padding top dikembalikan ke 160px agar ada jarak */
         body { background-color: var(--bg); color: var(--text); min-height: 100vh; padding-top: 160px; user-select: none;}
 
         /* LOGIN GATE */
@@ -105,6 +107,9 @@
         /* Default Header Paragraphs (Desktop) */
         .header p { font-size: 0.85rem; opacity: 0.9; margin: 2px 0; text-align: center; }
         
+        /* Class khusus untuk Region Sumatera di Mobile */
+        .mobile-region-title { display: none; }
+
         .data-tabs-container {
             width: 100%;
             display: flex;
@@ -177,7 +182,8 @@
             align-items: center; 
             padding: 12px 20px; 
             background: var(--card-bg); 
-            margin: 0 20px 10px 20px; 
+            /* MARGIN FIX: Jarak antar header dan card diperjelas */
+            margin: 10px 20px 10px 20px; 
             border-radius: var(--radius); 
             box-shadow: var(--shadow); 
             gap: 10px; 
@@ -276,7 +282,7 @@
         .top5-name { flex: 1; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; margin-right: 5px; font-size: 0.65rem; min-width: 0; }
         .top5-val { font-weight: bold; color: var(--text); font-size: 0.65rem; flex-shrink: 0; }
 
-        /* RESPONSIVE MEDIA QUERIES - FINAL FIX */
+        /* RESPONSIVE MEDIA QUERIES - FINAL FIX WITH !IMPORTANT */
         @media (max-width: 900px) {
             .header { 
                 padding: 15px 70px 10px 15px !important; 
@@ -296,33 +302,35 @@
                 margin-bottom: 2px !important; 
             }
             
-            /* Reset default paragraph styles for mobile */
-            .header p { 
-                text-align: left !important; 
-                width: 100% !important;
-                margin: 0 !important;
-                opacity: 1 !important;
-            }
-
-            /* KHUSUS MOBILE: Region Sumatera (p ke-2) */
-            .header p:nth-child(2) {
+            /* Sembunyikan teks desktop default di mobile */
+            .header p:nth-child(2) { display: none !important; } 
+            
+            /* Tampilkan class mobile khusus */
+            .mobile-region-title { 
+                display: block !important;
                 font-size: 1.2rem !important; /* Sama dengan H1 */
                 font-weight: 600 !important;
                 margin-bottom: 4px !important;
                 line-height: 1.3 !important;
+                text-align: left !important;
+                width: 100% !important;
+                opacity: 1 !important;
             }
 
-            /* KHUSUS MOBILE: Leading Indicator (p ke-3) */
+            /* Leading Indicator tetap kecil di bawah Region Sumatera */
             .header p:nth-child(3) {
-                font-size: 0.8rem !important; /* Kembali kecil */
+                font-size: 0.8rem !important;
                 opacity: 0.9 !important;
                 margin-bottom: 4px !important;
+                text-align: left !important;
+                width: 100% !important;
             }
 
-            /* KHUSUS MOBILE: Meta Data (p ke-4) */
             .header p:nth-child(4) {
                 font-size: 0.75rem !important;
                 opacity: 0.8 !important;
+                text-align: left !important;
+                width: 100% !important;
             }
 
             .data-tabs-container {
@@ -424,10 +432,18 @@
                 
                 <div style="width: 100%; text-align: left;">
                     <h1><img src="img/BMI.png" alt="Bank Muamalat Logo" class="logo" width="30" height="30"> Bank Muamalat</h1>
-                    <!-- Struktur dipisah agar mudah diatur di mobile -->
+                    
+                    <!-- STRUKTUR BARU: Desktop & Mobile Dipisah -->
+                    <!-- Teks ini hanya muncul di Desktop -->
+                    <p>Leading Indicator Dashboard 📊 Region Sumatera</p>
+                    
+                    <!-- Teks ini hanya muncul di Mobile (Region Sumatera Besar) -->
+                    <p class="mobile-region-title">Region Sumatera</p>
+                    
+                    <!-- Teks ini muncul di Mobile (Leading Indicator Kecil) -->
                     <p>Leading Indicator Dashboard 📊</p>
-                    <p>Region Sumatera</p>
-                    <p id="headerMeta">📅 Per: -- Juni 2026 | 💼 Workdays: --</p>
+                    
+                    <p id="headerMeta"> Per: -- Juni 2026 | 💼 Workdays: --</p>
                 </div>
             </div>
             <div class="data-tabs-container" id="dataTabsContainer"></div>
