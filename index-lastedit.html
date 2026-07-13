@@ -106,7 +106,7 @@
         .data-tabs-container {
             width: 100%;
             display: flex;
-            justify-content: center; /* Default Center untuk Desktop */
+            justify-content: center;
             margin-top: 12px;
             gap: 8px;
             overflow-x: auto;
@@ -278,7 +278,7 @@
         @media (max-width: 900px) {
             .header { 
                 padding: 15px 70px 10px 15px; 
-                min-height: 140px;
+                min-height: 160px; /* Tinggi header ditambah karena teks lebih banyak */
                 align-items: flex-start; 
             }
             .header-content-wrapper { 
@@ -292,16 +292,27 @@
                 width: 100%;
                 padding-right: 10px; 
             }
+            
+            /* PERUBAHAN KHUSUS MOBILE UNTUK TEKS HEADER */
             .header p { 
                 font-size: 0.75rem; 
                 text-align: left; 
                 width: 100%;
+                margin: 2px 0;
             }
             
-            /* PERUBAHAN UTAMA DI SINI: Meratakan Tab ke Kiri */
+            /* Membuat teks "Region Sumatera" ukurannya sama dengan Judul Utama */
+            .header p:nth-child(2) {
+                font-size: 1.2rem !important;
+                font-weight: 600;
+                margin-top: 0px;
+                margin-bottom: 4px;
+                opacity: 1;
+            }
+
             .data-tabs-container {
-                justify-content: flex-start !important; /* Override justify-content: center */
-                padding-left: 5px; /* Sedikit jarak dari tepi kiri */
+                justify-content: flex-start !important;
+                padding-left: 5px;
             }
             
             .theme-toggle { 
@@ -320,7 +331,7 @@
                 z-index: 1000; 
             }
             
-            body { padding-top: 150px; }
+            body { padding-top: 170px; } /* Padding body disesuaikan */
 
             .controls { 
                 flex-wrap: wrap; 
@@ -398,8 +409,10 @@
                 
                 <div style="width: 100%; text-align: left;">
                     <h1><img src="img/BMI.png" alt="Bank Muamalat Logo" class="logo" width="30" height="30"> Bank Muamalat</h1>
-                    <p>Leading Indicator Dashboard 📊 Region Sumatera</p>
-                    <p id="headerMeta"> Per: -- Juni 2026 | 💼 Workdays: --</p>
+                    <!-- Struktur dipisah agar mudah diatur di mobile -->
+                    <p>Leading Indicator Dashboard 📊</p>
+                    <p>Region Sumatera</p>
+                    <p id="headerMeta">📅 Per: -- Juni 2026 | 💼 Workdays: --</p>
                 </div>
             </div>
             <div class="data-tabs-container" id="dataTabsContainer"></div>
@@ -457,8 +470,8 @@
 
     <script>
         const jsonFiles = [
-            { id: 'juli', label: 'Juli', file: 'juli.json', meta: '📅 Per: 08 Juli 2026 | 💼 Workdays: 23' },
-            { id: 'juni', label: 'Juni', file: 'juni.json', meta: '📅 Per: 30 Juni 2026 | 💼 Workdays: 20' },
+            { id: 'juli', label: 'Juli', file: 'juli.json', meta: '📅 Per: 08 Juli 2026 |  Workdays: 23' },
+            { id: 'juni', label: 'Juni', file: 'juni.json', meta: ' Per: 30 Juni 2026 | 💼 Workdays: 20' },
             { id: 'mei', label: 'Mei', file: 'mei.json', meta: '📅 Per: 29 Mei 2026 | 💼 Workdays: 16' }            
         ];
         let currentActiveJson = jsonFiles[0]; 
