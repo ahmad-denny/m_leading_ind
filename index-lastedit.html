@@ -106,7 +106,7 @@
         .data-tabs-container {
             width: 100%;
             display: flex;
-            justify-content: center;
+            justify-content: center; /* Default Center untuk Desktop */
             margin-top: 12px;
             gap: 8px;
             overflow-x: auto;
@@ -274,23 +274,23 @@
         .top5-name { flex: 1; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; margin-right: 5px; font-size: 0.65rem; min-width: 0; }
         .top5-val { font-weight: bold; color: var(--text); font-size: 0.65rem; flex-shrink: 0; }
 
-        /* RESPONSIVE MEDIA QUERIES - PERBAIKAN DI SINI */
+        /* RESPONSIVE MEDIA QUERIES */
         @media (max-width: 900px) {
             .header { 
-                padding: 15px 70px 10px 15px; /* Padding kanan diperbesar untuk memberi ruang tombol */
+                padding: 15px 70px 10px 15px; 
                 min-height: 140px;
-                align-items: flex-start; /* Align ke kiri agar teks tidak menabrak tombol di tengah */
+                align-items: flex-start; 
             }
             .header-content-wrapper { 
                 max-width: 100%; 
-                justify-content: flex-start; /* Geser konten ke kiri */
+                justify-content: flex-start; 
             }
             .header h1 { 
                 font-size: 1.2rem; 
                 gap: 8px; 
                 justify-content: flex-start; 
                 width: 100%;
-                padding-right: 10px; /* Ruang aman di dalam judul */
+                padding-right: 10px; 
             }
             .header p { 
                 font-size: 0.75rem; 
@@ -298,21 +298,26 @@
                 width: 100%;
             }
             
-            /* Tombol Theme & Filter di Mobile: Fixed Position & Z-Index Tinggi */
+            /* PERUBAHAN UTAMA DI SINI: Meratakan Tab ke Kiri */
+            .data-tabs-container {
+                justify-content: flex-start !important; /* Override justify-content: center */
+                padding-left: 5px; /* Sedikit jarak dari tepi kiri */
+            }
+            
             .theme-toggle { 
                 position: fixed; 
                 top: 20px; 
                 right: 15px; 
                 width: 34px; height: 34px; font-size: 0.9rem; 
-                z-index: 1000; /* Pastikan di atas segalanya */
+                z-index: 1000; 
             }
             
             .filter-toggle { 
                 position: fixed; 
                 top: 20px; 
-                right: 55px; /* Geser sedikit ke kiri dari theme toggle */
+                right: 55px; 
                 width: 34px; height: 34px; font-size: 0.9rem; 
-                z-index: 1000; /* Pastikan di atas segalanya */
+                z-index: 1000; 
             }
             
             body { padding-top: 150px; }
@@ -388,14 +393,13 @@
     <div id="mainContentWrapper" class="main-content">
         <div class="header">
             <div class="header-content-wrapper">
-                <!-- Tombol Filter diletakkan SEBELUM Theme Toggle agar urutannya benar -->
                 <button class="filter-toggle" onclick="toggleFilter()" title="Show/Hide Filter"><i class="fas fa-filter" id="filterIcon"></i></button>
                 <button class="theme-toggle" onclick="toggleTheme()" title="Toggle Dark/Light Mode"><i class="fas fa-moon" id="themeIcon"></i></button>
                 
                 <div style="width: 100%; text-align: left;">
                     <h1><img src="img/BMI.png" alt="Bank Muamalat Logo" class="logo" width="30" height="30"> Bank Muamalat</h1>
                     <p>Leading Indicator Dashboard 📊 Region Sumatera</p>
-                    <p id="headerMeta">📅 Per: -- Juni 2026 | 💼 Workdays: --</p>
+                    <p id="headerMeta"> Per: -- Juni 2026 | 💼 Workdays: --</p>
                 </div>
             </div>
             <div class="data-tabs-container" id="dataTabsContainer"></div>
