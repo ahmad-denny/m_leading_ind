@@ -26,7 +26,6 @@
             --col-rank-w: 40px;
             --col-name-w: 120px;
             --col-total-w: 60px;
-
             --text-primary: #6a4c9c;
         }
 
@@ -44,112 +43,29 @@
             --sort-text-color: #e2e8f0;
             --sort-icon-color: #a78bfa;
             --top5-header-color: #ffffff;
-            
             --text-primary: #D4C4F0;
         }
 
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', system-ui, sans-serif; transition: background-color 0.3s, color 0.3s; }
         
         body.modal-open { overflow: hidden; }
-        /* PERUBAHAN 1: Padding top dikurangi dari 195px menjadi 160px */
         body { background-color: var(--bg); color: var(--text); min-height: 100vh; padding-top: 160px; user-select: none;}
 
-        /* =========================================
-           LOGIN GATE STYLES
-           ========================================= */
-        .login-overlay {
-            position: fixed;
-            top: 0; left: 0; width: 100%; height: 100%;
-            background-color: #1a2332;
-            z-index: 99999;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-        }
-        .login-card {
-            background: #ffffff;
-            padding: 35px 30px;
-            border-radius: 20px;
-            width: 90%;
-            max-width: 440px;
-            text-align: center;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
-        }
-        .login-icon-circle {
-            width: 65px; height: 65px;
-            background: #e8ebfa;
-            color: #4f46e5;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin: 0 auto 20px auto;
-            font-size: 1.6rem;
-        }
-        .login-card h2 {
-            font-size: 1.65rem;
-            color: #111827;
-            margin-bottom: 6px;
-            font-weight: 700;
-        }
-        .login-card p {
-            font-size: 0.9rem;
-            color: #6b7280;
-            margin-bottom: 25px;
-        }
-        .password-field-container {
-            position: relative;
-            margin-bottom: 20px;
-        }
-        .password-field-container input {
-            width: 100%;
-            padding: 14px 45px 14px 16px;
-            border: 2px solid #6366f1;
-            border-radius: 12px;
-            font-size: 0.95rem;
-            outline: none;
-            color: #1f2937;
-            background: #ffffff;
-        }
-        .password-field-container i {
-            position: absolute;
-            right: 16px; top: 50%;
-            transform: translateY(-50%);
-            color: #9ca3af;
-            cursor: pointer;
-            font-size: 1.1rem;
-        }
-        .login-card button {
-            width: 100%;
-            padding: 14px;
-            background: #4f46e5;
-            color: #ffffff;
-            border: none;
-            border-radius: 12px;
-            font-size: 1rem;
-            font-weight: 600;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 8px;
-            transition: background 0.2s;
-        }
+        /* LOGIN GATE */
+        .login-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: #1a2332; z-index: 99999; display: flex; justify-content: center; align-items: center; }
+        .login-card { background: #ffffff; padding: 35px 30px; border-radius: 20px; width: 90%; max-width: 440px; text-align: center; box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3); }
+        .login-icon-circle { width: 65px; height: 65px; background: #e8ebfa; color: #4f46e5; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 20px auto; font-size: 1.6rem; }
+        .login-card h2 { font-size: 1.65rem; color: #111827; margin-bottom: 6px; font-weight: 700; }
+        .login-card p { font-size: 0.9rem; color: #6b7280; margin-bottom: 25px; }
+        .password-field-container { position: relative; margin-bottom: 20px; }
+        .password-field-container input { width: 100%; padding: 14px 45px 14px 16px; border: 2px solid #6366f1; border-radius: 12px; font-size: 0.95rem; outline: none; color: #1f2937; background: #ffffff; }
+        .password-field-container i { position: absolute; right: 16px; top: 50%; transform: translateY(-50%); color: #9ca3af; cursor: pointer; font-size: 1.1rem; }
+        .login-card button { width: 100%; padding: 14px; background: #4f46e5; color: #ffffff; border: none; border-radius: 12px; font-size: 1rem; font-weight: 600; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px; transition: background 0.2s; }
         .login-card button:hover { background: #4338ca; }
-        .login-error-msg {
-            color: #dc3545;
-            font-size: 0.8rem;
-            margin-top: -12px;
-            margin-bottom: 15px;
-            text-align: left;
-            padding-left: 4px;
-            display: none;
-        }
+        .login-error-msg { color: #dc3545; font-size: 0.8rem; margin-top: -12px; margin-bottom: 15px; text-align: left; padding-left: 4px; display: none; }
         .main-content { display: none; }
 
-        /* =========================================
-           HEADER FIXED & CENTERED WITH TABS
-           ========================================= */
+        /* HEADER & TABS */
         .header { 
             background: linear-gradient(135deg, var(--primary), #2d1b50); 
             color: white; 
@@ -208,21 +124,11 @@
             white-space: nowrap;
             transition: all 0.2s ease;
         }
-        .data-tab-btn:hover {
-            background: rgba(255, 255, 255, 0.25);
-            color: #ffffff;
-        }
-        .data-tab-btn.active {
-            background: #ffffff;
-            color: var(--primary);
-            box-shadow: 0 2px 5px rgba(0,0,0,0.15);
-        }
-        [data-theme="dark"] .data-tab-btn.active {
-            background: var(--card-bg);
-            color: #ffffff;
-            border-color: var(--border);
-        }
+        .data-tab-btn:hover { background: rgba(255, 255, 255, 0.25); color: #ffffff; }
+        .data-tab-btn.active { background: #ffffff; color: var(--primary); box-shadow: 0 2px 5px rgba(0,0,0,0.15); }
+        [data-theme="dark"] .data-tab-btn.active { background: var(--card-bg); color: #ffffff; border-color: var(--border); }
         
+        /* TOMBOL TOGGLE (DESKTOP) */
         .theme-toggle { 
             position: fixed; 
             top: 25px; 
@@ -263,21 +169,19 @@
         }
         .filter-toggle:hover { background: rgba(255,255,255,0.25); }
         
+        /* CONTROLS / FILTER PANEL */
         .controls { 
             display: none;
             align-items: center; 
-            padding: 12px 20px; /* Padding dikurangi sedikit */
+            padding: 12px 20px; 
             background: var(--card-bg); 
-            /* PERUBAHAN 2: Margin top dikurangi dari 15px menjadi 10px */
             margin: 0 20px 10px 20px; 
             border-radius: var(--radius); 
             box-shadow: var(--shadow); 
             gap: 10px; 
             flex-wrap: nowrap; 
         }
-        .controls.show {
-            display: flex;
-        }
+        .controls.show { display: flex; }
         .filter-group { display: flex; gap: 10px; flex: 2; min-width: 0; } 
         select { padding: 8px 12px; border: 1px solid var(--border); border-radius: 4px; flex: 1; background: var(--card-bg); color: var(--text); min-width: 0; font-size: 0.85rem; }
         .btn { padding: 8px 16px; border: none; border-radius: 4px; cursor: pointer; font-weight: 600; font-size: 0.85rem; display: inline-flex; align-items: center; gap: 6px; white-space: nowrap; }
@@ -285,8 +189,8 @@
         .btn-ranking { background: var(--warning); color: #333; flex: 1; justify-content: center; } 
         .btn:hover { opacity: 0.9; transform: translateY(-1px); }
 
+        /* DASHBOARD GRID & CARDS */
         .dashboard-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 15px; padding: 0 20px 20px 20px; }
-        
         .card { background: var(--card-bg); padding: 16px; border-radius: var(--radius); box-shadow: var(--shadow); border-top: 0px solid var(--primary); border-left: 0px solid var(--primary); display: flex; flex-direction: column; }        
         .card-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; }
         .card-title { font-size: 0.95rem; font-weight: bold; color: var(--primary); display: flex; align-items: center; gap: 6px; }
@@ -306,7 +210,7 @@
         
         .footer { text-align: center; padding: 10px; font-size: 0.75rem; color: var(--text-muted); margin-top: 3px; }
 
-        /* DETAILED BREAKDOWN TABLE STYLES */
+        /* TABLE STYLES */
         .breakdown-container { padding: 0 20px 40px 20px; }
         .breakdown-card { background: var(--card-bg); border-radius: var(--radius); box-shadow: var(--shadow); overflow: hidden; border-top: 0px solid var(--primary); border-left: 0px solid var(--primary); }
         .breakdown-header { font-weight: bold; padding: 15px 20px; border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; }
@@ -332,7 +236,7 @@
         .detail-table tr:hover td { background-color: rgba(0,0,0,0.02); }
         [data-theme="dark"] .detail-table tr:hover td { background-color: rgba(255,255,255,0.05); }
 
-        /* MODAL & RANKING STYLES */
+        /* MODAL & RANKING */
         .modal-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); z-index: 1000; justify-content: center; align-items: center; }
         .modal-content { background: var(--card-bg); width: 95%; max-width: 1200px; height: auto; max-height: 85vh; border-radius: var(--radius); overflow: hidden; display: flex; flex-direction: column; animation: slideUp 0.3s ease; color: var(--text); }
         @keyframes slideUp { from { transform: translateY(20px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
@@ -370,20 +274,57 @@
         .top5-name { flex: 1; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; margin-right: 5px; font-size: 0.65rem; min-width: 0; }
         .top5-val { font-weight: bold; color: var(--text); font-size: 0.65rem; flex-shrink: 0; }
 
-        /* RESPONSIVE MEDIA QUERIES */
+        /* RESPONSIVE MEDIA QUERIES - PERBAIKAN DI SINI */
         @media (max-width: 900px) {
-            .header { padding: 15px 15px 10px 15px; min-height: 150px; }
-            .header-content-wrapper { max-width: 100%; }
-            .header h1 { font-size: 1.2rem; gap: 8px; }
-            .header p { font-size: 0.75rem; }
+            .header { 
+                padding: 15px 70px 10px 15px; /* Padding kanan diperbesar untuk memberi ruang tombol */
+                min-height: 140px;
+                align-items: flex-start; /* Align ke kiri agar teks tidak menabrak tombol di tengah */
+            }
+            .header-content-wrapper { 
+                max-width: 100%; 
+                justify-content: flex-start; /* Geser konten ke kiri */
+            }
+            .header h1 { 
+                font-size: 1.2rem; 
+                gap: 8px; 
+                justify-content: flex-start; 
+                width: 100%;
+                padding-right: 10px; /* Ruang aman di dalam judul */
+            }
+            .header p { 
+                font-size: 0.75rem; 
+                text-align: left; 
+                width: 100%;
+            }
             
-            .theme-toggle { position: absolute; top: 35px; right: 0; width: 32px; height: 32px; font-size: 0.9rem; }
-            .filter-toggle { position: absolute; top: 35px; right: 40px; width: 32px; height: 32px; font-size: 0.9rem; }
+            /* Tombol Theme & Filter di Mobile: Fixed Position & Z-Index Tinggi */
+            .theme-toggle { 
+                position: fixed; 
+                top: 20px; 
+                right: 15px; 
+                width: 34px; height: 34px; font-size: 0.9rem; 
+                z-index: 1000; /* Pastikan di atas segalanya */
+            }
             
-            /* PERUBAHAN 3: Padding top mobile disesuaikan */
+            .filter-toggle { 
+                position: fixed; 
+                top: 20px; 
+                right: 55px; /* Geser sedikit ke kiri dari theme toggle */
+                width: 34px; height: 34px; font-size: 0.9rem; 
+                z-index: 1000; /* Pastikan di atas segalanya */
+            }
+            
             body { padding-top: 150px; }
 
-            .controls { flex-wrap: wrap; flex-direction: row; align-items: stretch; padding: 10px; gap: 8px; margin: 0 10px 10px 10px; }
+            .controls { 
+                flex-wrap: wrap; 
+                flex-direction: row; 
+                align-items: stretch; 
+                padding: 10px; 
+                gap: 8px; 
+                margin: 0 10px 10px 10px; 
+            }
             .filter-group { flex-basis: 100%; flex-direction: row; gap: 5px; }
             .filter-group select { font-size: 0.85rem; padding: 8px; }
             .btn { flex: 1; justify-content: center; font-size: 0.85rem; padding: 8px; }
@@ -447,9 +388,11 @@
     <div id="mainContentWrapper" class="main-content">
         <div class="header">
             <div class="header-content-wrapper">
+                <!-- Tombol Filter diletakkan SEBELUM Theme Toggle agar urutannya benar -->
                 <button class="filter-toggle" onclick="toggleFilter()" title="Show/Hide Filter"><i class="fas fa-filter" id="filterIcon"></i></button>
                 <button class="theme-toggle" onclick="toggleTheme()" title="Toggle Dark/Light Mode"><i class="fas fa-moon" id="themeIcon"></i></button>
-                <div style="width: 100%;">
+                
+                <div style="width: 100%; text-align: left;">
                     <h1><img src="img/BMI.png" alt="Bank Muamalat Logo" class="logo" width="30" height="30"> Bank Muamalat</h1>
                     <p>Leading Indicator Dashboard 📊 Region Sumatera</p>
                     <p id="headerMeta">📅 Per: -- Juni 2026 | 💼 Workdays: --</p>
@@ -457,6 +400,7 @@
             </div>
             <div class="data-tabs-container" id="dataTabsContainer"></div>
         </div>
+        
         <div class="controls" id="filterControls" style="border-left: 0px solid var(--primary); border-top: 0px solid var(--primary);">
             <div class="filter-group">
                 <select id="coBranchFilter" onchange="handleCoBranchChange()"><option value="">All Co-Branch</option></select>
