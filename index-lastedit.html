@@ -118,10 +118,12 @@
             display: flex; flex-direction: column; align-items: center; justify-content: center;
             box-shadow: 0 4px 10px rgba(0,0,0,0.2); min-height: 125px;
         }
+        
         .header-content-wrapper {
             position: relative; width: 100%; max-width: 600px;
             display: flex; align-items: center; justify-content: center;
         }
+
         .header h1 { 
             font-size: 1.4rem; margin-bottom: 5px; display: flex; align-items: center; 
             justify-content: center; gap: 12px; text-align: center; line-height: 1.2;
@@ -150,44 +152,44 @@
         }
         .theme-toggle:hover { background: rgba(255,255,255,0.25); }
         
-        /* CONTROLS & FILTER TOGGLE STYLES */
+        /* CONTROLS AREA UPDATE */
         .controls { 
-            display: flex; align-items: center; padding: 15px 20px; 
-            background: var(--card-bg); margin: 0 20px 15px 20px; 
-            border-radius: var(--radius); box-shadow: var(--shadow); 
-            gap: 10px; flex-wrap: nowrap; 
+            display: flex; flex-direction: column; /* Changed to column to handle toggle logic better */
+            padding: 15px 20px; background: var(--card-bg); margin: 0 20px 15px 20px; 
+            border-radius: var(--radius); box-shadow: var(--shadow); gap: 10px; 
         }
 
-        /* Tombol Toggle Filter (Kiri) */
-        .btn-filter-toggle {
-            background: var(--primary);
-            color: white;
-            border: none;
-            padding: 8px 12px;
-            border-radius: 4px;
-            cursor: pointer;
-            font-size: 0.9rem;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            flex-shrink: 0;
-            transition: all 0.3s ease;
+        .controls-top-row {
+            display: flex; align-items: center; gap: 10px; width: 100%;
         }
-        .btn-filter-toggle:hover { opacity: 0.9; }
-        .btn-filter-toggle.active { background: var(--text-muted); }
 
-        .filter-group { 
-            display: flex; gap: 10px; flex: 2; min-width: 0; 
-            transition: all 0.3s ease;
-        } 
-        
-        /* State Hidden untuk Filter Group */
-        .controls.collapsed .filter-group {
-            display: none;
+        /* Filter Wrapper for Show/Hide */
+        .filter-wrapper {
+            display: none; /* Default Hidden */
+            width: 100%;
+            margin-top: 5px;
+            animation: slideDown 0.3s ease;
         }
-        
+        .filter-wrapper.show { display: block; }
+
+        @keyframes slideDown {
+            from { opacity: 0; transform: translateY(-10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .filter-group { display: flex; gap: 10px; width: 100%; } 
         select { padding: 8px 12px; border: 1px solid var(--border); border-radius: 4px; flex: 1; background: var(--card-bg); color: var(--text); min-width: 0; font-size: 0.85rem; }
+        
         .btn { padding: 8px 16px; border: none; border-radius: 4px; cursor: pointer; font-weight: 600; font-size: 0.85rem; display: inline-flex; align-items: center; gap: 6px; white-space: nowrap; }
+        
+        /* New Toggle Button Style */
+        .btn-filter-toggle {
+            background: var(--primary); color: white;
+        }
+        .btn-filter-toggle.active {
+            background: var(--text-muted);
+        }
+
         .btn-reset { background: var(--text-muted); color: white; flex: 1; justify-content: center; flex-shrink: 0; } 
         .btn-ranking { background: var(--warning); color: #333; flex: 1; justify-content: center; } 
         .btn:hover { opacity: 0.9; transform: translateY(-1px); }
@@ -246,26 +248,14 @@
 
         /* MODAL & RANKING STYLES */
         .modal-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); z-index: 1000; justify-content: center; align-items: center; }
-        .modal-content { 
-            background: var(--card-bg); width: 95%; max-width: 1200px; 
-            height: auto; max-height: 85vh; 
-            border-radius: var(--radius); overflow: hidden; 
-            display: flex; flex-direction: column; animation: slideUp 0.3s ease; color: var(--text);
-        }
+        .modal-content { background: var(--card-bg); width: 95%; max-width: 1200px; height: auto; max-height: 85vh; border-radius: var(--radius); overflow: hidden; display: flex; flex-direction: column; animation: slideUp 0.3s ease; color: var(--text); }
         @keyframes slideUp { from { transform: translateY(20px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
         .modal-header { background: var(--primary); color: white; padding: 12px 15px 0 15px; display: flex; align-items: flex-end; flex-shrink: 0; }
         .close-btn { background: none; border: none; color: white; font-size: 1.5rem; cursor: pointer; display: flex; align-self: center; margin-left: auto; padding-bottom: 10px; }
         .modal-body { padding: 0; overflow-y: auto; flex: 1; display: flex; flex-direction: column; position: relative; }
         .ranking-tabs-wrapper { position: sticky; top: 0; z-index: 40; background: var(--card-bg); padding: 15px 20px; border-bottom: 1px solid var(--border); box-shadow: 0 2px 4px rgba(0,0,0,0.05); }
-        .tab-btn { 
-            padding: 8px 16px; background: rgba(0, 0, 0, 0.15); color: rgba(255, 255, 255, 0.8); 
-            border: 1px solid transparent; border-radius: 4px 4px 0 0; cursor: pointer; font-size: 0.8rem; 
-            display: inline-flex; align-items: center; margin-right: 5px;
-        }
-        .tab-btn.active { 
-            padding: 8px 16px; border: 1px solid var(--card-bg); border-bottom: 1px solid white; 
-            background: var(--card-bg); color: var(--primary); border-radius: 4px 4px 0 0; 
-        }
+        .tab-btn { padding: 8px 16px; background: rgba(0, 0, 0, 0.15); color: rgba(255, 255, 255, 0.8); border: 1px solid transparent; border-radius: 4px 4px 0 0; cursor: pointer; font-size: 0.8rem; display: inline-flex; align-items: center; margin-right: 5px; }
+        .tab-btn.active { padding: 8px 16px; border: 1px solid var(--card-bg); border-bottom: 1px solid white; background: var(--card-bg); color: var(--primary); border-radius: 4px 4px 0 0; cursor: pointer; font-size: 0.8rem; display: inline-flex; align-items: center; margin-right: 5px; }
         .rank-badge { display: inline-block; width: 22px; height: 22px; line-height: 22px; text-align: center; border-radius: 50%; font-weight: bold; font-size: 0.7rem; background: var(--border); }
         .rank-1 { background: #ffd700; color: #333; }
         .rank-2 { background: #c0c0c0; color: #333; }
@@ -300,36 +290,51 @@
             .header-content-wrapper { max-width: 100%; }
             .header h1 { font-size: 1.2rem; gap: 8px; }
             .header p { font-size: 0.75rem; }
+            
             .theme-toggle { position: absolute; top: 35px; right: 0; width: 32px; height: 32px; font-size: 0.9rem; }
+            
             body { padding-top: 185px; }
 
             .controls { 
-                flex-wrap: wrap; flex-direction: row; align-items: stretch; 
                 padding: 10px; gap: 8px; margin: 0 10px 15px 10px; 
             }
             
-            /* Layout Mobile: Toggle Filter Kiri, Tombol Aksi Kan */
-            .btn-filter-toggle { order: 1; flex: 0 0 auto; }
-            .btn-reset { order: 2; flex: 1; }
-            .btn-ranking { order: 3; flex: 1; }
+            /* Mobile Controls Layout Adjustment */
+            .controls-top-row {
+                flex-wrap: nowrap;
+            }
             
+            .btn-filter-toggle {
+                flex: 0 0 auto; /* Don't grow, just fit content */
+            }
+
+            .btn-ranking {
+                flex: 1; /* Take remaining space */
+            }
+
+            .filter-wrapper.show {
+                margin-top: 10px;
+            }
+
             .filter-group { 
-                order: 4; flex-basis: 100%; flex-direction: row; gap: 5px; margin-top: 5px;
+                flex-direction: row; gap: 5px;
             }
             .filter-group select { font-size: 0.85rem; padding: 8px; }
             
-            /* Saat collapsed di mobile, tombol aksi memenuhi baris */
-            .controls.collapsed .btn-reset, 
-            .controls.collapsed .btn-ranking { flex: 1; }
-
+            .btn-reset { 
+                width: 100%; margin-top: 5px; flex: none; 
+            }
+            
             .dashboard-grid { grid-template-columns: repeat(2, 1fr); gap: 10px; padding: 0 10px 20px 10px; }
             .card { padding: 12px; }
+            
             .card-title { font-size: 0.85rem; }
             .metric-row { font-size: 0.85rem; margin-bottom: 6px; }
             .metric-val { font-size: 0.85rem; }
             .achv-label { font-size: 0.85rem; }
             .achv-val { font-size: 1.3rem; }
             .badge-mtd { font-size: 0.75rem; }
+            
             :root { --col-name-w: 100px; --col-total-w: 45px; }
             .ranking-table { font-size: 0.7rem; }
             .ranking-table th:nth-child(2), .ranking-table td:nth-child(2) { left: var(--col-rank-w); width: var(--col-name-w); min-width: var(--col-name-w); max-width: var(--col-name-w); }
@@ -338,11 +343,14 @@
             .indicator-prefix { font-size: 0.45rem; }
             .ranking-table th { height: 48px; }
             .th-content { padding: 4px 2px; gap: 2px; }
+            
             .tab-btn.active { padding: 6px 12px; border: 1px solid var(--card-bg); border-bottom: 1px solid var(--card-bg); background: var(--card-bg); color: var(--primary); border-radius: 4px 4px 0 0; }
             .modal-header h3 { font-size: 1.1rem; }
             .close-btn { font-size: 1.2rem; }
+            
             .ranking-tabs-wrapper { padding: 10px 15px; }
             .modal-content { width: 100%; height: 100%; border-radius: 0; max-width: none; max-height: 100vh; }
+            
             .top5-grid-container { grid-template-columns: repeat(2, 1fr); gap: 8px; padding: 10px; }
             .top5-card { padding: 8px; }
             .top5-header { font-size: 0.7rem; margin-bottom: 5px; padding-bottom: 4px; }
@@ -350,8 +358,8 @@
             .top5-name { font-size: 0.6rem; }
             .top5-val { font-size: 0.6rem; }
             .top5-rank { width: 14px; height: 14px; line-height: 14px; font-size: 0.55rem; margin-right: 4px; }
+
             .breakdown-container { padding: 0 10px 40px 10px; display: none !important; }
-            .detail-table th, .detail-table td { padding: 8px 6px; font-size: 0.75rem; }
         }
 
         [data-theme="dark"] .tab-btn { background: rgba(255, 255, 255, 0.08) !important; color: rgba(255, 255, 255, 0.5) !important; border: 1px solid rgba(255, 255, 255, 0.1) !important; }
@@ -387,22 +395,28 @@
             <div class="data-tabs-container" id="dataTabsContainer"></div>
         </div>
         
-        <!-- CONTROLS DENGAN TOGGLE FILTER DI KIRI & DEFAULT HIDDEN -->
-        <div class="controls collapsed" style="border-left: 0px solid var(--primary); border-top: 0px solid var(--primary);">
-            <!-- Tombol Toggle Filter (Kiri) -->
-            <button class="btn-filter-toggle" onclick="toggleFilterPanel()" title="Show/Hide Filter">
-                <i class="fas fa-filter"></i>
-            </button>
-
-            <!-- Filter Group (Default Hidden via CSS .collapsed) -->
-            <div class="filter-group">
-                <select id="coBranchFilter" onchange="handleCoBranchChange()"><option value="">All Co-Branch</option></select>
-                <select id="branchFilter" onchange="applyFilters()"><option value="">All Branch</option></select>
+        <!-- UPDATED CONTROLS SECTION -->
+        <div class="controls" style="border-left: 0px solid var(--primary); border-top: 0px solid var(--primary);">
+            <!-- Top Row: Toggle Button (Left) & Ranking Button (Right/Fill) -->
+            <div class="controls-top-row">
+                <button class="btn btn-filter-toggle" onclick="toggleFilterMenu()" title="Show/Hide Filter">
+                    <i class="fas fa-filter"></i> Filter
+                </button>
+                <button class="btn btn-ranking" onclick="openRankingModal()">
+                    <i class="fas fa-trophy"></i> Performance Ranking
+                </button>
             </div>
 
-            <!-- Action Buttons -->
-            <button class="btn btn-reset" onclick="resetFilters()"><i class="fas fa-sync-alt"></i> Reset</button>
-            <button class="btn btn-ranking" onclick="openRankingModal()"><i class="fas fa-trophy"></i> Ranking</button>
+            <!-- Hidden Filter Wrapper -->
+            <div class="filter-wrapper" id="filterMenuWrapper">
+                <div class="filter-group">
+                    <select id="coBranchFilter" onchange="handleCoBranchChange()"><option value="">All Co-Branch</option></select>
+                    <select id="branchFilter" onchange="applyFilters()"><option value="">All Branch</option></select>
+                </div>
+                <button class="btn btn-reset" onclick="resetFilters()" style="margin-top: 8px; width: 100%;">
+                    <i class="fas fa-sync-alt"></i> Reset Filter
+                </button>
+            </div>
         </div>
 
         <div class="dashboard-grid" id="dashboardContainer">
@@ -483,20 +497,19 @@
             }
         };
 
-        // TOGGLE FILTER PANEL FUNCTION
-        function toggleFilterPanel() {
-            const controls = document.querySelector('.controls');
+        // --- NEW FILTER TOGGLE FUNCTION ---
+        function toggleFilterMenu() {
+            const wrapper = document.getElementById('filterMenuWrapper');
             const btn = document.querySelector('.btn-filter-toggle');
-            controls.classList.toggle('collapsed');
+            wrapper.classList.toggle('show');
             
-            // Optional: Change icon based on state
-            const icon = btn.querySelector('i');
-            if (controls.classList.contains('collapsed')) {
-                icon.className = 'fas fa-filter';
-                btn.classList.remove('active');
-            } else {
-                icon.className = 'fas fa-times';
+            // Optional: Change button appearance when active
+            if(wrapper.classList.contains('show')) {
                 btn.classList.add('active');
+                btn.innerHTML = '<i class="fas fa-times"></i> Tutup Filter';
+            } else {
+                btn.classList.remove('active');
+                btn.innerHTML = '<i class="fas fa-filter"></i> Filter';
             }
         }
 
@@ -519,6 +532,7 @@
             
             if (inputVal === 'rbpm') {
                 errorMsg.style.display = 'none';
+                document.getElementById('loginGate').style.fadeOut = "slow";
                 document.getElementById('loginGate').style.display = 'none';
                 document.getElementById('mainContentWrapper').style.display = 'block';
                 sessionStorage.setItem('dashboard_authed', 'true');
@@ -575,7 +589,7 @@
                 populateCoBranchFilter();
                 renderDashboard(rawData);
             } catch (err) {
-                container.innerHTML = `<div style="color:var(--danger); text-align:center; padding:20px;">Error: ${err.message}</div>`;
+                container.innerHTML = `<div style="color:var(--danger); text-align:center; padding:20px; align:center;">Error: ${err.message}</div>`;
             }
         }
 
@@ -638,7 +652,6 @@
             if (isTarget) prefix = ''; 
             else if ((isGrowthType || isGap) && val > 0) { if (!isGap) prefix = '+'; } 
             let displayVal = isGap ? Math.abs(val) : val;
-
             if (unit === 'M') {
                 if (isTarget) return prefix + displayVal.toLocaleString('id-ID', { minimumFractionDigits: 1, maximumFractionDigits: 1 }) + ' M';
                 if (displayVal === 0) return prefix + '0 M';
@@ -722,7 +735,10 @@
             const thead = document.getElementById('detailTableHead');
             const tbody = document.getElementById('detailTableBody');
             
-            if (!data || data.length === 0) { section.style.display = 'none'; return; }
+            if (!data || data.length === 0) {
+                section.style.display = 'none';
+                return;
+            }
             
             section.style.display = 'block';
             thead.innerHTML = '';
@@ -737,7 +753,11 @@
 
             data.forEach((row, index) => {
                 let rowHTML = `<tr>`;
-                rowHTML += `<td>${index + 1}</td><td>${row['co'] || '-'}</td><td>${row['br'] || '-'}</td><td>${row['tp'] || '-'}</td>`;
+                rowHTML += `<td>${index + 1}</td>`;
+                rowHTML += `<td>${row['co'] || '-'}</td>`;
+                rowHTML += `<td>${row['br'] || '-'}</td>`;
+                rowHTML += `<td>${row['tp'] || '-'}</td>`;
+
                 metrics.forEach(m => {
                     let val = parseFloat(row[m.key + '_mtd'] || 0);
                     totals[m.key] += val; 
@@ -750,7 +770,8 @@
                 tbody.innerHTML += rowHTML;
             });
 
-            let totalRowHTML = `<tr class="total-row"><td></td><td></td><td></td><td style="text-align: right;">TOTAL</td>`; 
+            let totalRowHTML = `<tr class="total-row">`;
+            totalRowHTML += `<td></td><td></td><td></td><td style="text-align: right;">TOTAL</td>`; 
             metrics.forEach(m => {
                 let isGrowth = ['ca', 'sa', 'fu'].includes(m.key);
                 let formatted = formatValue(totals[m.key], m.unit, isGrowth, false, false);
@@ -783,7 +804,8 @@
         function renderRanking() {
             const thead = document.getElementById('rankingThead');
             const tbody = document.getElementById('rankingTableBody');
-            thead.innerHTML = ''; tbody.innerHTML = ''; 
+            thead.innerHTML = ''; 
+            tbody.innerHTML = ''; 
             
             let gridContainer = document.getElementById('top5GridContainer');
             if (!gridContainer) {
@@ -800,11 +822,13 @@
             if (top5Level === 'branch') {
                 metrics.forEach(m => {
                     let branchData = rawData.map(d => ({ name: d['br'], sub: d['co'], val: parseFloat(d[m.key + '_mtd'] || 0) }));
-                    branchData = branchData.filter(item => item.val > 0).sort((a, b) => b.val - a.val).slice(0, 5);
-                    if (branchData.length === 0) return;
+                    branchData = branchData.filter(item => item.val > 0);
+                    branchData.sort((a, b) => b.val - a.val);
+                    const topN = branchData.slice(0, 5);
+                    if (topN.length === 0) return;
 
                     let cardHTML = `<div class="top5-card"><div class="top5-header" title="${m.label}"><i class="fas ${m.icon}"></i> ${m.label}</div><div class="top5-list">`;
-                    branchData.forEach((item, idx) => {
+                    topN.forEach((item, idx) => {
                         const isGrowth = ['ca','sa','fu'].includes(m.key);
                         const formatted = formatValue(item.val, m.unit, isGrowth, false, false);
                         cardHTML += `<div class="top5-item"><div style="display:flex; align-items:center; overflow:hidden; flex:1; min-width:0;"><span class="top5-rank">${idx+1}</span><span class="top5-name" title="${item.name} (${item.sub})">${item.name}</span></div><span class="top5-val">${formatted}</span></div>`;
@@ -822,11 +846,13 @@
 
                 metrics.forEach(m => {
                     let coData = Object.keys(coMap).map(coName => ({ name: coName, sub: 'Region Sumatera', val: coMap[coName][m.key] }));
-                    coData = coData.filter(item => item.val > 0).sort((a, b) => b.val - a.val).slice(0, 5);
-                    if (coData.length === 0) return;
+                    coData = coData.filter(item => item.val > 0);
+                    coData.sort((a, b) => b.val - a.val);
+                    const topN = coData.slice(0, 5);
+                    if (topN.length === 0) return;
 
                     let cardHTML = `<div class="top5-card"><div class="top5-header" title="${m.label}"><i class="fas ${m.icon}"></i> ${m.label}</div><div class="top5-list">`;
-                    coData.forEach((item, idx) => {
+                    topN.forEach((item, idx) => {
                         const isGrowth = ['ca','sa','fu'].includes(m.key);
                         const formatted = formatValue(item.val, m.unit, isGrowth, false, false);
                         cardHTML += `<div class="top5-item"><div style="display:flex; align-items:center; overflow:hidden; flex:1; min-width:0;"><span class="top5-rank">${idx+1}</span><span class="top5-name" title="${item.name}">${item.name}</span></div><span class="top5-val">${formatted}</span></div>`;
@@ -837,15 +863,22 @@
             }
         }
 
-        window.onclick = function(e) { if (e.target == document.getElementById('rankingModal')) closeRankingModal(); }
-        document.addEventListener('contextmenu', e => e.preventDefault());
+        window.onclick = function(e) {
+            const modal = document.getElementById('rankingModal');
+            if (e.target == modal) closeRankingModal();
+        }
+        document.addEventListener('contextmenu', function(e) { e.preventDefault(); });
         document.addEventListener('keydown', function(e) {
-            if (e.key === 'F12' || (e.ctrlKey && e.key === 'u') || (e.ctrlKey && e.shiftKey && ['I','J','C'].includes(e.key)) || (e.ctrlKey && e.key === 's')) {
-                e.preventDefault(); return false;
-            }
+            if (e.key === 'F12') { e.preventDefault(); return false; }
+            if (e.ctrlKey && e.key === 'u') { e.preventDefault(); return false; }
+            if (e.ctrlKey && e.shiftKey && e.key === 'I') { e.preventDefault(); return false; }
+            if (e.ctrlKey && e.shiftKey && e.key === 'J') { e.preventDefault(); return false; }
+            if (e.ctrlKey && e.shiftKey && e.key === 'C') { e.preventDefault(); return false; }
+            if (e.ctrlKey && e.key === 's') { e.preventDefault(); return false; }
         });
         setInterval(function() {
-            if (window.outerWidth - window.innerWidth > 160 || window.outerHeight - window.innerHeight > 160) console.clear();
+            const threshold = 160;
+            if (window.outerWidth - window.innerWidth > threshold || window.outerHeight - window.innerHeight > threshold) { console.clear(); }
         }, 1000);        
     </script>
 </body>
