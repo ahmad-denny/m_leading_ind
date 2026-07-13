@@ -31,7 +31,7 @@
         }
 
         [data-theme="dark"] {
-            --primary: #6a4c9c; /* Sedikit lebih terang agar kontras di dark */
+            --primary: #6a4c9c;
             --bg: #1a1a2e;
             --card-bg: #16213e;
             --text: #e0e0e0;
@@ -51,11 +51,11 @@
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', system-ui, sans-serif; transition: background-color 0.3s, color 0.3s; }
         
         body.modal-open { overflow: hidden; }
-        /* UPDATED: Padding top disesuaikan untuk mengakomodasi header dan controls */
-        body { background-color: var(--bg); color: var(--text); min-height: 100vh; padding-top: 160px; user-select: none;}
+        /* Padding top disesuaikan untuk mengakomodasi header dan controls */
+        body { background-color: var(--bg); color: var(--text); min-height: 100vh; padding-top: 210px; user-select: none;}
 
         /* =========================================
-           LOGIN GATE STYLES (MATCHING IMAGE)
+           LOGIN GATE STYLES
            ========================================= */
         .login-overlay {
             position: fixed;
@@ -224,14 +224,23 @@
             border-color: var(--border);
         }
         
-        /* BUTTON GROUP (FILTER & THEME) */
+        /* BUTTON GROUP (FILTER & THEME) - UPDATED FOR LEFT/RIGHT SPLIT */
         .header-actions {
-            position: fixed;
-            top: 25px;
-            right: 20px;
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 100%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            pointer-events: none; /* Allow clicks to pass through empty space */
+            z-index: 101;
+        }
+
+        .left-actions, .right-actions {
+            pointer-events: auto; /* Re-enable clicks on buttons */
             display: flex;
             gap: 10px;
-            z-index: 101;
         }
 
         .theme-toggle, .filter-toggle { 
@@ -299,7 +308,7 @@
         .footer { text-align: center; padding: 10px; font-size: 0.75rem; color: var(--text-muted); margin-top: 3px; }
 
         /* =========================================
-        DETAILED BREAKDOWN TABLE STYLES (UPDATED)
+        DETAILED BREAKDOWN TABLE STYLES
         ========================================= */
         .breakdown-container {
             padding: 0 20px 40px 20px;
@@ -566,17 +575,19 @@
             .header h1 { font-size: 1.2rem; gap: 8px; }
             .header p { font-size: 0.75rem; }
             
+            /* Mobile adjustments for split buttons */
             .header-actions { 
                 position: absolute; 
-                top: 35px; 
-                right: 0; 
+                top: 25px; /* Adjusted for mobile header height */
+                transform: none;
+                padding: 0 10px;
             }
             .theme-toggle, .filter-toggle {
                 width: 32px; height: 32px; font-size: 0.9rem; 
             }
             
             /* Mobile spacing adjustment */
-            body { padding-top: 160px; }
+            body { padding-top: 185px; }
 
             .controls { 
                 flex-wrap: wrap; 
@@ -684,10 +695,14 @@
     <div id="mainContentWrapper" class="main-content">
         <div class="header">
             <div class="header-content-wrapper">
-                <!-- Button Group Container -->
+                <!-- Split Actions: Left (Filter) and Right (Theme) -->
                 <div class="header-actions">
-                    <button class="filter-toggle" onclick="toggleFilterMenu()" title="Show/Hide Filter"><i class="fas fa-filter" id="filterIcon"></i></button>
-                    <button class="theme-toggle" onclick="toggleTheme()" title="Toggle Dark/Light Mode"><i class="fas fa-moon" id="themeIcon"></i></button>
+                    <div class="left-actions">
+                        <button class="filter-toggle" onclick="toggleFilterMenu()" title="Show/Hide Filter"><i class="fas fa-filter" id="filterIcon"></i></button>
+                    </div>
+                    <div class="right-actions">
+                        <button class="theme-toggle" onclick="toggleTheme()" title="Toggle Dark/Light Mode"><i class="fas fa-moon" id="themeIcon"></i></button>
+                    </div>
                 </div>
                 
                 <div style="width: 100%;">
