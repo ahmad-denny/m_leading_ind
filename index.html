@@ -683,13 +683,13 @@
                 <i class="fas fa-lock"></i>
             </div>
             <h2>Dashboard Login</h2>
-            <p>Masukkan password untuk akses</p>
+            <p>Please enter your password</p>
             <div class="password-field-container">
                 <input type="password" id="loginPassword" placeholder="Enter password..." onkeydown="if(event.key === 'Enter') checkLoginPassword()" autofocus>
                 <i class="fas fa-eye" id="passwordToggleIcon" onclick="togglePasswordVisibility()"></i>
             </div>
-            <div class="login-error-msg" id="loginError">Password salah, silahkan coba lagi!</div>
-            <button onclick="checkLoginPassword()"><i class="fas fa-sign-in-alt"></i> Masuk</button>
+            <div class="login-error-msg" id="loginError">Wrong Password, try again!</div>
+            <button onclick="checkLoginPassword()"><i class="fas fa-sign-in-alt"></i> Login</button>
         </div>
     </div>
 
