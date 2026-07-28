@@ -52,7 +52,7 @@
         
         body.modal-open { overflow: hidden; }
         /* Padding top disesuaikan untuk mengakomodasi header dan controls */
-        body { background-color: var(--bg); color: var(--text); min-height: 100vh; padding-top: 170px; user-select: none;}
+        body { background-color: var(--bg); color: var(--text); min-height: 100vh; padding-top: 140px; user-select: none;}
 
         /* =========================================
            LOGIN GATE STYLES
@@ -148,7 +148,7 @@
         .main-content { display: none; }
 
         /* =========================================
-           HEADER FIXED & CENTERED WITH TABS
+           HEADER FIXED & LEFT ALIGNED
            ========================================= */
         .header { 
             background: linear-gradient(135deg, var(--primary), #2d1b50); 
@@ -159,7 +159,7 @@
             z-index: 100;
             display: flex;
             flex-direction: column;
-            align-items: center;
+            align-items: flex-start; /* RATA KIRI */
             justify-content: center;
             box-shadow: 0 4px 10px rgba(0,0,0,0.2);
             min-height: 125px;
@@ -168,10 +168,11 @@
         .header-content-wrapper {
             position: relative;
             width: 100%;
-            max-width: 350px;
+            max-width: 100%; /* Full width */
             display: flex;
             align-items: center;
-            justify-content: center;
+            justify-content: flex-start; /* RATA KIRI */
+            padding-right: 20px; /* Space for buttons */
         }
 
         .header h1 { 
@@ -179,19 +180,20 @@
             margin-bottom: 5px; 
             display: flex; 
             align-items: center; 
-            justify-content: center; 
+            justify-content: flex-start; /* RATA KIRI */
             gap: 12px; 
-            text-align: center;
-            line-height: 1.2;
+            text-align: left;
+            line-height: 1.1;
+            flex: 1; /* Take available space */
         }
-        .header h1 img.logo { object-fit: contain; vertical-align: middle; }
-        .header p { font-size: 0.85rem; opacity: 0.9; margin: 2px 0; text-align: center; }
+        .header h1 img.logo { object-fit: contain; vertical-align: middle; margin-top: -2px; }
+        .header p { font-size: 0.85rem; opacity: 0.9; margin: 2px 0; text-align: left; }
         
         /* CONTAINER TAB JSON DINAMIS */
         .data-tabs-container {
             width: 100%;
             display: flex;
-            justify-content: center;
+            justify-content: flex-start; /* RATA KIRI */
             margin-top: 12px;
             gap: 8px;
             overflow-x: auto;
@@ -224,37 +226,30 @@
             border-color: var(--border);
         }
         
-        /* BUTTON GROUP (FILTER & THEME) - UPDATED FOR LEFT/RIGHT SPLIT */
+        /* BUTTON GROUP (FILTER & THEME) - POSITIONED TO THE RIGHT */
         .header-actions {
             position: absolute;
             top: 50%;
+            right: 0; /* Pindah ke kanan */
             transform: translateY(-50%);
-            width: 100%;
             display: flex;
-            justify-content: space-between;
             align-items: center;
-            pointer-events: none; /* Allow clicks to pass through empty space */
-            z-index: 101;
-        }
-
-        .left-actions, .right-actions {
-            pointer-events: auto; /* Re-enable clicks on buttons */
-            display: flex;
             gap: 10px;
+            z-index: 101;
         }
 
         .theme-toggle, .filter-toggle { 
             background: rgba(255,255,255,0.15); 
             border: none; 
             color: white; 
-            width: 38px; 
-            height: 38px; 
+            width: 25px; 
+            height: 25px; 
             border-radius: 50%; 
             cursor: pointer; 
             display: flex; 
             align-items: center; 
             justify-content: center; 
-            font-size: 1rem; 
+            font-size: 0.7rem; 
             flex-shrink: 0;
             transition: background 0.2s;
         }
@@ -269,7 +264,7 @@
             margin: 10px 20px 15px 20px; 
             border-radius: var(--radius); 
             box-shadow: var(--shadow); 
-            gap: 10px; 
+            gap: 5px; 
             flex-wrap: nowrap; 
             animation: slideDown 0.3s ease;
         }
@@ -579,9 +574,8 @@
             .header-actions { 
                 position: absolute; 
                 top: 25px; /* Adjusted for mobile header height */
+                right: 10px;
                 transform: none;
-/*                padding: 0 10px; */
-                padding: 5 5px;
             }
             .theme-toggle, .filter-toggle {
                 width: 32px; height: 32px; font-size: 0.9rem; 
@@ -696,27 +690,27 @@
     <div id="mainContentWrapper" class="main-content">
         <div class="header">
             <div class="header-content-wrapper">
-                <!-- Split Actions: Left (Filter) and Right (Theme) -->
-                <div class="header-actions">
-                    <div class="left-actions">
-                        <button class="filter-toggle" onclick="toggleFilterMenu()" title="Show/Hide Filter"><i class="fas fa-filter" id="filterIcon"></i></button>
-                    </div>
-                    <div class="right-actions">
-                        <button class="theme-toggle" onclick="toggleTheme()" title="Toggle Dark/Light Mode"><i class="fas fa-moon" id="themeIcon"></i></button>
-                    </div>
-                </div>
                 
                 <div style="width: 100%;">
-                    <h1><img src="img/BMI.png" alt="Bank Muamalat Logo" class="logo" width="30" height="30"> Bank Muamalat</h1>
-                    <p>Leading Indicator Region Sumatera</p>
+                    <!-- Header diubah menjadi 2 baris dengan alignment yang lebih baik -->
+                    <h1>
+                        <img src="img/BMI.png" alt="Bank Muamalat Logo" class="logo" width="30" height="30"> 
+                        <span style="font-size: 15px; margin-left: -10px;font-weight: bold;">LEADING INDICATOR<br><span style="font-size: 13px;font-weight: normal">Region Sumatera</span></span>
+                    </h1>
                     <p id="headerMeta">📅 Per: -- Juni 2026 | 💼 Workdays: --</p>
+                </div>
+
+                <!-- Split Actions: Moved to the Right side -->
+                <div class="header-actions">
+                    <button class="filter-toggle" onclick="toggleFilterMenu()" title="Show/Hide Filter"><i class="fas fa-filter" id="filterIcon"></i></button>
+                    <button class="theme-toggle" onclick="toggleTheme()" title="Toggle Dark/Light Mode"><i class="fas fa-moon" id="themeIcon"></i></button>
                 </div>
             </div>
             <div class="data-tabs-container" id="dataTabsContainer"></div>
         </div>
         
         <!-- Controls now hidden by default and animated -->
-        <div class="controls" id="filterControls" style="border-left: 0px solid var(--primary); border-top: 0px solid var(--primary);">
+        <div class="controls" id="filterControls" style="border-left: 0px solid var(--primary); border-top: 0px solid var(--primary); ">
             <div class="filter-group">
                 <select id="coBranchFilter" onchange="handleCoBranchChange()"><option value="">All Co-Branch</option></select>
                 <select id="branchFilter" onchange="applyFilters()"><option value="">All Branch</option></select>
