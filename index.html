@@ -1014,7 +1014,7 @@
         function populateCoBranchFilter() {
             const coSelect = document.getElementById('coBranchFilter');
             const currentVal = coSelect.value; // Save current selection
-            coSelect.innerHTML = '<option value="">All Co-Branch</option>';
+            coSelect.innerHTML = '<option value="">Select Co-Branch</option>';
             const coSet = new Set(rawData.map(d => d['co']).filter(Boolean));
             [...coSet].sort().forEach(co => { coSelect.innerHTML += `<option value="${co}">${co}</option>`; });
             // Try to restore if exists
