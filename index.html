@@ -153,7 +153,8 @@
         .header { 
             background: linear-gradient(135deg, var(--primary), #2d1b50); 
             color: white; 
-            padding: 15px 20px 10px 20px; 
+            /* MODIFIED: Removed bottom padding completely to make tabs touch the edge */
+            padding: 15px 20px 0 20px; 
             position: fixed; 
             top: 0; left: 0; right: 0;
             z-index: 100;
@@ -189,41 +190,57 @@
         .header h1 img.logo { object-fit: contain; vertical-align: middle; margin-top: -2px; }
         .header p { font-size: 0.85rem; opacity: 0.9; margin: 2px 0; text-align: left; }
         
-        /* CONTAINER TAB JSON DINAMIS */
+        /* CONTAINER TAB JSON DINAMIS - UPDATED STYLE TO MATCH RANKING MODAL */
         .data-tabs-container {
             width: 100%;
             display: flex;
             justify-content: flex-start; /* RATA KIRI */
+            /* MODIFIED: Adjusted margins/padding to sit flush at bottom of header */
             margin-top: 12px;
-            gap: 8px;
+            margin-bottom: 0;
+            gap: 0; 
             overflow-x: auto;
-            padding-bottom: 5px;
+            padding-bottom: 0;
         }
         .data-tab-btn {
-            padding: 6px 16px;
-            background: rgba(255, 255, 255, 0.15);
+            padding: 8px 16px;
+            background: rgba(0, 0, 0, 0.15);
             color: rgba(255, 255, 255, 0.8);
+            /* MODIFIED: Added transparent bottom border to align height with active tab */
             border: 1px solid transparent;
-            border-radius: 20px;
+            border-bottom: 1px solid transparent;
+            border-radius: 4px 4px 0 0; /* Square top corners */
             cursor: pointer;
             font-size: 0.8rem;
             font-weight: 600;
             white-space: nowrap;
             transition: all 0.2s ease;
+            margin-right: 5px;
+            display: inline-flex;
+            align-items: center;
         }
         .data-tab-btn:hover {
-            background: rgba(255, 255, 255, 0.25);
+            background: rgba(255, 255, 255, 0.15);
             color: #ffffff;
         }
         .data-tab-btn.active {
-            background: #ffffff;
+            padding: 8px 16px;
+            border: 1px solid var(--card-bg);
+            /* MODIFIED: Remove bottom border and set background to match card-bg for seamless look */
+            border-bottom: none; 
+            background: var(--card-bg);
             color: var(--primary);
-            box-shadow: 0 2px 5px rgba(0,0,0,0.15);
+            border-radius: 4px 4px 0 0;
+            font-weight: bold;
+            position: relative;
+            z-index: 2; /* Ensure it sits above the header edge */
         }
         [data-theme="dark"] .data-tab-btn.active {
-            background: var(--card-bg);
-            color: #ffffff;
-            border-color: var(--border);
+            background: #16213e !important; 
+            color: #ffffff !important;
+            border: 1px solid #16213e !important;
+            border-bottom: none !important;
+            font-weight: bold;
         }
         
         /* BUTTON GROUP (FILTER & THEME) - POSITIONED TO THE RIGHT */
@@ -261,12 +278,16 @@
             align-items: center; 
             padding: 15px 20px; 
             background: var(--card-bg); 
-            margin: 10px 20px 15px 20px; 
-            border-radius: var(--radius); 
+            /* MODIFIED: Negative margin top to pull up and cover the gap */
+            /* MODIFIED: Border radius adjusted to be flat on top corners to eliminate gap */
+            margin: -1px 20px 15px 20px; 
+            border-radius: 0 0 var(--radius) var(--radius); 
             box-shadow: var(--shadow); 
             gap: 5px; 
             flex-wrap: nowrap; 
             animation: slideDown 0.3s ease;
+            position: relative;
+            z-index: 10;
         }
 
         @keyframes slideDown {
@@ -281,7 +302,16 @@
         .btn-reset { background: var(--warning); color: #333; flex: 1; justify-content: center; } 
         .btn:hover { opacity: 0.9; transform: translateY(-1px); }
 
-        .dashboard-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 15px; padding: 0 20px 20px 20px; }
+        /* MODIFIED: Added negative margin top to merge with tabs */
+        .dashboard-grid { 
+            display: grid; 
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); 
+            gap: 15px; 
+            padding: 0 20px 20px 20px; 
+            margin-top: -2px; /* Pulls cards up to overlap the tab border slightly */
+            position: relative; /* Required for z-index */
+            z-index: 10; /* Ensures content sits ON TOP of header/tabs */
+        }
         
         .card { background: var(--card-bg); padding: 16px; border-radius: var(--radius); box-shadow: var(--shadow); border-top: 0px solid var(--primary); border-left: 0px solid var(--primary); display: flex; flex-direction: column; }        
         .card-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; }
@@ -563,7 +593,7 @@
         /* RESPONSIVE MEDIA QUERIES */
         @media (max-width: 900px) {
             .header { 
-                padding: 15px 15px 10px 15px; 
+                padding: 15px 15px 0 15px; 
                 min-height: 150px;
             }
             .header-content-wrapper { max-width: 100%; }
@@ -590,7 +620,8 @@
                 align-items: stretch; 
                 padding: 10px; 
                 gap: 8px; 
-                margin: 10px 10px 15px 10px; 
+                margin: -1px 10px 15px 10px; 
+                border-radius: 0 0 var(--radius) var(--radius);
             }
             .filter-group { 
                 flex-basis: 100%; 
@@ -603,7 +634,7 @@
             .btn-reset { flex-basis: 40%; }
             .btn-ranking { flex-basis: 55%; margin-top: 0; } 
             
-            .dashboard-grid { grid-template-columns: repeat(2, 1fr); gap: 10px; padding: 0 10px 20px 10px; }
+            .dashboard-grid { grid-template-columns: repeat(2, 1fr); gap: 10px; padding: 0 10px 20px 10px; margin-top: -2px; position: relative; z-index: 10; }
             .card { padding: 12px; }
             
             .card-title { font-size: 0.85rem; }
@@ -695,9 +726,9 @@
                     <!-- Header diubah menjadi 2 baris dengan alignment yang lebih baik -->
                     <h1>
                         <img src="img/BMI.png" alt="Bank Muamalat Logo" class="logo" width="30" height="30"> 
-                        <span style="font-size: 15px; margin-left: -5px;font-weight: bold;">LEADING INDICATOR<br><span style="font-size: 13px;font-weight: normal">Region Sumatera</span></span>
+                        <span style="font-size: 15px; margin-left: -5px;font-weight: bold;">LEADING INDICATOR<br><span id="headerSubtitle" style="font-size: 13px;font-weight: normal">Region Sumatera</span></span>
                     </h1>
-                    <p id="headerMeta">📅 Per: -- Juni 2026 | 💼 Workdays: --</p>
+                    <p id="headerMeta"> Per: -- Juni 2026 | 💼 Workdays: --</p>
                 </div>
 
                 <!-- Split Actions: Moved to the Right side -->
@@ -763,11 +794,11 @@
     </div>
 
     <script>
-        // CONFIG ARRAY
+        // CONFIG ARRAY - FIXED EMOJIS HERE
         const jsonFiles = [
-            { id: 'juli', label: 'Juli', file: 'juli.json', meta: '📅 Per: 29 Juli 2026 | 💼 Workdays: 23' },
-            { id: 'juni', label: 'Juni', file: 'juni.json', meta: '📅 Per: 30 Juni 2026 | 💼 Workdays: 20' },
-            { id: 'mei', label: 'Mei', file: 'mei.json', meta: '📅 Per: 29 Mei 2026 | 💼 Workdays: 16' }            
+            { id: 'juli', label: 'Juli', file: 'juli.json', meta: '<i class="fas fa-calendar-alt"></i> Per: 27 Juli 2026 | <i class="fas fa-briefcase"></i> Workdays: 23' },
+            { id: 'juni', label: 'Juni', file: 'juni.json', meta: '<i class="fas fa-calendar-alt"></i> Per: 30 Juni 2026 | <i class="fas fa-briefcase"></i> Workdays: 20' },
+            { id: 'mei', label: 'Mei', file: 'mei.json', meta: '<i class="fas fa-calendar-alt"></i> Per: 29 Mei 2026 | <i class="fas fa-briefcase"></i> Workdays: 16' }            
         ];
 
         let currentActiveJson = jsonFiles[0]; 
@@ -788,6 +819,9 @@
         let rawData = [];
         let currentRankingMode = 'top5branch';
         let top5Level = 'branch'; 
+        
+        // Variable to store filter state
+        let currentFilterState = { co: "", branch: "" };
 
         window.onload = function() {
             initTheme();
@@ -853,10 +887,55 @@
             element.classList.add('active');
             currentActiveJson = jsonItem;
             
-            document.getElementById('coBranchFilter').value = "";
-            document.getElementById('branchFilter').innerHTML = '<option value="">All Branch</option>';
-            
+            // 1. Simpan nilai filter saat ini sebelum data berubah
+            const savedCo = document.getElementById('coBranchFilter').value;
+            const savedBr = document.getElementById('branchFilter').value;
+
+            // 2. Load data baru
             await loadJsonData(jsonItem);
+
+            // 3. Restore filter jika memungkinkan
+            const coSelect = document.getElementById('coBranchFilter');
+            const brSelect = document.getElementById('branchFilter');
+
+            // Cek apakah Co-Branch yang tersimpan masih ada di data baru
+            let coExists = false;
+            for (let i = 0; i < coSelect.options.length; i++) {
+                if (coSelect.options[i].value === savedCo) {
+                    coExists = true;
+                    break;
+                }
+            }
+
+            if (coExists && savedCo !== "") {
+                coSelect.value = savedCo;
+                // Populate branch options based on restored Co-Branch
+                handleCoBranchChange(false); // false means don't apply filters yet, just populate
+                
+                // Cek apakah Branch yang tersimpan masih ada di list branch yang baru di-populate
+                let brExists = false;
+                for (let i = 0; i < brSelect.options.length; i++) {
+                    if (brSelect.options[i].value === savedBr) {
+                        brExists = true;
+                        break;
+                    }
+                }
+
+                if (brExists) {
+                    brSelect.value = savedBr;
+                } else {
+                    brSelect.value = ""; // Reset branch jika tidak ditemukan di Co-Branch baru
+                }
+                
+                // Apply filters dengan nilai yang sudah direstore
+                applyFilters();
+            } else {
+                // Jika Co-Branch tidak ada/kosong, reset semua
+                coSelect.value = "";
+                brSelect.innerHTML = '<option value="">All Branch</option>';
+                updateHeaderSubtitle(); // Update header to default
+                renderDashboard(rawData);
+            }
         }
 
         async function loadJsonData(jsonItem) {
@@ -885,7 +964,10 @@
                 });
 
                 populateCoBranchFilter();
-                renderDashboard(rawData);
+                // Initial render handled by switchJsonTab logic or initial load
+                if(document.getElementById('coBranchFilter').value === "" && document.getElementById('branchFilter').value === "") {
+                     renderDashboard(rawData);
+                }
             } catch (err) {
                 container.innerHTML = `<div style="color:var(--danger); text-align:center; padding:20px; align:center;">Error: ${err.message}</div>`;
             }
@@ -931,25 +1013,43 @@
 
         function populateCoBranchFilter() {
             const coSelect = document.getElementById('coBranchFilter');
+            const currentVal = coSelect.value; // Save current selection
             coSelect.innerHTML = '<option value="">All Co-Branch</option>';
             const coSet = new Set(rawData.map(d => d['co']).filter(Boolean));
             [...coSet].sort().forEach(co => { coSelect.innerHTML += `<option value="${co}">${co}</option>`; });
+            // Try to restore if exists
+            if([...coSet].includes(currentVal)) coSelect.value = currentVal;
         }
 
-        function handleCoBranchChange() {
+        function handleCoBranchChange(shouldApplyFilter = true) {
             const coVal = document.getElementById('coBranchFilter').value;
             const brSelect = document.getElementById('branchFilter');
+            const currentBrVal = brSelect.value; // Save current branch selection
+            
             brSelect.innerHTML = '<option value="">All Branch</option>';
             if (coVal) {
                 const brSet = new Set(rawData.filter(d => d['co'] === coVal).map(d => d['br']).filter(Boolean));
                 [...brSet].sort().forEach(br => { brSelect.innerHTML += `<option value="${br}">${br}</option>`; });
+                
+                // Restore branch if it exists in the new list
+                if([...brSet].includes(currentBrVal)) {
+                    brSelect.value = currentBrVal;
+                }
             }
-            applyFilters();
+            
+            if(shouldApplyFilter) applyFilters();
         }
 
         function applyFilters() {
             const coVal = document.getElementById('coBranchFilter').value;
             const brVal = document.getElementById('branchFilter').value;
+            
+            // Save current filter state
+            currentFilterState = { co: coVal, branch: brVal };
+
+            // Update Header Subtitle
+            updateHeaderSubtitle();
+
             let filtered = rawData;
             if (coVal) filtered = filtered.filter(d => d['co'] === coVal);
             if (brVal) filtered = filtered.filter(d => d['br'] === brVal);
@@ -959,7 +1059,27 @@
         function resetFilters() {
             document.getElementById('coBranchFilter').value = "";
             document.getElementById('branchFilter').innerHTML = '<option value="">All Branch</option>';
+            
+            // Reset stored state
+            currentFilterState = { co: "", branch: "" };
+            
+            updateHeaderSubtitle();
             renderDashboard(rawData);
+        }
+
+        // New Function to Update Header Subtitle
+        function updateHeaderSubtitle() {
+            const coVal = document.getElementById('coBranchFilter').value;
+            const brVal = document.getElementById('branchFilter').value;
+            const subtitleEl = document.getElementById('headerSubtitle');
+            
+            if (brVal) {
+                subtitleEl.innerText = "Branch " + brVal;
+            } else if (coVal) {
+                subtitleEl.innerText = "Co-Branch " + coVal;
+            } else {
+                subtitleEl.innerText = "Region Sumatera";
+            }
         }
 
         function formatValue(val, unit, isGrowthType = false, isTarget = false, isGap = false) {
