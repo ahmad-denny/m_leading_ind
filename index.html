@@ -932,7 +932,7 @@
             } else {
                 // Jika Co-Branch tidak ada/kosong, reset semua
                 coSelect.value = "";
-                brSelect.innerHTML = '<option value="">All Branch</option>';
+                brSelect.innerHTML = '<option value="">Select Branch</option>';
                 updateHeaderSubtitle(); // Update header to default
                 renderDashboard(rawData);
             }
@@ -1026,7 +1026,7 @@
             const brSelect = document.getElementById('branchFilter');
             const currentBrVal = brSelect.value; // Save current branch selection
             
-            brSelect.innerHTML = '<option value="">All Branch</option>';
+            brSelect.innerHTML = '<option value="">Select Branch</option>';
             if (coVal) {
                 const brSet = new Set(rawData.filter(d => d['co'] === coVal).map(d => d['br']).filter(Boolean));
                 [...brSet].sort().forEach(br => { brSelect.innerHTML += `<option value="${br}">${br}</option>`; });
@@ -1058,7 +1058,7 @@
 
         function resetFilters() {
             document.getElementById('coBranchFilter').value = "";
-            document.getElementById('branchFilter').innerHTML = '<option value="">All Branch</option>';
+            document.getElementById('branchFilter').innerHTML = '<option value="">Select Branch</option>';
             
             // Reset stored state
             currentFilterState = { co: "", branch: "" };
