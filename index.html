@@ -5,7 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Leading Indicator Dashboard - Bank Muamalat</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <!-- Chart.js CDN -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="https://cdn.sheetjs.com/xlsx-latest/package/dist/xlsx.full.min.js"></script>
     <style>
@@ -24,11 +23,9 @@
             --highlight-bg: rgba(75, 46, 131, 0.08);
             --card-title-light: #d4c4f0; 
             --top5-header-color: var(--primary);
-            
             --col-rank-w: 40px;
             --col-name-w: 120px;
             --col-total-w: 60px;
-
             --text-primary: #6a4c9c;
         }
 
@@ -46,14 +43,14 @@
             --sort-text-color: #e2e8f0;
             --sort-icon-color: #a78bfa;
             --top5-header-color: #ffffff;
-            
             --text-primary: #D4C4F0;
         }
 
-        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', system-ui, sans-serif; transition: background-color 0.3s, color 0.3s; }
+        /* FONT STANDARD DIKEMBALIKAN */
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; transition: background-color 0.3s, color 0.3s; }
         
         body.modal-open { overflow: hidden; }
-        body { background-color: var(--bg); color: var(--text); min-height: 100vh; padding-top: 150px; user-select: none;}
+        body { background-color: var(--bg); color: var(--text); min-height: 100vh; padding-top: 150px; user-select: none; overflow-x: hidden; }
 
         /* LOGIN GATE STYLES */
         .login-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: #1a2332; z-index: 99999; display: flex; justify-content: center; align-items: center; }
@@ -76,7 +73,9 @@
         .header h1 img.logo { object-fit: contain; vertical-align: middle; margin-top: -2px; }
         .header p { font-size: 0.85rem; opacity: 0.9; margin: 2px 0; text-align: left; }
         
-        .data-tabs-container { width: 100%; display: flex; justify-content: flex-start; margin-top: 12px; margin-bottom: 0; gap: 0; overflow-x: auto; padding-bottom: 0; }
+        .data-tabs-container { width: 100%; display: flex; justify-content: flex-start; margin-top: 12px; margin-bottom: 0; gap: 0; overflow-x: auto; padding-bottom: 0; scrollbar-width: none; }
+        .data-tabs-container::-webkit-scrollbar { display: none; }
+        
         .data-tab-btn { padding: 8px 16px; background: rgba(0, 0, 0, 0.15); color: rgba(255, 255, 255, 0.8); border: 1px solid transparent; border-bottom: 1px solid transparent; border-radius: 4px 4px 0 0; cursor: pointer; font-size: 0.8rem; font-weight: 600; white-space: nowrap; transition: all 0.2s ease; margin-right: 5px; display: inline-flex; align-items: center; }
         .data-tab-btn:hover { background: rgba(255, 255, 255, 0.15); color: #ffffff; }
         .data-tab-btn.active { padding: 8px 16px; border: 1px solid var(--card-bg); border-bottom: none; background: var(--card-bg); color: var(--primary); border-radius: 4px 4px 0 0; font-weight: bold; position: relative; z-index: 2; }
@@ -108,14 +107,7 @@
         .metric-val.neg { color: var(--danger); }
         .metric-val.pos { color: var(--success); }
         
-        /* CHART CONTAINER STYLE */
-        .chart-container {
-            position: relative;
-            height: 140px; /* Default Desktop Height */
-            width: 100%;
-            margin-top: 5px;
-            margin-bottom: 10px;
-        }
+        .chart-container { position: relative; height: 140px; width: 100%; margin-top: 5px; margin-bottom: 10px; }
 
         .achievement-box { margin-top: auto; text-align: center; padding-top: 10px; border-top: 1px dashed var(--border); }
         .achv-label { font-size: 0.85rem; color: var(--text-muted); margin-bottom: 5px; }
@@ -194,36 +186,61 @@
         .top5-name { flex: 1; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; margin-right: 5px; font-size: 0.65rem; min-width: 0; }
         .top5-val { font-weight: bold; color: var(--text); font-size: 0.65rem; flex-shrink: 0; }
 
-        /* RESPONSIVE MEDIA QUERIES */
+        /* =========================================
+           RESPONSIVE MOBILE COMPACT (RESTORED FONTS)
+           ========================================= */
         @media (max-width: 900px) {
-            .header { padding: 15px 15px 0 15px; min-height: 150px; }
-            .header-content-wrapper { max-width: 100%; }
-            .header h1 { font-size: 1.2rem; gap: 8px; }
-            .header p { font-size: 0.75rem; }
-            .theme-toggle, .filter-toggle { width: 32px; height: 32px; font-size: 0.9rem; }
-            body { padding-top: 160px; }
-            .controls { flex-wrap: wrap; flex-direction: row; align-items: stretch; padding: 10px; gap: 8px; margin: -1px 10px 15px 10px; border-radius: 0 0 var(--radius) var(--radius); }
-            .filter-group { flex-basis: 100%; flex-direction: row; gap: 5px; }
+            .header { padding: 10px 10px 0 10px; min-height: 130px; }
+            .header-content-wrapper { max-width: 100%; padding-right: 10px; }
+            .header h1 { font-size: 1.1rem; gap: 8px; } /* Sedikit lebih kecil tapi masih terbaca */
+            .header h1 span { font-size: 14px !important; }
+            .header h1 span span { font-size: 12px !important; }
+            .header p { font-size: 0.75rem; margin-top: 5px; }
+            
+            .theme-toggle, .filter-toggle { width: 30px; height: 30px; font-size: 0.85rem; }
+            body { padding-top: 140px; }
+            
+            .controls { padding: 10px; gap: 8px; margin: -1px 10px 10px 10px; flex-wrap: wrap; }
+            .filter-group { flex-basis: 100%; gap: 5px; }
             .filter-group select { font-size: 0.85rem; padding: 8px; }
-            .btn { flex: 1; justify-content: center; font-size: 0.85rem; padding: 8px; }
-            .btn-reset { flex-basis: 40%; }
-            .btn-ranking { flex-basis: 55%; margin-top: 0; } 
+            .btn { font-size: 0.85rem; padding: 8px; }
             
-            .dashboard-grid { grid-template-columns: repeat(2, 1fr); gap: 10px; padding: 0 10px 20px 10px; margin-top: -2px; position: relative; z-index: 10; }
-            .card { padding: 12px; }
-            .card-title { font-size: 0.85rem; }
-            .metric-row { font-size: 0.85rem; margin-bottom: 6px; }
-            .metric-val { font-size: 0.85rem; }
-            .achv-label { font-size: 0.85rem; }
-            .achv-val { font-size: 1.3rem; }
-            .badge-mtd { font-size: 0.75rem; }
+            /* GRID UTAMA: PAKSA 2 KOLOM */
+            .dashboard-grid { 
+                grid-template-columns: repeat(2, 1fr); 
+                gap: 10px; 
+                padding: 0 10px 20px 10px; 
+                margin-top: -2px; 
+            }
             
-            /* MOBILE CHART ADJUSTMENT */
+            /* CARD COMPACT STYLE DENGAN FONT TERBACA */
+            .card { 
+                padding: 10px; /* Padding seimbang */
+                border-radius: 6px;
+            }
+            .card-header { margin-bottom: 6px; }
+            .card-title { font-size: 0.8rem; gap: 5px; font-weight: 700; } /* Font Title Dibesarkan */
+            .card-title i { font-size: 0.8rem; }
+            .badge-mtd { font-size: 0.65rem; padding: 2px 5px; }
+            
+            .metric-row { font-size: 0.75rem; margin-bottom: 4px; display: flex; justify-content: space-between; } /* Font Metrik Dibesarkan */
+            .metric-val { font-size: 0.75rem; font-weight: 700; }
+            
+            /* CHART COMPACT */
             .chart-container {
-                height: 100px; /* Lebih pendek di mobile */
-                margin-bottom: 5px;
+                height: 85px; /* Tinggi disesuaikan */
+                margin-top: 5px;
+                margin-bottom: 8px;
             }
 
+            /* ACHIEVEMENT BOX COMPACT */
+            .achievement-box { padding-top: 6px; }
+            .achv-val { font-size: 1.2rem; margin-bottom: 4px; line-height: 1.2; }
+            .progress-bar { height: 5px; }
+            
+            .footer { display: none; }
+            
+            /* MODAL & TABLE ADJUSTMENTS */
             :root { --col-name-w: 100px; --col-total-w: 45px; }
             .ranking-table { font-size: 0.7rem; }
             .ranking-table th:nth-child(2), .ranking-table td:nth-child(2) { left: var(--col-rank-w); width: var(--col-name-w); min-width: var(--col-name-w); max-width: var(--col-name-w); }
@@ -244,9 +261,7 @@
             .top5-name { font-size: 0.6rem; }
             .top5-val { font-size: 0.6rem; }
             .top5-rank { width: 14px; height: 14px; line-height: 14px; font-size: 0.55rem; margin-right: 4px; }
-            .breakdown-container { padding: 0 10px 40px 10px; }
-            .detail-table th, .detail-table td { padding: 8px 6px; font-size: 0.75rem; }
-            .breakdown-container { display: none !important; }
+            .breakdown-container { padding: 0 10px 40px 10px; display: none !important; }
         }
 
         [data-theme="dark"] .tab-btn { background: rgba(255, 255, 255, 0.08) !important; color: rgba(255, 255, 255, 0.5) !important; border: 1px solid rgba(255, 255, 255, 0.1) !important; }
@@ -292,8 +307,8 @@
                 <select id="coBranchFilter" onchange="handleCoBranchChange()"><option value="">Select Co-Branch</option></select>
                 <select id="branchFilter" onchange="applyFilters()"><option value="">Select Branch</option></select>
             </div>
-            <button class="btn btn-reset" onclick="resetFilters()"><i class="fas fa-sync-alt"></i> Filter Reset</button>
-            <button class="btn btn-ranking" onclick="openRankingModal()"><i class="fas fa-trophy"></i> Performance Ranking</button>
+            <button class="btn btn-reset" onclick="resetFilters()"><i class="fas fa-sync-alt"></i> Reset</button>
+            <button class="btn btn-ranking" onclick="openRankingModal()"><i class="fas fa-trophy"></i> Ranking</button>
         </div>
 
         <div class="dashboard-grid" id="dashboardContainer">
@@ -480,9 +495,7 @@
                 document.getElementById('themeIcon').className = 'fas fa-sun';
                 localStorage.setItem('bm_theme', 'dark');
             }
-            // Re-render charts to update colors if theme changes
             if(document.getElementById('dashboardContainer').children.length > 0 && !document.getElementById('dashboardContainer').innerHTML.includes('spinner')){
-                 // Simple trigger to refresh chart colors
                  const coVal = document.getElementById('coBranchFilter').value;
                  const brVal = document.getElementById('branchFilter').value;
                  let filtered = rawData;
@@ -575,7 +588,6 @@
             const container = document.getElementById('dashboardContainer');
             container.innerHTML = '';
             
-            // Destroy existing charts
             Object.values(chartInstances).forEach(chart => chart.destroy());
             chartInstances = {};
 
@@ -620,8 +632,8 @@
                 const formattedTgt = formatValue(tgt, m.unit, false, true, false);
                 const formattedGap = formatValue(gap, m.unit, false, false, true);
                 
-                const gapLabel = ['ca','sa','fu'].includes(m.key) ? 'Growth GAP' : 
-                                 ['con','sme','ph','sli'].includes(m.key) ? 'Booking GAP' : 'Akuisisi GAP';
+                const gapLabel = ['ca','sa','fu'].includes(m.key) ? 'GAP' : 
+                                 ['con','sme','ph','sli'].includes(m.key) ? 'GAP' : 'GAP';
 
                 const canvasId = `chart-${m.key}`;
 
@@ -632,13 +644,12 @@
                             <span class="badge-mtd">MTD</span>
                         </div>
                         
-                        <!-- CHART AREA -->
                         <div class="chart-container">
                             <canvas id="${canvasId}"></canvas>
                         </div>
 
                         <div class="metric-row"><span>${m.type}</span><span class="metric-val ${growthClass}">${formattedMtd}</span></div>
-                        <div class="metric-row"><span>MTD Target</span><span class="metric-val">${formattedTgt}</span></div>
+                        <div class="metric-row"><span>Target</span><span class="metric-val">${formattedTgt}</span></div>
                         <div class="metric-row"><span>${gapLabel}</span><span class="metric-val" style="color: var(--danger);">${formattedGap}</span></div>
                         <div class="achievement-box">
                             <div class="achv-val" style="color: ${achv >= 80 ? 'var(--success)' : achv >= 50 ? 'var(--warning)' : 'var(--danger)'};">${achvDisplay}</div>
@@ -657,8 +668,6 @@
             const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
             const textColor = isDark ? '#e0e0e0' : '#333333';
             const gridColor = isDark ? 'rgba(255,255,255,0.1)' : 'rgba(0,0,0,0.05)';
-            
-            // Cek apakah layar mobile (lebar < 900px)
             const isMobile = window.innerWidth <= 900;
 
             metrics.forEach(m => {
@@ -680,35 +689,26 @@
                                 label: 'Aktual',
                                 data: [mtd],
                                 backgroundColor: mtdColor,
-                                borderRadius: 4,
-                                barPercentage: isMobile ? 0.8 : 0.6, // Batang sedikit lebih lebar di mobile agar mudah dilihat
-                                categoryPercentage: isMobile ? 0.8 : 0.6
+                                borderRadius: 2,
+                                barPercentage: 0.7,
+                                categoryPercentage: 0.8
                             },
                             {
                                 label: 'Target',
                                 data: [tgt],
                                 backgroundColor: tgtColor,
-                                borderRadius: 4,
-                                barPercentage: isMobile ? 0.8 : 0.6,
-                                categoryPercentage: isMobile ? 0.8 : 0.6
+                                borderRadius: 2,
+                                barPercentage: 0.7,
+                                categoryPercentage: 0.8
                             }
                         ]
                     },
                     options: {
                         responsive: true,
                         maintainAspectRatio: false,
-                        animation: { duration: 0 }, // Matikan animasi untuk performa lebih cepat saat filter
+                        animation: { duration: 0 },
                         plugins: {
-                            legend: {
-                                display: !isMobile, // Sembunyikan legenda di mobile untuk hemat tempat
-                                position: 'bottom',
-                                labels: {
-                                    boxWidth: 10,
-                                    font: { size: 10 },
-                                    color: textColor,
-                                    padding: 5
-                                }
-                            },
+                            legend: { display: false },
                             tooltip: {
                                 enabled: true,
                                 mode: 'index',
@@ -729,22 +729,16 @@
                         scales: {
                             x: { display: false }, 
                             y: {
-                                display: true,
+                                display: !isMobile,
                                 beginAtZero: true,
                                 grid: { color: gridColor, drawBorder: false },
                                 ticks: { 
                                     color: textColor, 
-                                    font: { size: isMobile ? 8 : 10 }, // Font lebih kecil di mobile
-                                    maxTicksLimit: isMobile ? 4 : 6, // Batasi jumlah garis grid di mobile
+                                    font: { size: 9 },
+                                    maxTicksLimit: 4,
                                     callback: function(value) {
-                                        // Format ringkas untuk mobile (contoh: 1000 -> 1k, 1000000 -> 1M)
-                                        if (isMobile) {
-                                            if (value >= 1000000) return (value / 1000000).toFixed(1) + 'M';
-                                            if (value >= 1000) return (value / 1000).toFixed(0) + 'k';
-                                            return value;
-                                        }
-                                        // Format desktop standar
-                                        if(m.unit === 'M') return value + 'M';
+                                        if (value >= 1000000) return (value / 1000000).toFixed(1) + 'M';
+                                        if (value >= 1000) return (value / 1000).toFixed(0) + 'k';
                                         return value;
                                     }
                                 }
