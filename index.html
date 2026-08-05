@@ -5,7 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Leading Indicator Dashboard - Bank Muamalat</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="https://cdn.sheetjs.com/xlsx-latest/package/dist/xlsx.full.min.js"></script>
     <style>
         :root {
@@ -23,9 +22,11 @@
             --highlight-bg: rgba(75, 46, 131, 0.08);
             --card-title-light: #d4c4f0; 
             --top5-header-color: var(--primary);
+            
             --col-rank-w: 40px;
             --col-name-w: 120px;
             --col-total-w: 60px;
+
             --text-primary: #6a4c9c;
         }
 
@@ -43,51 +44,257 @@
             --sort-text-color: #e2e8f0;
             --sort-icon-color: #a78bfa;
             --top5-header-color: #ffffff;
+            
             --text-primary: #D4C4F0;
         }
 
-        /* FONT STANDARD DIKEMBALIKAN */
-        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; transition: background-color 0.3s, color 0.3s; }
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', system-ui, sans-serif; transition: background-color 0.3s, color 0.3s; }
         
         body.modal-open { overflow: hidden; }
-        body { background-color: var(--bg); color: var(--text); min-height: 100vh; padding-top: 150px; user-select: none; overflow-x: hidden; }
+        /* Padding top disesuaikan untuk mengakomodasi header dan controls */
+        body { background-color: var(--bg); color: var(--text); min-height: 100vh; padding-top: 150px; user-select: none;}
 
-        /* LOGIN GATE STYLES */
-        .login-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: #1a2332; z-index: 99999; display: flex; justify-content: center; align-items: center; }
-        .login-card { background: #ffffff; padding: 35px 30px; border-radius: 20px; width: 90%; max-width: 440px; text-align: center; box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3); }
-        .login-icon-circle { width: 65px; height: 65px; background: #e8ebfa; color: #4f46e5; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 20px auto; font-size: 1.6rem; }
-        .login-card h2 { font-size: 1.65rem; color: #111827; margin-bottom: 6px; font-weight: 700; }
-        .login-card p { font-size: 0.9rem; color: #6b7280; margin-bottom: 25px; }
-        .password-field-container { position: relative; margin-bottom: 20px; }
-        .password-field-container input { width: 100%; padding: 14px 45px 14px 16px; border: 2px solid #6366f1; border-radius: 12px; font-size: 0.95rem; outline: none; color: #1f2937; background: #ffffff; }
-        .password-field-container i { position: absolute; right: 16px; top: 50%; transform: translateY(-50%); color: #9ca3af; cursor: pointer; font-size: 1.1rem; }
-        .login-card button { width: 100%; padding: 14px; background: #4f46e5; color: #ffffff; border: none; border-radius: 12px; font-size: 1rem; font-weight: 600; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px; transition: background 0.2s; }
+        /* =========================================
+           LOGIN GATE STYLES
+           ========================================= */
+        .login-overlay {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background-color: #1a2332;
+            z-index: 99999;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        .login-card {
+            background: #ffffff;
+            padding: 35px 30px;
+            border-radius: 20px;
+            width: 90%;
+            max-width: 440px;
+            text-align: center;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+        }
+        .login-icon-circle {
+            width: 65px; height: 65px;
+            background: #e8ebfa;
+            color: #4f46e5;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 20px auto;
+            font-size: 1.6rem;
+        }
+        .login-card h2 {
+            font-size: 1.65rem;
+            color: #111827;
+            margin-bottom: 6px;
+            font-weight: 700;
+        }
+        .login-card p {
+            font-size: 0.9rem;
+            color: #6b7280;
+            margin-bottom: 25px;
+        }
+        .password-field-container {
+            position: relative;
+            margin-bottom: 20px;
+        }
+        .password-field-container input {
+            width: 100%;
+            padding: 14px 45px 14px 16px;
+            border: 2px solid #6366f1;
+            border-radius: 12px;
+            font-size: 0.95rem;
+            outline: none;
+            color: #1f2937;
+            background: #ffffff;
+        }
+        .password-field-container i {
+            position: absolute;
+            right: 16px; top: 50%;
+            transform: translateY(-50%);
+            color: #9ca3af;
+            cursor: pointer;
+            font-size: 1.1rem;
+        }
+        .login-card button {
+            width: 100%;
+            padding: 14px;
+            background: #4f46e5;
+            color: #ffffff;
+            border: none;
+            border-radius: 12px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            transition: background 0.2s;
+        }
         .login-card button:hover { background: #4338ca; }
-        .login-error-msg { color: #dc3545; font-size: 0.8rem; margin-top: -12px; margin-bottom: 15px; text-align: left; padding-left: 4px; display: none; }
+        .login-error-msg {
+            color: #dc3545;
+            font-size: 0.8rem;
+            margin-top: -12px;
+            margin-bottom: 15px;
+            text-align: left;
+            padding-left: 4px;
+            display: none;
+        }
         .main-content { display: none; }
 
-        /* HEADER */
-        .header { background: linear-gradient(135deg, var(--primary), #2d1b50); color: white; padding: 15px 20px 0 20px; position: fixed; top: 0; left: 0; right: 0; z-index: 100; display: flex; flex-direction: column; align-items: flex-start; justify-content: center; box-shadow: 0 4px 10px rgba(0,0,0,0.2); min-height: 125px; }
-        .header-content-wrapper { position: relative; width: 100%; max-width: 100%; display: flex; align-items: center; justify-content: flex-start; padding-right: 20px; }
-        .header h1 { font-size: 1.4rem; margin-bottom: 5px; display: flex; align-items: center; justify-content: flex-start; gap: 12px; text-align: left; line-height: 1.1; flex: 1; }
+        /* =========================================
+           HEADER FIXED & LEFT ALIGNED
+           ========================================= */
+        .header { 
+            background: linear-gradient(135deg, var(--primary), #2d1b50); 
+            color: white; 
+            /* MODIFIED: Removed bottom padding completely to make tabs touch the edge */
+            padding: 15px 20px 0 20px; 
+            position: fixed; 
+            top: 0; left: 0; right: 0;
+            z-index: 100;
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start; /* RATA KIRI */
+            justify-content: center;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+            min-height: 125px;
+        }
+        
+        .header-content-wrapper {
+            position: relative;
+            width: 100%;
+            max-width: 100%; /* Full width */
+            display: flex;
+            align-items: center;
+            justify-content: flex-start; /* RATA KIRI */
+            padding-right: 20px; /* Space for buttons */
+        }
+
+        .header h1 { 
+            font-size: 1.4rem; 
+            margin-bottom: 5px; 
+            display: flex; 
+            align-items: center; 
+            justify-content: flex-start; /* RATA KIRI */
+            gap: 12px; 
+            text-align: left;
+            line-height: 1.1;
+            flex: 1; /* Take available space */
+        }
         .header h1 img.logo { object-fit: contain; vertical-align: middle; margin-top: -2px; }
         .header p { font-size: 0.85rem; opacity: 0.9; margin: 2px 0; text-align: left; }
         
-        .data-tabs-container { width: 100%; display: flex; justify-content: flex-start; margin-top: 12px; margin-bottom: 0; gap: 0; overflow-x: auto; padding-bottom: 0; scrollbar-width: none; }
-        .data-tabs-container::-webkit-scrollbar { display: none; }
+        /* CONTAINER TAB JSON DINAMIS - UPDATED STYLE TO MATCH RANKING MODAL */
+        .data-tabs-container {
+            width: 100%;
+            display: flex;
+            justify-content: flex-start; /* RATA KIRI */
+            /* MODIFIED: Adjusted margins/padding to sit flush at bottom of header */
+            margin-top: 12px;
+            margin-bottom: 0;
+            gap: 0; 
+            overflow-x: auto;
+            padding-bottom: 0;
+        }
+        .data-tab-btn {
+            padding: 8px 16px;
+            background: rgba(0, 0, 0, 0.15);
+            color: rgba(255, 255, 255, 0.8);
+            /* MODIFIED: Added transparent bottom border to align height with active tab */
+            border: 1px solid transparent;
+            border-bottom: 1px solid transparent;
+            border-radius: 4px 4px 0 0; /* Square top corners */
+            cursor: pointer;
+            font-size: 0.8rem;
+            font-weight: 600;
+            white-space: nowrap;
+            transition: all 0.2s ease;
+            margin-right: 5px;
+            display: inline-flex;
+            align-items: center;
+        }
+        .data-tab-btn:hover {
+            background: rgba(255, 255, 255, 0.15);
+            color: #ffffff;
+        }
+        .data-tab-btn.active {
+            padding: 8px 16px;
+            border: 1px solid var(--card-bg);
+            /* MODIFIED: Remove bottom border and set background to match card-bg for seamless look */
+            border-bottom: none; 
+            background: var(--card-bg);
+            color: var(--primary);
+            border-radius: 4px 4px 0 0;
+            font-weight: bold;
+            position: relative;
+            z-index: 2; /* Ensure it sits above the header edge */
+        }
+        [data-theme="dark"] .data-tab-btn.active {
+            background: #16213e !important; 
+            color: #ffffff !important;
+            border: 1px solid #16213e !important;
+            border-bottom: none !important;
+            font-weight: bold;
+        }
         
-        .data-tab-btn { padding: 8px 16px; background: rgba(0, 0, 0, 0.15); color: rgba(255, 255, 255, 0.8); border: 1px solid transparent; border-bottom: 1px solid transparent; border-radius: 4px 4px 0 0; cursor: pointer; font-size: 0.8rem; font-weight: 600; white-space: nowrap; transition: all 0.2s ease; margin-right: 5px; display: inline-flex; align-items: center; }
-        .data-tab-btn:hover { background: rgba(255, 255, 255, 0.15); color: #ffffff; }
-        .data-tab-btn.active { padding: 8px 16px; border: 1px solid var(--card-bg); border-bottom: none; background: var(--card-bg); color: var(--primary); border-radius: 4px 4px 0 0; font-weight: bold; position: relative; z-index: 2; }
-        [data-theme="dark"] .data-tab-btn.active { background: #16213e !important; color: #ffffff !important; border: 1px solid #16213e !important; border-bottom: none !important; font-weight: bold; }
-        
-        .header-actions { position: absolute; top: 15px; right: 0; transform: translateY(-50%); display: flex; align-items: center; gap: 10px; z-index: 101; }
-        .theme-toggle, .filter-toggle { background: rgba(255,255,255,0.15); border: none; color: white; width: 28px; height: 28px; border-radius: 50%; cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 0.7em; flex-shrink: 0; transition: background 0.2s; }
+        /* BUTTON GROUP (FILTER & THEME) - POSITIONED TO THE RIGHT */
+        .header-actions {
+            position: absolute;
+            top: 15px;
+            right: 0; /* Pindah ke kanan */
+            transform: translateY(-50%);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            z-index: 101;
+        }
+
+        .theme-toggle, .filter-toggle { 
+            background: rgba(255,255,255,0.15); 
+            border: none; 
+            color: white; 
+            width: 28px; 
+            height: 28px; 
+            border-radius: 50%; 
+            cursor: pointer; 
+            display: flex; 
+            align-items: center; 
+            justify-content: center; 
+            font-size: 0.7em; 
+            flex-shrink: 0;
+            transition: background 0.2s;
+        }
         .theme-toggle:hover, .filter-toggle:hover { background: rgba(255,255,255,0.25); }
         .filter-toggle.active { background: var(--warning); color: #333; }
         
-        .controls { display: none; align-items: center; padding: 15px 20px; background: var(--card-bg); margin: -1px 20px 15px 20px; border-radius: 0 0 var(--radius) var(--radius); box-shadow: var(--shadow); gap: 5px; flex-wrap: nowrap; animation: slideDown 0.3s ease; position: relative; z-index: 10; }
-        @keyframes slideDown { from { opacity: 0; transform: translateY(-10px); } to { opacity: 1; transform: translateY(0); } }
+        .controls { 
+            display: none; /* Hidden by default */
+            align-items: center; 
+            padding: 15px 20px; 
+            background: var(--card-bg); 
+            /* MODIFIED: Negative margin top to pull up and cover the gap */
+            /* MODIFIED: Border radius adjusted to be flat on top corners to eliminate gap */
+            margin: -1px 20px 15px 20px; 
+            border-radius: 0 0 var(--radius) var(--radius); 
+            box-shadow: var(--shadow); 
+            gap: 5px; 
+            flex-wrap: nowrap; 
+            animation: slideDown 0.3s ease;
+            position: relative;
+            z-index: 10;
+        }
+
+        @keyframes slideDown {
+            from { opacity: 0; transform: translateY(-10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
         .filter-group { display: flex; gap: 10px; flex: 2; min-width: 0; } 
         select { padding: 8px 12px; border: 1px solid var(--border); border-radius: 4px; flex: 1; background: var(--card-bg); color: var(--text); min-width: 0; font-size: 0.85rem; }
         .btn { padding: 8px 16px; border: none; border-radius: 4px; cursor: pointer; font-weight: 600; font-size: 0.85rem; display: inline-flex; align-items: center; gap: 6px; white-space: nowrap; }
@@ -95,9 +302,18 @@
         .btn-reset { background: var(--warning); color: #333; flex: 1; justify-content: center; } 
         .btn:hover { opacity: 0.9; transform: translateY(-1px); }
 
-        .dashboard-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 15px; padding: 0 20px 20px 20px; margin-top: -2px; position: relative; z-index: 10; }
+        /* MODIFIED: Added negative margin top to merge with tabs */
+        .dashboard-grid { 
+            display: grid; 
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); 
+            gap: 15px; 
+            padding: 0 20px 20px 20px; 
+            margin-top: -2px; /* Pulls cards up to overlap the tab border slightly */
+            position: relative; /* Required for z-index */
+            z-index: 10; /* Ensures content sits ON TOP of header/tabs */
+        }
         
-        .card { background: var(--card-bg); padding: 16px; border-radius: var(--radius); box-shadow: var(--shadow); display: flex; flex-direction: column; }        
+        .card { background: var(--card-bg); padding: 16px; border-radius: var(--radius); box-shadow: var(--shadow); border-top: 0px solid var(--primary); border-left: 0px solid var(--primary); display: flex; flex-direction: column; }        
         .card-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; }
         .card-title { font-size: 0.95rem; font-weight: bold; color: var(--primary); display: flex; align-items: center; gap: 6px; }
         [data-theme="dark"] .card-title { color: var(--card-title-light); }
@@ -106,9 +322,6 @@
         .metric-val { font-weight: 600; color: var(--text); font-size: 0.85rem; }
         .metric-val.neg { color: var(--danger); }
         .metric-val.pos { color: var(--success); }
-        
-        .chart-container { position: relative; height: 140px; width: 100%; margin-top: 5px; margin-bottom: 10px; }
-
         .achievement-box { margin-top: auto; text-align: center; padding-top: 10px; border-top: 1px dashed var(--border); }
         .achv-label { font-size: 0.85rem; color: var(--text-muted); margin-bottom: 5px; }
         .achv-val { font-size: 1.5rem; font-weight: bold; margin-bottom: 6px; }
@@ -119,49 +332,188 @@
         
         .footer { text-align: center; padding: 10px; font-size: 0.75rem; color: var(--text-muted); margin-top: 3px; }
 
-        /* DETAILED BREAKDOWN TABLE STYLES */
-        .breakdown-container { padding: 0 20px 40px 20px; }
-        .breakdown-card { background: var(--card-bg); border-radius: var(--radius); box-shadow: var(--shadow); overflow: hidden; }
-        .breakdown-header { font-weight: bold; padding: 15px 20px; border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; }
-        .breakdown-title { font-size: 1rem; font-weight: bold; color: var(--text-primary); display: flex; align-items: center; gap: 8px; transition: color 0.3s ease; }
-        .table-responsive { overflow-x: auto; width: 100%; -webkit-overflow-scrolling: touch; }
-        .detail-table { width: 100%; border-collapse: collapse; font-size: 0.8rem; white-space: nowrap; table-layout: fixed; }
-        .detail-table th, .detail-table td { padding: 10px 8px; text-align: right; border-bottom: 1px solid var(--border); overflow: hidden; text-overflow: ellipsis; }
+        /* =========================================
+        DETAILED BREAKDOWN TABLE STYLES
+        ========================================= */
+        .breakdown-container {
+            padding: 0 20px 40px 20px;
+        }
+
+        .breakdown-card {
+            background: var(--card-bg);
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+            overflow: hidden;
+            border-top: 0px solid var(--primary);
+            border-left: 0px solid var(--primary);        }
+
+        .breakdown-header {
+            font-weight: bold;
+            padding: 15px 20px;
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;            
+        }
+
+        .breakdown-title {
+            font-size: 1rem;
+            font-weight: bold;
+            color: var(--primary);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            color: var(--text-primary);
+            transition: color 0.3s ease;
+        }
+
+        .table-responsive {
+            overflow-x: auto;
+            width: 100%;
+            -webkit-overflow-scrolling: touch;
+        }
+
+        .detail-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.8rem;
+            white-space: nowrap;
+            table-layout: fixed;
+        }
+
+        .detail-table th, .detail-table td {
+            padding: 10px 8px;
+            text-align: right; 
+            border-bottom: 1px solid var(--border);
+            overflow: hidden;
+            text-overflow: ellipsis;            
+        }
+
         .detail-table th:nth-child(1), .detail-table td:nth-child(1) { width: 40px; min-width: 40px; }
         .detail-table th:nth-child(2), .detail-table td:nth-child(2) { width: 100px; min-width: 100px; }
         .detail-table th:nth-child(3), .detail-table td:nth-child(3) { width: 130px; min-width: 130px; }
         .detail-table th:nth-child(4), .detail-table td:nth-child(4) { width: 70px; min-width: 70px; }
+
         .detail-table th:first-child, .detail-table td:first-child,
         .detail-table th:nth-child(2), .detail-table td:nth-child(2),
         .detail-table th:nth-child(3), .detail-table td:nth-child(3),
-        .detail-table th:nth-child(4), .detail-table td:nth-child(4) { text-align: left; position: sticky; background: var(--card-bg); z-index: 10; border-right: 1px solid var(--border); }
+        .detail-table th:nth-child(4), .detail-table td:nth-child(4) {
+            text-align: left; 
+            position: sticky;
+            background: var(--card-bg);
+            z-index: 10;
+            border-right: 1px solid var(--border);
+        }
+
         .detail-table th:first-child, .detail-table td:first-child { left: 0; z-index: 11; }
         .detail-table th:nth-child(2), .detail-table td:nth-child(2) { left: 40px; z-index: 11; }
         .detail-table th:nth-child(3), .detail-table td:nth-child(3) { left: 140px; z-index: 11; }
         .detail-table th:nth-child(4), .detail-table td:nth-child(4) { left: 270px; z-index: 11; border-right: 1px solid var(--border); }
-        .detail-table th { background: var(--bg); color: var(--text-muted); font-weight: 600; position: sticky; top: 0; z-index: 5; }
-        .detail-table tr.total-row { background-color: var(--highlight-bg); font-weight: bold; }
-        .detail-table tr.total-row td:first-child { position: sticky; left: 0; background: var(--highlight-bg); z-index: 11; border-right: 1px solid var(--border); }
-        .detail-table tr.total-row td:nth-child(2) { position: sticky; left: 40px; background: var(--highlight-bg); z-index: 11; border-right: 1px solid var(--border); }
-        .detail-table tr.total-row td:nth-child(3) { position: sticky; left: 140px; background: var(--highlight-bg); z-index: 11; border-right: 1px solid var(--border); text-align: right !important; }
-        .detail-table tr.total-row td:nth-child(4) { position: sticky; left: 270px; background: var(--highlight-bg); z-index: 11; border-right: 1px solid var(--border); }
+
+        .detail-table th {
+            background: var(--bg);
+            color: var(--text-muted);
+            font-weight: 600;
+            position: sticky;
+            top: 0;
+            z-index: 5;
+        }
+
+        .detail-table tr.total-row {
+            background-color: var(--highlight-bg);
+            font-weight: bold;
+            border-top: 0px solid var(--primary);
+        }
+        
+        .detail-table tr.total-row td:first-child {
+            position: sticky; left: 0; background: var(--highlight-bg); z-index: 11; border-right: 1px solid var(--border);
+        }
+        .detail-table tr.total-row td:nth-child(2) {
+            position: sticky; left: 40px; background: var(--highlight-bg); z-index: 11; border-right: 1px solid var(--border);
+        }
+        .detail-table tr.total-row td:nth-child(3) {
+            position: sticky; left: 140px; background: var(--highlight-bg); z-index: 11; border-right: 1px solid var(--border); text-align: right !important;
+        }
+        .detail-table tr.total-row td:nth-child(4) {
+            position: sticky; left: 270px; background: var(--highlight-bg); z-index: 11; border-right: 1px solid var(--border);
+        }
+
         .detail-table tr:hover td { background-color: rgba(0,0,0,0.02); }
         [data-theme="dark"] .detail-table tr:hover td { background-color: rgba(255,255,255,0.05); }
 
-        /* MODAL & RANKING STYLES */
+        /* =========================================
+           MODAL & RANKING STYLES
+           ========================================= */
         .modal-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); z-index: 1000; justify-content: center; align-items: center; }
-        .modal-content { background: var(--card-bg); width: 95%; max-width: 1200px; height: auto; max-height: 85vh; border-radius: var(--radius); overflow: hidden; display: flex; flex-direction: column; animation: slideUp 0.3s ease; color: var(--text); }
+        .modal-content { 
+            background: var(--card-bg); width: 95%; max-width: 1200px; 
+            height: auto; max-height: 85vh; 
+            border-radius: var(--radius); overflow: hidden; 
+            display: flex; flex-direction: column; animation: slideUp 0.3s ease; color: var(--text);
+        }
         @keyframes slideUp { from { transform: translateY(20px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
-        .modal-header { background: var(--primary); color: white; padding: 12px 15px 0 15px; display: flex; align-items: flex-end; flex-shrink: 0; }
-        .close-btn { background: none; border: none; color: white; font-size: 1.5rem; cursor: pointer; display: flex; align-self: center; margin-left: auto; padding-bottom: 10px; }
+        
+        .modal-header { 
+            background: var(--primary); 
+            color: white; 
+            padding: 12px 15px 0 15px; 
+            display: flex; 
+            align-items: flex-end; 
+            flex-shrink: 0; 
+        }
+        
+        .close-btn { 
+            background: none; 
+            border: none; 
+            color: white; 
+            font-size: 1.5rem; 
+            cursor: pointer;  
+            display: flex; 
+            align-self: center; 
+            margin-left: auto; 
+            padding-bottom: 10px; 
+        }
+        
         .modal-body { padding: 0; overflow-y: auto; flex: 1; display: flex; flex-direction: column; position: relative; }
-        .ranking-tabs-wrapper { position: sticky; top: 0; z-index: 40; background: var(--card-bg); padding: 15px 20px; border-bottom: 1px solid var(--border); box-shadow: 0 2px 4px rgba(0,0,0,0.05); }
-        .tab-btn { padding: 8px 16px; background: rgba(0, 0, 0, 0.15); color: rgba(255, 255, 255, 0.8); border: 1px solid transparent; border-radius: 4px 4px 0 0; cursor: pointer; font-size: 0.8rem; display: inline-flex; align-items: center; margin-right: 5px; }
-        .tab-btn.active { padding: 8px 16px; border: 1px solid var(--card-bg); border-bottom: 1px solid white; background: var(--card-bg); color: var(--primary); border-radius: 4px 4px 0 0; cursor: pointer; font-size: 0.8rem; display: inline-flex; align-items: center; margin-right: 5px; }
+        
+        .ranking-tabs-wrapper {
+            position: sticky; top: 0; z-index: 40; background: var(--card-bg);
+            padding: 15px 20px; border-bottom: 1px solid var(--border);
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+        }
+        
+        .tab-btn { 
+            padding: 8px 16px; 
+            background: rgba(0, 0, 0, 0.15); 
+            color: rgba(255, 255, 255, 0.8); 
+            border: 1px solid transparent;
+            border-radius: 4px 4px 0 0; 
+            cursor: pointer; 
+            font-size: 0.8rem; 
+            display: inline-flex;
+            align-items: center; 
+            margin-right: 5px;
+        }
+        
+        .tab-btn.active { 
+            padding: 8px 16px; 
+            border: 1px solid var(--card-bg); 
+            border-bottom: 1px solid white; 
+            background: var(--card-bg); 
+            color: var(--primary); 
+            border-radius: 4px 4px 0 0; 
+            cursor: pointer; 
+            font-size: 0.8rem; 
+            display: inline-flex;
+            align-items: center; 
+            margin-right: 5px; 
+        }
+
         .rank-badge { display: inline-block; width: 22px; height: 22px; line-height: 22px; text-align: center; border-radius: 50%; font-weight: bold; font-size: 0.7rem; background: var(--border); }
         .rank-1 { background: #ffd700; color: #333; }
         .rank-2 { background: #c0c0c0; color: #333; }
         .rank-3 { background: #cd7f32; color: white; }
+
         .table-wrapper { overflow-x: auto; -webkit-overflow-scrolling: touch; width: 100%; flex: 1; position: relative; }
         .ranking-table { width: 100%; border-collapse: separate; border-spacing: 0; font-size: 0.8rem; min-width: 800px; }
         .ranking-table th { background: var(--bg); padding: 0; text-align: center; border-bottom: 2px solid var(--border); position: sticky; top: 0; z-index: 5; color: var(--text); vertical-align: middle; height: 55px; }
@@ -171,76 +523,127 @@
         .sort-priority-badge { position: absolute; top: 2px; right: 2px; background: var(--primary); color: white; font-size: 0.55rem; width: 14px; height: 14px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: bold; }
         .ranking-table td { padding: 10px 4px; border-bottom: 1px solid var(--border); color: var(--text); text-align: center; white-space: nowrap; background: var(--card-bg); }
         .ranking-table td.highlight-col { background: var(--highlight-bg); font-weight: bold; }
+
         .ranking-table th:first-child, .ranking-table td:first-child { position: sticky; left: 0; z-index: 30; width: var(--col-rank-w); min-width: var(--col-rank-w); max-width: var(--col-rank-w); border-right: 1px solid var(--border); background: var(--card-bg); }
         .ranking-table th:nth-child(2), .ranking-table td:nth-child(2) { position: sticky; left: var(--col-rank-w); z-index: 25; width: var(--col-name-w); min-width: var(--col-name-w); max-width: var(--col-name-w); text-align: left !important; border-right: 1px solid var(--border); overflow: hidden; text-overflow: ellipsis; background: var(--card-bg); }
         .ranking-table th:nth-child(3), .ranking-table td:nth-child(3) { position: sticky; left: calc(var(--col-rank-w) + var(--col-name-w)); z-index: 20; font-weight: bold; background: var(--card-bg); border-right: 2px solid var(--primary); width: var(--col-total-w); min-width: var(--col-total-w); max-width: var(--col-total-w); font-size: 0.75rem; box-shadow: 2px 0 5px -2px rgba(0,0,0,0.1); padding-right: 4px !important; }
-        .top5-grid-container { display: grid; grid-template-columns: repeat(5, 1fr); gap: 12px; padding: 15px; overflow-y: auto; width: 100%; }
-        .top5-card { background: var(--card-bg); border: 1px solid var(--border); border-radius: var(--radius); padding: 10px; box-shadow: var(--shadow); display: flex; flex-direction: column; min-height: 0; min-width: 0; }
-        .top5-header { display: flex; align-items: center; gap: 5px; margin-bottom: 8px; padding-bottom: 6px; border-bottom: 1px dashed var(--border); color: var(--top5-header-color); font-weight: bold; font-size: 0.75rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-        .top5-item { display: flex; justify-content: space-between; align-items: center; padding: 3px 0; font-size: 0.7rem; border-bottom: 1px solid rgba(0,0,0,0.05); min-width: 0; }
+
+        .top5-grid-container {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 12px;
+            padding: 15px;
+            overflow-y: auto;
+            width: 100%;
+        }
+        .top5-card {
+            background: var(--card-bg);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 10px;
+            box-shadow: var(--shadow);
+            display: flex;
+            flex-direction: column;
+            min-height: 0;
+            min-width: 0;
+        }
+        .top5-header {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            margin-bottom: 8px;
+            padding-bottom: 6px;
+            border-bottom: 1px dashed var(--border);
+            color: var(--top5-header-color);
+            font-weight: bold;
+            font-size: 0.75rem;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        .top5-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 3px 0;
+            font-size: 0.7rem;
+            border-bottom: 1px solid rgba(0,0,0,0.05);
+            min-width: 0;
+        }
         .top5-item:last-child { border-bottom: none; }
-        .top5-rank { width: 16px; height: 16px; background: var(--bg); border-radius: 50%; text-align: center; line-height: 16px; font-size: 0.6rem; font-weight: bold; color: var(--text-muted); margin-right: 5px; flex-shrink: 0; }
+        .top5-rank {
+            width: 16px; height: 16px; background: var(--bg); border-radius: 50%;
+            text-align: center; line-height: 16px; font-size: 0.6rem;
+            font-weight: bold; color: var(--text-muted); margin-right: 5px; flex-shrink: 0;
+        }
         .top5-item:nth-child(1) .top5-rank { background: #ffd700; color: #333; }
         .top5-item:nth-child(2) .top5-rank { background: #c0c0c0; color: #333; }
         .top5-item:nth-child(3) .top5-rank { background: #cd7f32; color: white; }
-        .top5-name { flex: 1; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; margin-right: 5px; font-size: 0.65rem; min-width: 0; }
+        .top5-name { 
+            flex: 1; 
+            white-space: nowrap; 
+            overflow: hidden; 
+            text-overflow: ellipsis; 
+            margin-right: 5px; 
+            font-size: 0.65rem; 
+            min-width: 0;
+        }
         .top5-val { font-weight: bold; color: var(--text); font-size: 0.65rem; flex-shrink: 0; }
 
-        /* =========================================
-           RESPONSIVE MOBILE COMPACT (RESTORED FONTS)
-           ========================================= */
+        /* RESPONSIVE MEDIA QUERIES */
         @media (max-width: 900px) {
-            .header { padding: 10px 10px 0 10px; min-height: 130px; }
-            .header-content-wrapper { max-width: 100%; padding-right: 10px; }
-            .header h1 { font-size: 1.1rem; gap: 8px; } /* Sedikit lebih kecil tapi masih terbaca */
-            .header h1 span { font-size: 14px !important; }
-            .header h1 span span { font-size: 12px !important; }
-            .header p { font-size: 0.75rem; margin-top: 5px; }
+            .header { 
+                padding: 15px 15px 0 15px; 
+                min-height: 150px;
+            }
+            .header-content-wrapper { max-width: 100%; }
+            .header h1 { font-size: 1.2rem; gap: 8px; }
+            .header p { font-size: 0.75rem; }
             
-            .theme-toggle, .filter-toggle { width: 30px; height: 30px; font-size: 0.85rem; }
-            body { padding-top: 140px; }
-            
-            .controls { padding: 10px; gap: 8px; margin: -1px 10px 10px 10px; flex-wrap: wrap; }
-            .filter-group { flex-basis: 100%; gap: 5px; }
-            .filter-group select { font-size: 0.85rem; padding: 8px; }
-            .btn { font-size: 0.85rem; padding: 8px; }
-            
-            /* GRID UTAMA: PAKSA 2 KOLOM */
-            .dashboard-grid { 
-                grid-template-columns: repeat(2, 1fr); 
-                gap: 10px; 
-                padding: 0 10px 20px 10px; 
-                margin-top: -2px; 
+            /* Mobile adjustments for split buttons */
+            .s { 
+                position: absolute; 
+                top: 2px; /* Adjusted for mobile header height */
+                right: 1px;
+                transform: none;
+            }
+            .theme-toggle, .filter-toggle {
+                width: 32px; height: 32px; font-size: 0.9rem; 
             }
             
-            /* CARD COMPACT STYLE DENGAN FONT TERBACA */
-            .card { 
-                padding: 10px; /* Padding seimbang */
-                border-radius: 6px;
-            }
-            .card-header { margin-bottom: 6px; }
-            .card-title { font-size: 0.8rem; gap: 5px; font-weight: 700; } /* Font Title Dibesarkan */
-            .card-title i { font-size: 0.8rem; }
-            .badge-mtd { font-size: 0.65rem; padding: 2px 5px; }
-            
-            .metric-row { font-size: 0.75rem; margin-bottom: 4px; display: flex; justify-content: space-between; } /* Font Metrik Dibesarkan */
-            .metric-val { font-size: 0.75rem; font-weight: 700; }
-            
-            /* CHART COMPACT */
-            .chart-container {
-                height: 85px; /* Tinggi disesuaikan */
-                margin-top: 5px;
-                margin-bottom: 8px;
-            }
+            /* Mobile spacing adjustment */
+            body { padding-top: 160px; }
 
-            /* ACHIEVEMENT BOX COMPACT */
-            .achievement-box { padding-top: 6px; }
-            .achv-val { font-size: 1.2rem; margin-bottom: 4px; line-height: 1.2; }
-            .progress-bar { height: 5px; }
+            .controls { 
+                flex-wrap: wrap; 
+                flex-direction: row; 
+                align-items: stretch; 
+                padding: 10px; 
+                gap: 8px; 
+                margin: -1px 10px 15px 10px; 
+                border-radius: 0 0 var(--radius) var(--radius);
+            }
+            .filter-group { 
+                flex-basis: 100%; 
+                flex-direction: row; 
+                gap: 5px;
+            }
+            .filter-group select { font-size: 0.85rem; padding: 8px; }
             
-            .footer { display: none; }
+            .btn { flex: 1; justify-content: center; font-size: 0.85rem; padding: 8px; }
+            .btn-reset { flex-basis: 40%; }
+            .btn-ranking { flex-basis: 55%; margin-top: 0; } 
             
-            /* MODAL & TABLE ADJUSTMENTS */
+            .dashboard-grid { grid-template-columns: repeat(2, 1fr); gap: 10px; padding: 0 10px 20px 10px; margin-top: -2px; position: relative; z-index: 10; }
+            .card { padding: 12px; }
+            
+            .card-title { font-size: 0.85rem; }
+            .metric-row { font-size: 0.85rem; margin-bottom: 6px; }
+            .metric-val { font-size: 0.85rem; }
+            .achv-label { font-size: 0.85rem; }
+            .achv-val { font-size: 1.3rem; }
+            .badge-mtd { font-size: 0.75rem; }
+            
             :root { --col-name-w: 100px; --col-total-w: 45px; }
             .ranking-table { font-size: 0.7rem; }
             .ranking-table th:nth-child(2), .ranking-table td:nth-child(2) { left: var(--col-rank-w); width: var(--col-name-w); min-width: var(--col-name-w); max-width: var(--col-name-w); }
@@ -249,30 +652,61 @@
             .indicator-prefix { font-size: 0.45rem; }
             .ranking-table th { height: 48px; }
             .th-content { padding: 4px 2px; gap: 2px; }
-            .tab-btn.active { padding: 6px 12px; border: 1px solid var(--card-bg); border-bottom: 1px solid var(--card-bg); background: var(--card-bg); color: var(--primary); border-radius: 4px 4px 0 0; }
+            
+            .tab-btn.active { 
+                padding: 6px 12px; 
+                border: 1px solid var(--card-bg); 
+                border-bottom: 1px solid var(--card-bg);
+                background: var(--card-bg); 
+                color: var(--primary); 
+                border-radius: 4px 4px 0 0; 
+            }
             .modal-header h3 { font-size: 1.1rem; }
             .close-btn { font-size: 1.2rem; }
+            
             .ranking-tabs-wrapper { padding: 10px 15px; }
             .modal-content { width: 100%; height: 100%; border-radius: 0; max-width: none; max-height: 100vh; }
-            .top5-grid-container { grid-template-columns: repeat(2, 1fr); gap: 8px; padding: 10px; }
+            
+            .top5-grid-container { 
+                grid-template-columns: repeat(2, 1fr); 
+                gap: 8px;
+                padding: 10px;
+            }
             .top5-card { padding: 8px; }
             .top5-header { font-size: 0.7rem; margin-bottom: 5px; padding-bottom: 4px; }
             .top5-item { padding: 2px 0; }
             .top5-name { font-size: 0.6rem; }
             .top5-val { font-size: 0.6rem; }
             .top5-rank { width: 14px; height: 14px; line-height: 14px; font-size: 0.55rem; margin-right: 4px; }
-            .breakdown-container { padding: 0 10px 40px 10px; display: none !important; }
+
+            .breakdown-container { padding: 0 10px 40px 10px; }
+            .detail-table th, .detail-table td { padding: 8px 6px; font-size: 0.75rem; }
+            .breakdown-container { display: none !important; }
         }
 
-        [data-theme="dark"] .tab-btn { background: rgba(255, 255, 255, 0.08) !important; color: rgba(255, 255, 255, 0.5) !important; border: 1px solid rgba(255, 255, 255, 0.1) !important; }
-        [data-theme="dark"] .tab-btn:hover { background: rgba(255, 255, 255, 0.15) !important; color: rgba(255, 255, 255, 0.8) !important; }
-        [data-theme="dark"] .tab-btn.active { background: #16213e !important; color: #ffffff !important; border: 1px solid #16213e !important; font-weight: bold; }
+        [data-theme="dark"] .tab-btn {
+            background: rgba(255, 255, 255, 0.08) !important;
+            color: rgba(255, 255, 255, 0.5) !important;
+            border: 1px solid rgba(255, 255, 255, 0.1) !important;
+        }
+        [data-theme="dark"] .tab-btn:hover {
+            background: rgba(255, 255, 255, 0.15) !important;
+            color: rgba(255, 255, 255, 0.8) !important;
+        }
+        [data-theme="dark"] .tab-btn.active {
+            background: #16213e !important; 
+            color: #ffffff !important;
+            border: 1px solid #16213e !important;
+            font-weight: bold;
+        }
     </style>
 </head>
 <body oncontextmenu="return false;" onkeydown="return blockShortcuts(event);" ondragstart="return false;">
     <div id="loginGate" class="login-overlay">
         <div class="login-card">
-            <div class="login-icon-circle"><i class="fas fa-lock"></i></div>
+            <div class="login-icon-circle">
+                <i class="fas fa-lock"></i>
+            </div>
             <h2>Dashboard Login</h2>
             <p>Please enter your password</p>
             <div class="password-field-container">
@@ -287,13 +721,17 @@
     <div id="mainContentWrapper" class="main-content">
         <div class="header">
             <div class="header-content-wrapper">
+                
                 <div style="width: 100%;">
+                    <!-- Header diubah menjadi 2 baris dengan alignment yang lebih baik -->
                     <h1>
                         <img src="img/BMI.png" alt="Bank Muamalat Logo" class="logo" width="30" height="30"> 
                         <span style="font-size: 15px; margin-left: -5px;font-weight: bold;">LEADING INDICATOR<br><span id="headerSubtitle" style="font-size: 13px;font-weight: normal">Region Sumatera</span></span>
                     </h1>
                     <p id="headerMeta"> Per: -- Juni 2026 | 💼 Workdays: --</p>
                 </div>
+
+                <!-- Split Actions: Moved to the Right side -->
                 <div class="header-actions">
                     <button class="filter-toggle" onclick="toggleFilterMenu()" title="Show/Hide Filter"><i class="fas fa-filter" id="filterIcon"></i></button>
                     <button class="theme-toggle" onclick="toggleTheme()" title="Toggle Dark/Light Mode"><i class="fas fa-moon" id="themeIcon"></i></button>
@@ -302,13 +740,14 @@
             <div class="data-tabs-container" id="dataTabsContainer"></div>
         </div>
         
+        <!-- Controls now hidden by default and animated -->
         <div class="controls" id="filterControls" style="border-left: 0px solid var(--primary); border-top: 0px solid var(--primary); ">
             <div class="filter-group">
                 <select id="coBranchFilter" onchange="handleCoBranchChange()"><option value="">Select Co-Branch</option></select>
                 <select id="branchFilter" onchange="applyFilters()"><option value="">Select Branch</option></select>
             </div>
-            <button class="btn btn-reset" onclick="resetFilters()"><i class="fas fa-sync-alt"></i> Reset</button>
-            <button class="btn btn-ranking" onclick="openRankingModal()"><i class="fas fa-trophy"></i> Ranking</button>
+            <button class="btn btn-reset" onclick="resetFilters()"><i class="fas fa-sync-alt"></i> Filter Reset</button>
+            <button class="btn btn-ranking" onclick="openRankingModal()"><i class="fas fa-trophy"></i> Performance Ranking</button>
         </div>
 
         <div class="dashboard-grid" id="dashboardContainer">
@@ -324,7 +763,9 @@
                 </div>
                 <div class="table-responsive">
                     <table class="detail-table" id="detailTable">
-                        <thead><tr id="detailTableHead"></tr></thead>
+                        <thead>
+                            <tr id="detailTableHead"></tr>
+                        </thead>
                         <tbody id="detailTableBody"></tbody>
                     </table>
                 </div>
@@ -353,7 +794,7 @@
     </div>
 
     <script>
-        // CONFIG ARRAY
+        // CONFIG ARRAY - FIXED EMOJIS HERE
         const jsonFiles = [
             { id: 'juli', label: 'Juli', file: 'juli.json', meta: '<i class="fas fa-calendar-alt"></i> Per: 31 Juli 2026 | <i class="fas fa-briefcase"></i> Workdays: 23' },
             { id: 'juni', label: 'Juni', file: 'juni.json', meta: '<i class="fas fa-calendar-alt"></i> Per: 30 Juni 2026 | <i class="fas fa-briefcase"></i> Workdays: 20' },
@@ -378,11 +819,13 @@
         let rawData = [];
         let currentRankingMode = 'top5branch';
         let top5Level = 'branch'; 
+        
+        // Variable to store filter state
         let currentFilterState = { co: "", branch: "" };
-        let chartInstances = {};
 
         window.onload = function() {
             initTheme();
+            // Cek jika sudah terautentikasi sebelumnya dalam sesi ini
             if (sessionStorage.getItem('dashboard_authed') === 'true') {
                 document.getElementById('loginGate').style.display = 'none';
                 document.getElementById('mainContentWrapper').style.display = 'block';
@@ -391,21 +834,33 @@
             }
         };
 
+        // FUNCTIONS FOR LOGIN SYSTEM
         function togglePasswordVisibility() {
             const pwdInput = document.getElementById('loginPassword');
             const icon = document.getElementById('passwordToggleIcon');
-            if (pwdInput.type === 'password') { pwdInput.type = 'text'; icon.className = 'fas fa-eye-slash'; } 
-            else { pwdInput.type = 'password'; icon.className = 'fas fa-eye'; }
+            if (pwdInput.type === 'password') {
+                pwdInput.type = 'text';
+                icon.className = 'fas fa-eye-slash';
+            } else {
+                pwdInput.type = 'password';
+                icon.className = 'fas fa-eye';
+            }
         }
 
         function checkLoginPassword() {
             const inputVal = document.getElementById('loginPassword').value;
             const errorMsg = document.getElementById('loginError');
+            
             if (inputVal === 'rbpm') {
                 errorMsg.style.display = 'none';
+                document.getElementById('loginGate').style.fadeOut = "slow";
                 document.getElementById('loginGate').style.display = 'none';
                 document.getElementById('mainContentWrapper').style.display = 'block';
+                
+                // Simpan status login di session storage
                 sessionStorage.setItem('dashboard_authed', 'true');
+                
+                // Jalankan inisialisasi dashboard asli
                 renderDataTabs();
                 loadJsonData(currentActiveJson);
             } else {
@@ -431,43 +886,85 @@
             document.querySelectorAll('.data-tab-btn').forEach(b => b.classList.remove('active'));
             element.classList.add('active');
             currentActiveJson = jsonItem;
+            
+            // 1. Simpan nilai filter saat ini sebelum data berubah
             const savedCo = document.getElementById('coBranchFilter').value;
             const savedBr = document.getElementById('branchFilter').value;
+
+            // 2. Load data baru
             await loadJsonData(jsonItem);
+
+            // 3. Restore filter jika memungkinkan
             const coSelect = document.getElementById('coBranchFilter');
             const brSelect = document.getElementById('branchFilter');
+
+            // Cek apakah Co-Branch yang tersimpan masih ada di data baru
             let coExists = false;
-            for (let i = 0; i < coSelect.options.length; i++) { if (coSelect.options[i].value === savedCo) { coExists = true; break; } }
+            for (let i = 0; i < coSelect.options.length; i++) {
+                if (coSelect.options[i].value === savedCo) {
+                    coExists = true;
+                    break;
+                }
+            }
+
             if (coExists && savedCo !== "") {
                 coSelect.value = savedCo;
-                handleCoBranchChange(false);
+                // Populate branch options based on restored Co-Branch
+                handleCoBranchChange(false); // false means don't apply filters yet, just populate
+                
+                // Cek apakah Branch yang tersimpan masih ada di list branch yang baru di-populate
                 let brExists = false;
-                for (let i = 0; i < brSelect.options.length; i++) { if (brSelect.options[i].value === savedBr) { brExists = true; break; } }
-                if (brExists) { brSelect.value = savedBr; } else { brSelect.value = ""; }
+                for (let i = 0; i < brSelect.options.length; i++) {
+                    if (brSelect.options[i].value === savedBr) {
+                        brExists = true;
+                        break;
+                    }
+                }
+
+                if (brExists) {
+                    brSelect.value = savedBr;
+                } else {
+                    brSelect.value = ""; // Reset branch jika tidak ditemukan di Co-Branch baru
+                }
+                
+                // Apply filters dengan nilai yang sudah direstore
                 applyFilters();
             } else {
+                // Jika Co-Branch tidak ada/kosong, reset semua
                 coSelect.value = "";
                 brSelect.innerHTML = '<option value="">Select Branch</option>';
-                updateHeaderSubtitle();
+                updateHeaderSubtitle(); // Update header to default
                 renderDashboard(rawData);
             }
         }
 
         async function loadJsonData(jsonItem) {
             const container = document.getElementById('dashboardContainer');
-            container.innerHTML = `<div style="grid-column: 1/-1; text-align: center; padding: 40px; color: var(--text-muted);"><i class="fas fa-spinner fa-spin fa-2x"></i><br><br>Memuat data ${jsonItem.label}...</div>`;
+            container.innerHTML = `
+                <div style="grid-column: 1/-1; text-align: center; padding: 40px; color: var(--text-muted);">                
+                    <i class="fas fa-spinner fa-spin fa-2x"></i><br><br>Memuat data ${jsonItem.label}...
+                </div>`;
+            
             document.getElementById('headerMeta').innerHTML = jsonItem.meta;
+
             try {
                 const res = await fetch(jsonItem.file);
                 if (!res.ok) throw new Error(`File ${jsonItem.file} tidak ditemukan`);
                 rawData = await res.json();
+                
                 if (!Array.isArray(rawData)) throw new Error("Format JSON tidak valid");
+
                 rawData = rawData.map(item => {
                     const clean = {};
-                    Object.keys(item).forEach(k => { const val = item[k]; clean[k.trim()] = (typeof val === 'string') ? val.trim() : val; });
+                    Object.keys(item).forEach(k => {
+                        const val = item[k];
+                        clean[k.trim()] = (typeof val === 'string') ? val.trim() : val;
+                    });
                     return clean;
                 });
+
                 populateCoBranchFilter();
+                // Initial render handled by switchJsonTab logic or initial load
                 if(document.getElementById('coBranchFilter').value === "" && document.getElementById('branchFilter').value === "") {
                      renderDashboard(rawData);
                 }
@@ -495,58 +992,64 @@
                 document.getElementById('themeIcon').className = 'fas fa-sun';
                 localStorage.setItem('bm_theme', 'dark');
             }
-            if(document.getElementById('dashboardContainer').children.length > 0 && !document.getElementById('dashboardContainer').innerHTML.includes('spinner')){
-                 const coVal = document.getElementById('coBranchFilter').value;
-                 const brVal = document.getElementById('branchFilter').value;
-                 let filtered = rawData;
-                 if (coVal) filtered = filtered.filter(d => d['co'] === coVal);
-                 if (brVal) filtered = filtered.filter(d => d['br'] === brVal);
-                 renderDashboard(filtered);
-            }
         }
 
+        // NEW FUNCTION: Toggle Filter Menu
         function toggleFilterMenu() {
             const controls = document.getElementById('filterControls');
             const btn = document.querySelector('.filter-toggle');
             const icon = document.getElementById('filterIcon');
+            
             if (controls.style.display === 'none' || controls.style.display === '') {
                 controls.style.display = 'flex';
                 btn.classList.add('active');
-                icon.className = 'fas fa-times';
+                icon.className = 'fas fa-times'; // Change icon to X
             } else {
                 controls.style.display = 'none';
                 btn.classList.remove('active');
-                icon.className = 'fas fa-filter';
+                icon.className = 'fas fa-filter'; // Change icon back to Filter
             }
         }
 
         function populateCoBranchFilter() {
             const coSelect = document.getElementById('coBranchFilter');
-            const currentVal = coSelect.value;
+            const currentVal = coSelect.value; // Save current selection
             coSelect.innerHTML = '<option value="">Select Co-Branch</option>';
             const coSet = new Set(rawData.map(d => d['co']).filter(Boolean));
             [...coSet].sort().forEach(co => { coSelect.innerHTML += `<option value="${co}">${co}</option>`; });
+            // Try to restore if exists
             if([...coSet].includes(currentVal)) coSelect.value = currentVal;
         }
 
         function handleCoBranchChange(shouldApplyFilter = true) {
             const coVal = document.getElementById('coBranchFilter').value;
             const brSelect = document.getElementById('branchFilter');
-            const currentBrVal = brSelect.value;
+            const currentBrVal = brSelect.value; // Save current branch selection
+            
             brSelect.innerHTML = '<option value="">Select Branch</option>';
             if (coVal) {
                 const brSet = new Set(rawData.filter(d => d['co'] === coVal).map(d => d['br']).filter(Boolean));
                 [...brSet].sort().forEach(br => { brSelect.innerHTML += `<option value="${br}">${br}</option>`; });
-                if([...brSet].includes(currentBrVal)) { brSelect.value = currentBrVal; }
+                
+                // Restore branch if it exists in the new list
+                if([...brSet].includes(currentBrVal)) {
+                    brSelect.value = currentBrVal;
+                }
             }
+            
             if(shouldApplyFilter) applyFilters();
         }
 
         function applyFilters() {
             const coVal = document.getElementById('coBranchFilter').value;
             const brVal = document.getElementById('branchFilter').value;
+            
+            // Save current filter state
             currentFilterState = { co: coVal, branch: brVal };
+
+            // Update Header Subtitle
             updateHeaderSubtitle();
+
             let filtered = rawData;
             if (coVal) filtered = filtered.filter(d => d['co'] === coVal);
             if (brVal) filtered = filtered.filter(d => d['br'] === brVal);
@@ -556,25 +1059,36 @@
         function resetFilters() {
             document.getElementById('coBranchFilter').value = "";
             document.getElementById('branchFilter').innerHTML = '<option value="">Select Branch</option>';
+            
+            // Reset stored state
             currentFilterState = { co: "", branch: "" };
+            
             updateHeaderSubtitle();
             renderDashboard(rawData);
         }
 
+        // New Function to Update Header Subtitle
         function updateHeaderSubtitle() {
             const coVal = document.getElementById('coBranchFilter').value;
             const brVal = document.getElementById('branchFilter').value;
             const subtitleEl = document.getElementById('headerSubtitle');
-            if (brVal) { subtitleEl.innerText = brVal; } 
-            else if (coVal) { subtitleEl.innerText = "Co-Branch " + coVal; } 
-            else { subtitleEl.innerText = "Region Sumatera"; }
+            
+            if (brVal) {
+                subtitleEl.innerText = brVal;
+            } else if (coVal) {
+                subtitleEl.innerText = "Co-Branch " + coVal;
+            } else {
+                subtitleEl.innerText = "Region Sumatera";
+            }
         }
 
         function formatValue(val, unit, isGrowthType = false, isTarget = false, isGap = false) {
             let prefix = '';
             if (isTarget) prefix = ''; 
             else if ((isGrowthType || isGap) && val > 0) { if (!isGap) prefix = '+'; } 
+            
             let displayVal = isGap ? Math.abs(val) : val;
+
             if (unit === 'M') {
                 if (isTarget) return prefix + displayVal.toLocaleString('id-ID', { minimumFractionDigits: 1, maximumFractionDigits: 1 }) + ' M';
                 if (displayVal === 0) return prefix + '0 M';
@@ -587,10 +1101,6 @@
         function renderDashboard(data) {
             const container = document.getElementById('dashboardContainer');
             container.innerHTML = '';
-            
-            Object.values(chartInstances).forEach(chart => chart.destroy());
-            chartInstances = {};
-
             if (data.length === 0) {
                 container.innerHTML = '<div style="grid-column:1/-1; text-align:center; padding:20px; color:var(--text-muted);">Tidak ada data.</div>';
                 renderDetailTable([]); 
@@ -632,10 +1142,8 @@
                 const formattedTgt = formatValue(tgt, m.unit, false, true, false);
                 const formattedGap = formatValue(gap, m.unit, false, false, true);
                 
-                const gapLabel = ['ca','sa','fu'].includes(m.key) ? 'GAP' : 
-                                 ['con','sme','ph','sli'].includes(m.key) ? 'GAP' : 'GAP';
-
-                const canvasId = `chart-${m.key}`;
+                const gapLabel = ['ca','sa','fu'].includes(m.key) ? 'Growth GAP' : 
+                                 ['con','sme','ph','sli'].includes(m.key) ? 'Booking GAP' : 'Akuisisi GAP';
 
                 container.innerHTML += `
                     <div class="card">
@@ -643,15 +1151,13 @@
                             <span class="card-title"><i class="fas ${m.icon}"></i> ${m.label}</span>
                             <span class="badge-mtd">MTD</span>
                         </div>
-                        
-                        <div class="chart-container">
-                            <canvas id="${canvasId}"></canvas>
-                        </div>
-
                         <div class="metric-row"><span>${m.type}</span><span class="metric-val ${growthClass}">${formattedMtd}</span></div>
-                        <div class="metric-row"><span>Target</span><span class="metric-val">${formattedTgt}</span></div>
+                        <div class="metric-row"><span>MTD Target</span><span class="metric-val">${formattedTgt}</span></div>
                         <div class="metric-row"><span>${gapLabel}</span><span class="metric-val" style="color: var(--danger);">${formattedGap}</span></div>
                         <div class="achievement-box">
+                        <!--
+                            <div class="achv-label">Achievement</div>
+                        -->
                             <div class="achv-val" style="color: ${achv >= 80 ? 'var(--success)' : achv >= 50 ? 'var(--warning)' : 'var(--danger)'};">${achvDisplay}</div>
                             <div class="progress-bar">
                                 <div class="progress-fill" style="background-color: ${achv >= 80 ? 'var(--success)' : achv >= 50 ? 'var(--warning)' : 'var(--danger)'}; width: ${barWidth}%"></div>
@@ -660,117 +1166,41 @@
                     </div>`;
             });
 
-            renderCharts(agg);
             renderDetailTable(data);
-        }
-
-        function renderCharts(agg) {
-            const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
-            const textColor = isDark ? '#e0e0e0' : '#333333';
-            const gridColor = isDark ? 'rgba(255,255,255,0.1)' : 'rgba(0,0,0,0.05)';
-            const isMobile = window.innerWidth <= 900;
-
-            metrics.forEach(m => {
-                const ctx = document.getElementById(`chart-${m.key}`);
-                if (!ctx) return;
-
-                const mtd = agg[m.key + '_mtd'];
-                const tgt = agg[m.key + '_tgt'];
-                
-                const mtdColor = mtd >= tgt ? '#28a745' : '#ffc107'; 
-                const tgtColor = isDark ? 'rgba(255,255,255,0.3)' : 'rgba(0,0,0,0.2)'; 
-
-                chartInstances[m.key] = new Chart(ctx, {
-                    type: 'bar',
-                    data: {
-                        labels: [''], 
-                        datasets: [
-                            {
-                                label: 'Aktual',
-                                data: [mtd],
-                                backgroundColor: mtdColor,
-                                borderRadius: 2,
-                                barPercentage: 0.7,
-                                categoryPercentage: 0.8
-                            },
-                            {
-                                label: 'Target',
-                                data: [tgt],
-                                backgroundColor: tgtColor,
-                                borderRadius: 2,
-                                barPercentage: 0.7,
-                                categoryPercentage: 0.8
-                            }
-                        ]
-                    },
-                    options: {
-                        responsive: true,
-                        maintainAspectRatio: false,
-                        animation: { duration: 0 },
-                        plugins: {
-                            legend: { display: false },
-                            tooltip: {
-                                enabled: true,
-                                mode: 'index',
-                                intersect: false,
-                                callbacks: {
-                                    label: function(context) {
-                                        let label = context.dataset.label || '';
-                                        if (label) { label += ': '; }
-                                        if (context.parsed.y !== null) {
-                                            label += context.parsed.y.toLocaleString('id-ID', {maximumFractionDigits: 2});
-                                            if(m.unit === 'M') label += ' M';
-                                        }
-                                        return label;
-                                    }
-                                }
-                            }
-                        },
-                        scales: {
-                            x: { display: false }, 
-                            y: {
-                                display: !isMobile,
-                                beginAtZero: true,
-                                grid: { color: gridColor, drawBorder: false },
-                                ticks: { 
-                                    color: textColor, 
-                                    font: { size: 9 },
-                                    maxTicksLimit: 4,
-                                    callback: function(value) {
-                                        if (value >= 1000000) return (value / 1000000).toFixed(1) + 'M';
-                                        if (value >= 1000) return (value / 1000).toFixed(0) + 'k';
-                                        return value;
-                                    }
-                                }
-                            }
-                        }
-                    }
-                });
-            });
         }
 
         function renderDetailTable(data) {
             const section = document.getElementById('breakdownSection');
             const thead = document.getElementById('detailTableHead');
             const tbody = document.getElementById('detailTableBody');
-            if (!data || data.length === 0) { section.style.display = 'none'; return; }
+            
+            if (!data || data.length === 0) {
+                section.style.display = 'none';
+                return;
+            }
+            
             section.style.display = 'block';
             thead.innerHTML = '';
             tbody.innerHTML = '';
+
             let headerHTML = '<th>No</th><th>Co-Branch</th><th>Branch</th><th>TP</th>';
             metrics.forEach(m => { headerHTML += `<th>${m.label}</th>`; });
             thead.innerHTML = headerHTML;
+
             let totals = {};
             metrics.forEach(m => totals[m.key] = 0);
+
             data.forEach((row, index) => {
                 let rowHTML = `<tr>`;
                 rowHTML += `<td>${index + 1}</td>`;
                 rowHTML += `<td>${row['co'] || '-'}</td>`;
                 rowHTML += `<td>${row['br'] || '-'}</td>`;
                 rowHTML += `<td>${row['tp'] || '-'}</td>`;
+
                 metrics.forEach(m => {
                     let val = parseFloat(row[m.key + '_mtd'] || 0);
                     totals[m.key] += val; 
+                    
                     let isGrowth = ['ca', 'sa', 'fu'].includes(m.key);
                     let formatted = formatValue(val, m.unit, isGrowth, false, false);
                     let colorClass = (isGrowth && val < 0) ? 'neg' : '';
@@ -779,8 +1209,10 @@
                 rowHTML += `</tr>`;
                 tbody.innerHTML += rowHTML;
             });
+
             let totalRowHTML = `<tr class="total-row">`;
             totalRowHTML += `<td></td><td></td><td></td><td style="text-align: right;">TOTAL</td>`; 
+            
             metrics.forEach(m => {
                 let isGrowth = ['ca', 'sa', 'fu'].includes(m.key);
                 let formatted = formatValue(totals[m.key], m.unit, isGrowth, false, false);
@@ -795,22 +1227,29 @@
             document.body.classList.add('modal-open');
             setRankingTab('top5branch', document.getElementById('tabTop5Branch')); 
         }
+        
         function closeRankingModal() { 
             document.getElementById('rankingModal').style.display = 'none'; 
             document.body.classList.remove('modal-open');
         }
+
         function setRankingTab(mode, btn) {
             currentRankingMode = mode;
             document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
             if(btn) btn.classList.add('active');
+            
             if (mode === 'top5branch') { top5Level = 'branch'; } 
             else if (mode === 'top5cobranch') { top5Level = 'co'; }
             renderRanking();
         }
+
         function renderRanking() {
             const thead = document.getElementById('rankingThead');
             const tbody = document.getElementById('rankingTableBody');
-            thead.innerHTML = ''; tbody.innerHTML = ''; 
+            
+            thead.innerHTML = ''; 
+            tbody.innerHTML = ''; 
+            
             let gridContainer = document.getElementById('top5GridContainer');
             if (!gridContainer) {
                 gridContainer = document.createElement('div');
@@ -818,21 +1257,38 @@
                 gridContainer.className = 'top5-grid-container';
                 document.querySelector('.table-wrapper').appendChild(gridContainer);
             }
+            
             document.querySelector('.ranking-table').style.display = 'none';
             gridContainer.style.display = 'grid';
             gridContainer.innerHTML = '';
+
             if (top5Level === 'branch') {
                 metrics.forEach(m => {
-                    let branchData = rawData.map(d => ({ name: d['br'], sub: d['co'], val: parseFloat(d[m.key + '_mtd'] || 0) }));
+                    let branchData = rawData.map(d => ({
+                        name: d['br'],
+                        sub: d['co'],
+                        val: parseFloat(d[m.key + '_mtd'] || 0)
+                    }));
+
                     branchData = branchData.filter(item => item.val > 0);
                     branchData.sort((a, b) => b.val - a.val);
                     const topN = branchData.slice(0, 5);
+
                     if (topN.length === 0) return;
+
                     let cardHTML = `<div class="top5-card"><div class="top5-header" title="${m.label}"><i class="fas ${m.icon}"></i> ${m.label}</div><div class="top5-list">`;
+                    
                     topN.forEach((item, idx) => {
                         const isGrowth = ['ca','sa','fu'].includes(m.key);
                         const formatted = formatValue(item.val, m.unit, isGrowth, false, false);
-                        cardHTML += `<div class="top5-item"><div style="display:flex; align-items:center; overflow:hidden; flex:1; min-width:0;"><span class="top5-rank">${idx+1}</span><span class="top5-name" title="${item.name} (${item.sub})">${item.name}</span></div><span class="top5-val">${formatted}</span></div>`;
+                        cardHTML += `
+                            <div class="top5-item">
+                                <div style="display:flex; align-items:center; overflow:hidden; flex:1; min-width:0;">
+                                    <span class="top5-rank">${idx+1}</span>
+                                    <span class="top5-name" title="${item.name} (${item.sub})">${item.name}</span>
+                                </div>
+                                <span class="top5-val">${formatted}</span>
+                            </div>`;
                     });
                     cardHTML += `</div></div>`;
                     gridContainer.innerHTML += cardHTML;
@@ -841,20 +1297,39 @@
                 const coMap = {};
                 rawData.forEach(d => {
                     const coName = d['co'] || 'Unknown Co';
-                    if (!coMap[coName]) { coMap[coName] = {}; metrics.forEach(m => coMap[coName][m.key] = 0); }
+                    if (!coMap[coName]) {
+                        coMap[coName] = {};
+                        metrics.forEach(m => coMap[coName][m.key] = 0);
+                    }
                     metrics.forEach(m => { coMap[coName][m.key] += parseFloat(d[m.key + '_mtd'] || 0); });
                 });
+
                 metrics.forEach(m => {
-                    let coData = Object.keys(coMap).map(coName => ({ name: coName, sub: 'Region Sumatera', val: coMap[coName][m.key] }));
+                    let coData = Object.keys(coMap).map(coName => ({
+                        name: coName,
+                        sub: 'Region Sumatera',
+                        val: coMap[coName][m.key]
+                    }));
+
                     coData = coData.filter(item => item.val > 0);
                     coData.sort((a, b) => b.val - a.val);
                     const topN = coData.slice(0, 5);
+
                     if (topN.length === 0) return;
+
                     let cardHTML = `<div class="top5-card"><div class="top5-header" title="${m.label}"><i class="fas ${m.icon}"></i> ${m.label}</div><div class="top5-list">`;
+                    
                     topN.forEach((item, idx) => {
                         const isGrowth = ['ca','sa','fu'].includes(m.key);
                         const formatted = formatValue(item.val, m.unit, isGrowth, false, false);
-                        cardHTML += `<div class="top5-item"><div style="display:flex; align-items:center; overflow:hidden; flex:1; min-width:0;"><span class="top5-rank">${idx+1}</span><span class="top5-name" title="${item.name}">${item.name}</span></div><span class="top5-val">${formatted}</span></div>`;
+                        cardHTML += `
+                            <div class="top5-item">
+                                <div style="display:flex; align-items:center; overflow:hidden; flex:1; min-width:0;">
+                                    <span class="top5-rank">${idx+1}</span>
+                                    <span class="top5-name" title="${item.name}">${item.name}</span>
+                                </div>
+                                <span class="top5-val">${formatted}</span>
+                            </div>`;
                     });
                     cardHTML += `</div></div>`;
                     gridContainer.innerHTML += cardHTML;
@@ -866,18 +1341,60 @@
             const modal = document.getElementById('rankingModal');
             if (e.target == modal) closeRankingModal();
         }
-        document.addEventListener('contextmenu', function(e) { e.preventDefault(); });
-        document.addEventListener('keydown', function(e) {
-            if (e.key === 'F12') { e.preventDefault(); return false; }
-            if (e.ctrlKey && e.key === 'u') { e.preventDefault(); return false; }
-            if (e.ctrlKey && e.shiftKey && e.key === 'I') { e.preventDefault(); return false; }
-            if (e.ctrlKey && e.shiftKey && e.key === 'J') { e.preventDefault(); return false; }
-            if (e.ctrlKey && e.shiftKey && e.key === 'C') { e.preventDefault(); return false; }
-            if (e.ctrlKey && e.key === 's') { e.preventDefault(); return false; }
+        // 1. Mencegah Klik Kanan (Context Menu)
+        document.addEventListener('contextmenu', function(e) {
+            e.preventDefault();
         });
+
+        // 2. Mencegah Shortcut Keyboard (F12, View Source, Inspect Element)
+        document.addEventListener('keydown', function(e) {
+            // Mencegah F12
+            if (e.key === 'F12') {
+                e.preventDefault();
+                return false;
+            }
+            
+            // Mencegah Ctrl+U (View Source)
+            if (e.ctrlKey && e.key === 'u') {
+                e.preventDefault();
+                return false;
+            }
+            
+            // Mencegah Ctrl+Shift+I (Inspect Element)
+            if (e.ctrlKey && e.shiftKey && e.key === 'I') {
+                e.preventDefault();
+                return false;
+            }
+            
+            // Mencegah Ctrl+Shift+J (Console)
+            if (e.ctrlKey && e.shiftKey && e.key === 'J') {
+                e.preventDefault();
+                return false;
+            }
+
+            // Mencegah Ctrl+Shift+C (Inspect Element Selector)
+            if (e.ctrlKey && e.shiftKey && e.key === 'C') {
+                e.preventDefault();
+                return false;
+            }
+
+            // Mencegah Ctrl+S (Mencegah simpan halaman sebagai HTML mentah)
+            if (e.ctrlKey && e.key === 's') {
+                e.preventDefault();
+                return false;
+            }
+        });
+
+        // 3. Proteksi Tambahan: Menutup halaman/Mereset jika Developer Tools terbuka (opsional)
+        // Fungsi ini mendeteksi jika ada perubahan ukuran layar ekstrim akibat konsol terbuka
         setInterval(function() {
             const threshold = 160;
-            if (window.outerWidth - window.innerWidth > threshold || window.outerHeight - window.innerHeight > threshold) { console.clear(); }
+            if (window.outerWidth - window.innerWidth > threshold || 
+                window.outerHeight - window.innerHeight > threshold) {
+                // Jika devtools terbuka, Anda bisa mengarahkan halaman atau memicu aksi lain
+                // Contoh: Lewati atau kosongkan konten demi keamanan
+                console.clear();
+            }
         }, 1000);        
     </script>
 </body>
