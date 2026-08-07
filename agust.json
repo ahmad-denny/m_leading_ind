@@ -1,4 +1,5 @@
-[
+{
+  "Sheet1": [
     {
       "co": "BANDA ACEH",
       "br": "BANDA ACEH",
@@ -69,7 +70,7 @@
       "mdin_tgt": "418",
       "qris_mtd": "1",
       "qris_tgt": "95",
-      "sli_mtd": "0",
+      "sli_mtd": "16",
       "sli_tgt": "171",
       "cif_mtd": "19",
       "cif_tgt": "475"
@@ -319,7 +320,7 @@
       "mdin_tgt": "418",
       "qris_mtd": "1",
       "qris_tgt": "95",
-      "sli_mtd": "0",
+      "sli_mtd": "36",
       "sli_tgt": "171",
       "cif_mtd": "27",
       "cif_tgt": "475"
@@ -344,7 +345,7 @@
       "mdin_tgt": "418",
       "qris_mtd": "2",
       "qris_tgt": "95",
-      "sli_mtd": "0",
+      "sli_mtd": "16",
       "sli_tgt": "171",
       "cif_mtd": "20",
       "cif_tgt": "475"
@@ -444,7 +445,7 @@
       "mdin_tgt": "418",
       "qris_mtd": "0",
       "qris_tgt": "95",
-      "sli_mtd": "0",
+      "sli_mtd": "30",
       "sli_tgt": "171",
       "cif_mtd": "10",
       "cif_tgt": "475"
@@ -544,7 +545,7 @@
       "mdin_tgt": "418",
       "qris_mtd": "0",
       "qris_tgt": "95",
-      "sli_mtd": "0",
+      "sli_mtd": "16",
       "sli_tgt": "171",
       "cif_mtd": "7",
       "cif_tgt": "475"
@@ -594,7 +595,7 @@
       "mdin_tgt": "418",
       "qris_mtd": "5",
       "qris_tgt": "95",
-      "sli_mtd": "0",
+      "sli_mtd": "11.28",
       "sli_tgt": "171",
       "cif_mtd": "7",
       "cif_tgt": "475"
@@ -719,7 +720,7 @@
       "mdin_tgt": "418",
       "qris_mtd": "0",
       "qris_tgt": "95",
-      "sli_mtd": "0",
+      "sli_mtd": "16",
       "sli_tgt": "171",
       "cif_mtd": "10",
       "cif_tgt": "475"
@@ -1000,3 +1001,4 @@
       "cif_tgt": "475"
     }
   ]
+}
