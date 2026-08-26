@@ -6,7 +6,6 @@
     <title>Leading Indicator Dashboard - Bank Muamalat</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script src="https://cdn.sheetjs.com/xlsx-latest/package/dist/xlsx.full.min.js"></script>
-    <!-- Library untuk Screenshot/Capture Dashboard -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
     
     <style>
@@ -29,7 +28,6 @@
             --col-rank-w: 40px;
             --col-name-w: 120px;
             --col-total-w: 60px;
-
             --text-primary: #6a4c9c;
         }
 
@@ -47,7 +45,6 @@
             --sort-text-color: #e2e8f0;
             --sort-icon-color: #a78bfa;
             --top5-header-color: #ffffff;
-            
             --text-primary: #D4C4F0;
         }
 
@@ -57,104 +54,38 @@
         body { background-color: var(--bg); color: var(--text); min-height: 100vh; padding-top: 150px; user-select: none;}
 
         /* LOGIN GATE STYLES */
-        .login-overlay {
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background-color: #1a2332; z-index: 99999;
-            display: flex; justify-content: center; align-items: center;
-        }
-        .login-card {
-            background: #ffffff; padding: 35px 30px; border-radius: 20px;
-            width: 90%; max-width: 440px; text-align: center;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
-        }
-        .login-icon-circle {
-            width: 65px; height: 65px; background: #e8ebfa; color: #4f46e5;
-            border-radius: 50%; display: flex; align-items: center; justify-content: center;
-            margin: 0 auto 20px auto; font-size: 1.6rem;
-        }
+        .login-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: #1a2332; z-index: 99999; display: flex; justify-content: center; align-items: center; }
+        .login-card { background: #ffffff; padding: 35px 30px; border-radius: 20px; width: 90%; max-width: 440px; text-align: center; box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3); }
+        .login-icon-circle { width: 65px; height: 65px; background: #e8ebfa; color: #4f46e5; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 20px auto; font-size: 1.6rem; }
         .login-card h2 { font-size: 1.65rem; color: #111827; margin-bottom: 6px; font-weight: 700; }
         .login-card p { font-size: 0.9rem; color: #6b7280; margin-bottom: 25px; }
         .password-field-container { position: relative; margin-bottom: 20px; }
-        .password-field-container input {
-            width: 100%; padding: 14px 45px 14px 16px; border: 2px solid #6366f1;
-            border-radius: 12px; font-size: 0.95rem; outline: none; color: #1f2937; background: #ffffff;
-        }
-        .password-field-container i {
-            position: absolute; right: 16px; top: 50%; transform: translateY(-50%);
-            color: #9ca3af; cursor: pointer; font-size: 1.1rem;
-        }
-        .login-card button {
-            width: 100%; padding: 14px; background: #4f46e5; color: #ffffff; border: none;
-            border-radius: 12px; font-size: 1rem; font-weight: 600; cursor: pointer;
-            display: flex; align-items: center; justify-content: center; gap: 8px; transition: background 0.2s;
-        }
+        .password-field-container input { width: 100%; padding: 14px 45px 14px 16px; border: 2px solid #6366f1; border-radius: 12px; font-size: 0.95rem; outline: none; color: #1f2937; background: #ffffff; }
+        .password-field-container i { position: absolute; right: 16px; top: 50%; transform: translateY(-50%); color: #9ca3af; cursor: pointer; font-size: 1.1rem; }
+        .login-card button { width: 100%; padding: 14px; background: #4f46e5; color: #ffffff; border: none; border-radius: 12px; font-size: 1rem; font-weight: 600; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px; transition: background 0.2s; }
         .login-card button:hover { background: #4338ca; }
-        .login-error-msg {
-            color: #dc3545; font-size: 0.8rem; margin-top: -12px; margin-bottom: 15px;
-            text-align: left; padding-left: 4px; display: none;
-        }
+        .login-error-msg { color: #dc3545; font-size: 0.8rem; margin-top: -12px; margin-bottom: 15px; text-align: left; padding-left: 4px; display: none; }
         .main-content { display: none; }
 
         /* HEADER FIXED & LEFT ALIGNED */
-        .header { 
-            background: linear-gradient(135deg, var(--primary), #2d1b50); 
-            color: white; padding: 15px 20px 0 20px; 
-            position: fixed; top: 0; left: 0; right: 0; z-index: 100;
-            display: flex; flex-direction: column; align-items: flex-start; 
-            justify-content: center; box-shadow: 0 4px 10px rgba(0,0,0,0.2); min-height: 125px;
-        }
-        .header-content-wrapper {
-            position: relative; width: 100%; max-width: 100%; 
-            display: flex; align-items: center; justify-content: flex-start; padding-right: 20px; 
-        }
-        .header h1 { 
-            font-size: 1.4rem; margin-bottom: 5px; display: flex; align-items: center; 
-            justify-content: flex-start; gap: 12px; text-align: left; line-height: 1.1; flex: 1; 
-        }
+        .header { background: linear-gradient(135deg, var(--primary), #2d1b50); color: white; padding: 15px 20px 0 20px; position: fixed; top: 0; left: 0; right: 0; z-index: 100; display: flex; flex-direction: column; align-items: flex-start; justify-content: center; box-shadow: 0 4px 10px rgba(0,0,0,0.2); min-height: 125px; }
+        .header-content-wrapper { position: relative; width: 100%; max-width: 100%; display: flex; align-items: center; justify-content: flex-start; padding-right: 20px; }
+        .header h1 { font-size: 1.4rem; margin-bottom: 5px; display: flex; align-items: center; justify-content: flex-start; gap: 12px; text-align: left; line-height: 1.1; flex: 1; }
         .header h1 img.logo { object-fit: contain; vertical-align: middle; margin-top: -2px; }
         .header p { font-size: 0.85rem; opacity: 0.9; margin: 2px 0; text-align: left; }
         
-        .data-tabs-container {
-            width: 100%; display: flex; justify-content: flex-start; 
-            margin-top: 12px; margin-bottom: 0; gap: 0; overflow-x: auto; padding-bottom: 0;
-        }
-        .data-tab-btn {
-            padding: 8px 16px; background: rgba(0, 0, 0, 0.15); color: rgba(255, 255, 255, 0.8);
-            border: 1px solid transparent; border-bottom: 1px solid transparent;
-            border-radius: 4px 4px 0 0; cursor: pointer; font-size: 0.8rem; font-weight: 600;
-            white-space: nowrap; transition: all 0.2s ease; margin-right: 5px; display: inline-flex; align-items: center;
-        }
+        .data-tabs-container { width: 100%; display: flex; justify-content: flex-start; margin-top: 12px; margin-bottom: 0; gap: 0; overflow-x: auto; padding-bottom: 0; }
+        .data-tab-btn { padding: 8px 16px; background: rgba(0, 0, 0, 0.15); color: rgba(255, 255, 255, 0.8); border: 1px solid transparent; border-bottom: 1px solid transparent; border-radius: 4px 4px 0 0; cursor: pointer; font-size: 0.8rem; font-weight: 600; white-space: nowrap; transition: all 0.2s ease; margin-right: 5px; display: inline-flex; align-items: center; }
         .data-tab-btn:hover { background: rgba(255, 255, 255, 0.15); color: #ffffff; }
-        .data-tab-btn.active {
-            padding: 8px 16px; border: 1px solid var(--card-bg); border-bottom: none; 
-            background: var(--card-bg); color: var(--primary); border-radius: 4px 4px 0 0;
-            font-weight: bold; position: relative; z-index: 2; 
-        }
-        [data-theme="dark"] .data-tab-btn.active {
-            background: #16213e !important; color: #ffffff !important;
-            border: 1px solid #16213e !important; border-bottom: none !important; font-weight: bold;
-        }
+        .data-tab-btn.active { padding: 8px 16px; border: 1px solid var(--card-bg); border-bottom: none; background: var(--card-bg); color: var(--primary); border-radius: 4px 4px 0 0; font-weight: bold; position: relative; z-index: 2; }
+        [data-theme="dark"] .data-tab-btn.active { background: #16213e !important; color: #ffffff !important; border: 1px solid #16213e !important; border-bottom: none !important; font-weight: bold; }
         
-        /* BUTTON GROUP (FILTER, CAPTURE & THEME) */
-        .header-actions {
-            position: absolute; top: 15px; right: 0; transform: translateY(-50%);
-            display: flex; align-items: center; gap: 10px; z-index: 101;
-        }
-        .theme-toggle, .filter-toggle, .capture-toggle { 
-            background: rgba(255,255,255,0.15); border: none; color: white; 
-            width: 28px; height: 28px; border-radius: 50%; cursor: pointer; 
-            display: flex; align-items: center; justify-content: center; 
-            font-size: 0.7em; flex-shrink: 0; transition: background 0.2s;
-        }
+        .header-actions { position: absolute; top: 15px; right: 0; transform: translateY(-50%); display: flex; align-items: center; gap: 10px; z-index: 101; }
+        .theme-toggle, .filter-toggle, .capture-toggle { background: rgba(255,255,255,0.15); border: none; color: white; width: 28px; height: 28px; border-radius: 50%; cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 0.7em; flex-shrink: 0; transition: background 0.2s; }
         .theme-toggle:hover, .filter-toggle:hover, .capture-toggle:hover { background: rgba(255,255,255,0.25); }
         .filter-toggle.active { background: var(--warning); color: #333; }
         
-        .controls { 
-            display: none; align-items: center; padding: 15px 20px; background: var(--card-bg); 
-            margin: -1px 20px 15px 20px; border-radius: 0 0 var(--radius) var(--radius); 
-            box-shadow: var(--shadow); gap: 5px; flex-wrap: nowrap; 
-            animation: slideDown 0.3s ease; position: relative; z-index: 10;
-        }
+        .controls { display: none; align-items: center; padding: 15px 20px; background: var(--card-bg); margin: -1px 20px 15px 20px; border-radius: 0 0 var(--radius) var(--radius); box-shadow: var(--shadow); gap: 5px; flex-wrap: nowrap; animation: slideDown 0.3s ease; position: relative; z-index: 10; }
         @keyframes slideDown { from { opacity: 0; transform: translateY(-10px); } to { opacity: 1; transform: translateY(0); } }
 
         .filter-group { display: flex; gap: 10px; flex: 2; min-width: 0; } 
@@ -164,11 +95,7 @@
         .btn-reset { background: var(--warning); color: #333; flex: 1; justify-content: center; } 
         .btn:hover { opacity: 0.9; transform: translateY(-1px); }
 
-        .dashboard-grid { 
-            display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); 
-            gap: 15px; padding: 0 20px 20px 20px; margin-top: -2px; 
-            position: relative; z-index: 10; 
-        }
+        .dashboard-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 15px; padding: 0 20px 20px 20px; margin-top: -2px; position: relative; z-index: 10; }
         .card { background: var(--card-bg); padding: 16px; border-radius: var(--radius); box-shadow: var(--shadow); display: flex; flex-direction: column; }        
         .card-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; }
         .card-title { font-size: 0.95rem; font-weight: bold; color: var(--primary); display: flex; align-items: center; gap: 6px; }
@@ -200,9 +127,7 @@
         .detail-table th:first-child, .detail-table td:first-child,
         .detail-table th:nth-child(2), .detail-table td:nth-child(2),
         .detail-table th:nth-child(3), .detail-table td:nth-child(3),
-        .detail-table th:nth-child(4), .detail-table td:nth-child(4) {
-            text-align: left; position: sticky; background: var(--card-bg); z-index: 10; border-right: 1px solid var(--border);
-        }
+        .detail-table th:nth-child(4), .detail-table td:nth-child(4) { text-align: left; position: sticky; background: var(--card-bg); z-index: 10; border-right: 1px solid var(--border); }
         .detail-table th:first-child, .detail-table td:first-child { left: 0; z-index: 11; }
         .detail-table th:nth-child(2), .detail-table td:nth-child(2) { left: 40px; z-index: 11; }
         .detail-table th:nth-child(3), .detail-table td:nth-child(3) { left: 140px; z-index: 11; }
@@ -220,8 +145,38 @@
         .modal-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); z-index: 1000; justify-content: center; align-items: center; }
         .modal-content { background: var(--card-bg); width: 95%; max-width: 1200px; height: auto; max-height: 85vh; border-radius: var(--radius); overflow: hidden; display: flex; flex-direction: column; animation: slideUp 0.3s ease; color: var(--text); }
         @keyframes slideUp { from { transform: translateY(20px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
-        .modal-header { background: var(--primary); color: white; padding: 12px 15px 0 15px; display: flex; align-items: flex-end; flex-shrink: 0; }
-        .close-btn { background: none; border: none; color: white; font-size: 1.5rem; cursor: pointer; display: flex; align-self: center; margin-left: auto; padding-bottom: 10px; }
+        
+        .modal-header { 
+            background: var(--primary); 
+            color: white; 
+            padding: 12px 15px 0 15px; 
+            display: flex; 
+            align-items: flex-end; 
+            flex-shrink: 0; 
+            position: relative;
+        }
+        
+        /* Tombol Capture di Modal */
+        .modal-capture-btn {
+            background: rgba(255,255,255,0.2);
+            border: none;
+            color: white;
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.85rem;
+            margin-left: auto;
+            margin-right: 10px;
+            margin-bottom: 8px;
+            transition: background 0.2s;
+        }
+        .modal-capture-btn:hover { background: rgba(255,255,255,0.35); }
+        
+        .close-btn { background: none; border: none; color: white; font-size: 1.5rem; cursor: pointer; display: flex; align-self: center; margin-left: 0; padding-bottom: 10px; }
         .modal-body { padding: 0; overflow-y: auto; flex: 1; display: flex; flex-direction: column; position: relative; }
         .tab-btn { padding: 8px 16px; background: rgba(0, 0, 0, 0.15); color: rgba(255, 255, 255, 0.8); border: 1px solid transparent; border-radius: 4px 4px 0 0; cursor: pointer; font-size: 0.8rem; display: inline-flex; align-items: center; margin-right: 5px; }
         .tab-btn.active { padding: 8px 16px; border: 1px solid var(--card-bg); border-bottom: 1px solid white; background: var(--card-bg); color: var(--primary); border-radius: 4px 4px 0 0; }
@@ -246,7 +201,6 @@
         .top5-name { flex: 1; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; margin-right: 5px; font-size: 0.65rem; min-width: 0; }
         .top5-val { font-weight: bold; color: var(--text); font-size: 0.65rem; flex-shrink: 0; }
 
-        /* RESPONSIVE MEDIA QUERIES */
         @media (max-width: 900px) {
             .header { padding: 15px 15px 0 15px; min-height: 150px; }
             .header h1 { font-size: 1.2rem; gap: 8px; }
@@ -259,6 +213,7 @@
             .card { padding: 12px; }
             .top5-grid-container { grid-template-columns: repeat(2, 1fr); gap: 8px; padding: 10px; }
             .breakdown-container { display: none !important; }
+            .modal-capture-btn { width: 28px; height: 28px; font-size: 0.75rem; margin-bottom: 6px; }
         }
 
         [data-theme="dark"] .tab-btn { background: rgba(255, 255, 255, 0.08) !important; color: rgba(255, 255, 255, 0.5) !important; border: 1px solid rgba(255, 255, 255, 0.1) !important; }
@@ -314,7 +269,6 @@
             </div>        
         </div>
 
-        <!-- Tabel Breakdown (Akan disembunyikan saat capture) -->
         <div class="breakdown-container" id="breakdownSection" style="display:none;">
             <div class="breakdown-card">
                 <div class="breakdown-header">
@@ -331,14 +285,21 @@
 
         <div class="footer">Typing, Create, Update, Repeat | Optimized for Mobile & Web | Theme: Light/Dark | RBPM - Region Sumatera</div>
 
+        <!-- MODAL RANKING DENGAN TOMBOL CAPTURE -->
         <div id="rankingModal" class="modal-overlay">
             <div class="modal-content">
                 <div class="modal-header">
-                    <button class="tab-btn" id="tabTop5Branch" onclick="setRankingTab('top5branch', this)"><i class="fas fa-trophy"></i>Top 5 Branch</button>
-                    <button class="tab-btn" onclick="setRankingTab('top5cobranch', this)"><i class="fas fa-sitemap"></i>Top 5 Co-Branch</button>
+                    <button class="tab-btn" id="tabTop5Branch" onclick="setRankingTab('top5branch', this)"><i class="fas fa-trophy"></i> Top 5 Branch</button>
+                    <button class="tab-btn" onclick="setRankingTab('top5cobranch', this)"><i class="fas fa-sitemap"></i> Top 5 Co-Branch</button>
+                    
+                    <!-- Tombol Capture Ranking -->
+                    <button class="modal-capture-btn" onclick="captureRanking()" title="Download Ranking Image">
+                        <i class="fas fa-camera"></i>
+                    </button>
+                    
                     <button class="close-btn" onclick="closeRankingModal()">&times;</button>
                 </div>
-                <div class="modal-body">                
+                <div class="modal-body" id="rankingModalBody">                
                     <div class="table-wrapper">
                         <table class="ranking-table" id="rankingTable">
                             <thead id="rankingThead"></thead>
@@ -352,7 +313,7 @@
 
     <script>
         const jsonFiles = [
-            { id: 'agust', label: 'Agust', file: 'agust.json', meta: '<i class="fas fa-calendar-alt"></i> Per: 24 Agustus 2026 | <i class="fas fa-briefcase"></i> Workdays: 19' },
+            { id: 'agust', label: 'Agust', file: 'agust.json', meta: '<i class="fas fa-calendar-alt"></i> Per: 21 Agustus 2026 | <i class="fas fa-briefcase"></i> Workdays: 19' },
             { id: 'juli', label: 'Juli', file: 'juli.json', meta: '<i class="fas fa-calendar-alt"></i> Per: 31 Juli 2026 | <i class="fas fa-briefcase"></i> Workdays: 23' },
             { id: 'juni', label: 'Juni', file: 'juni.json', meta: '<i class="fas fa-calendar-alt"></i> Per: 30 Juni 2026 | <i class="fas fa-briefcase"></i> Workdays: 20' },
             { id: 'mei', label: 'Mei', file: 'mei.json', meta: '<i class="fas fa-calendar-alt"></i> Per: 29 Mei 2026 | <i class="fas fa-briefcase"></i> Workdays: 16' }            
@@ -611,23 +572,36 @@
             thead.innerHTML = headerHTML;
             let totals = {}; metrics.forEach(m => totals[m.key] = 0);
             data.forEach((row, index) => {
-                let rowHTML = `<tr><td>${index + 1}</td><td>${row['co'] || '-'}</td><td>${row['br'] || '-'}</td><td>${row['tp'] || '-'}</td>`;
+                let rowHTML = `<tr>`;
+                rowHTML += `<td>${index + 1}</td>`;
+                rowHTML += `<td>${row['co'] || '-'}</td>`;
+                rowHTML += `<td>${row['br'] || '-'}</td>`;
+                rowHTML += `<td>${row['tp'] || '-'}</td>`;
                 metrics.forEach(m => {
-                    let val = parseFloat(row[m.key + '_mtd'] || 0); totals[m.key] += val; 
-                    let isGrowth = ['ca', 'sa', 'fu'].includes(m.key);
-                    let formatted = formatValue(val, m.unit, isGrowth, false, false);
-                    let colorClass = (isGrowth && val < 0) ? 'neg' : '';
-                    rowHTML += `<td class="${colorClass}">${formatted}</td>`;
+                    let val = parseFloat(row[m.key + '_mtd'] || 0); 
+                    totals[m.key] += val; 
+                    const isGrowthType = ['ca', 'sa', 'fu'].includes(m.key);
+                    const isNegGrowth = isGrowthType && val < 0;
+                    const formatted = formatValue(val, m.unit, isGrowthType, false, false);
+                    let colorClass = '';
+                    if (isGrowthType) { colorClass = isNegGrowth ? 'neg' : 'pos'; }
+                    rowHTML += `<td class="metric-val ${colorClass}">${formatted}</td>`;
                 });
-                rowHTML += `</tr>`; tbody.innerHTML += rowHTML;
+                rowHTML += `</tr>`; 
+                tbody.innerHTML += rowHTML;
             });
-            let totalRowHTML = `<tr class="total-row"><td></td><td></td><td></td><td style="text-align: right;">TOTAL</td>`; 
+            let totalRowHTML = `<tr class="total-row">`;
+            totalRowHTML += `<td></td><td></td><td></td><td style="text-align: right;">TOTAL</td>`; 
             metrics.forEach(m => {
-                let isGrowth = ['ca', 'sa', 'fu'].includes(m.key);
-                let formatted = formatValue(totals[m.key], m.unit, isGrowth, false, false);
-                totalRowHTML += `<td>${formatted}</td>`;
+                const isGrowthType = ['ca', 'sa', 'fu'].includes(m.key);
+                const isNegGrowth = isGrowthType && totals[m.key] < 0;
+                const formatted = formatValue(totals[m.key], m.unit, isGrowthType, false, false);
+                let colorClass = '';
+                if (isGrowthType) { colorClass = isNegGrowth ? 'neg' : 'pos'; }
+                totalRowHTML += `<td class="metric-val ${colorClass}">${formatted}</td>`;
             });
-            totalRowHTML += `</tr>`; tbody.innerHTML += totalRowHTML;
+            totalRowHTML += `</tr>`; 
+            tbody.innerHTML += totalRowHTML;
         }
 
         function openRankingModal() { document.getElementById('rankingModal').style.display = 'flex'; document.body.classList.add('modal-open'); setRankingTab('top5branch', document.getElementById('tabTop5Branch')); }
@@ -675,22 +649,18 @@
         }
 
         // =========================================
-        // CAPTURE DASHBOARD FUNCTIONALITY (UPDATED WITH FOOTER)
+        // CAPTURE DASHBOARD (KPI Cards + Header + Footer)
         // =========================================
         function captureDashboard() {
-            const btn = document.querySelector('.capture-toggle');
+            const btn = document.querySelector('.header-actions .capture-toggle');
             const originalIcon = btn.innerHTML;
-            
-            // Visual feedback loading
             btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i>';
             btn.disabled = true;
 
-            // Element targets: Header + Dashboard Grid + Footer
             const headerElement = document.querySelector('.header');
             const dashboardElement = document.getElementById('dashboardContainer');
             const footerElement = document.querySelector('.footer');
             
-            // Buat container sementara untuk menggabungkan elemen
             const captureWrapper = document.createElement('div');
             captureWrapper.style.backgroundColor = getComputedStyle(document.body).getPropertyValue('--bg');
             captureWrapper.style.padding = '20px';
@@ -698,61 +668,107 @@
             captureWrapper.style.display = 'flex';
             captureWrapper.style.flexDirection = 'column';
             
-            // Clone elemen agar tidak merusak DOM asli
             const headerClone = headerElement.cloneNode(true);
             const dashClone = dashboardElement.cloneNode(true);
             const footerClone = footerElement.cloneNode(true);
             
-            // Fix styling untuk clone header (karena aslinya fixed position)
             headerClone.style.position = 'relative';
             headerClone.style.top = '0';
             headerClone.style.marginBottom = '20px';
             headerClone.style.borderRadius = '8px';
-            
-            // Hapus tombol actions dari clone header agar gambar bersih
             const actionsClone = headerClone.querySelector('.header-actions');
             if(actionsClone) actionsClone.style.display = 'none';
 
-            // Styling footer clone agar rapi di gambar
             footerClone.style.marginTop = '15px';
             footerClone.style.paddingTop = '10px';
             footerClone.style.borderTop = '1px solid ' + getComputedStyle(document.body).getPropertyValue('--border');
 
-            // Susun elemen: Header -> Dashboard -> Footer
             captureWrapper.appendChild(headerClone);
             captureWrapper.appendChild(dashClone);
             captureWrapper.appendChild(footerClone);
             
-            // Tempelkan sementara ke body tapi di luar layar
             captureWrapper.style.position = 'fixed';
             captureWrapper.style.left = '-9999px';
             document.body.appendChild(captureWrapper);
 
-            // Ambil info untuk nama file
             const regionText = document.getElementById('headerSubtitle').innerText.replace(/\s+/g, '_');
             const dateText = currentActiveJson.label;
             const fileName = `KPI_${regionText}_${dateText}.png`;
 
-            const options = {
-                scale: 2, 
-                useCORS: true,
-                backgroundColor: null, // Gunakan background dari wrapper
-                logging: false
-            };
-
-            html2canvas(captureWrapper, options).then(canvas => {
+            html2canvas(captureWrapper, { scale: 2, useCORS: true, backgroundColor: null, logging: false }).then(canvas => {
                 const link = document.createElement('a');
                 link.download = fileName;
                 link.href = canvas.toDataURL('image/png');
                 link.click();
-
-                // Cleanup
                 document.body.removeChild(captureWrapper);
                 btn.innerHTML = originalIcon;
                 btn.disabled = false;
             }).catch(err => {
                 console.error("Capture failed:", err);
                 alert("Gagal mengambil gambar dashboard.");
+                document.body.removeChild(captureWrapper);
+                btn.innerHTML = originalIcon;
+                btn.disabled = false;
+            });
+        }
+
+        // =========================================
+        // CAPTURE RANKING MODAL (Top 5 Branch / Co-Branch)
+        // =========================================
+        function captureRanking() {
+            const btn = document.querySelector('.modal-capture-btn');
+            const originalIcon = btn.innerHTML;
+            btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i>';
+            btn.disabled = true;
+
+            // Target: Seluruh modal content agar termasuk header tab nya
+            const modalContent = document.querySelector('.modal-content');
+            
+            // Tentukan nama file berdasarkan tab aktif
+            const modeLabel = currentRankingMode === 'top5branch' ? 'Top5_Branch' : 'Top5_CoBranch';
+            const dateText = currentActiveJson.label;
+            const fileName = `Ranking_${modeLabel}_${dateText}.png`;
+
+            // Clone modal content untuk capture bersih
+            const clone = modalContent.cloneNode(true);
+            
+            // Hapus tombol close dan capture dari clone agar gambar bersih
+            const closeBtn = clone.querySelector('.close-btn');
+            const capBtn = clone.querySelector('.modal-capture-btn');
+            if(closeBtn) closeBtn.style.display = 'none';
+            if(capBtn) capBtn.style.display = 'none';
+
+            // Buat wrapper sementara
+            const captureWrapper = document.createElement('div');
+            captureWrapper.style.backgroundColor = getComputedStyle(document.body).getPropertyValue('--bg');
+            captureWrapper.style.padding = '10px';
+            captureWrapper.style.borderRadius = '8px';
+            captureWrapper.appendChild(clone);
+            
+            captureWrapper.style.position = 'fixed';
+            captureWrapper.style.left = '-9999px';
+            captureWrapper.style.top = '0';
+            captureWrapper.style.width = modalContent.offsetWidth + 'px';
+            document.body.appendChild(captureWrapper);
+
+            html2canvas(captureWrapper, { 
+                scale: 2, 
+                useCORS: true, 
+                backgroundColor: null, 
+                logging: false,
+                windowWidth: captureWrapper.scrollWidth,
+                windowHeight: captureWrapper.scrollHeight
+            }).then(canvas => {
+                const link = document.createElement('a');
+                link.download = fileName;
+                link.href = canvas.toDataURL('image/png');
+                link.click();
+                document.body.removeChild(captureWrapper);
+                btn.innerHTML = originalIcon;
+                btn.disabled = false;
+            }).catch(err => {
+                console.error("Ranking capture failed:", err);
+                alert("Gagal mengambil gambar ranking.");
                 document.body.removeChild(captureWrapper);
                 btn.innerHTML = originalIcon;
                 btn.disabled = false;
