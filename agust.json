@@ -44,7 +44,7 @@
       "mdin_tgt": "418",
       "qris_mtd": "5",
       "qris_tgt": "95",
-      "sli_mtd": "76",
+      "sli_mtd": "106",
       "sli_tgt": "171",
       "cif_mtd": "60",
       "cif_tgt": "475"
@@ -69,7 +69,7 @@
       "mdin_tgt": "418",
       "qris_mtd": "7",
       "qris_tgt": "95",
-      "sli_mtd": "16",
+      "sli_mtd": "36",
       "sli_tgt": "171",
       "cif_mtd": "53",
       "cif_tgt": "475"
@@ -94,7 +94,7 @@
       "mdin_tgt": "418",
       "qris_mtd": "10",
       "qris_tgt": "95",
-      "sli_mtd": "40",
+      "sli_mtd": "20",
       "sli_tgt": "171",
       "cif_mtd": "58",
       "cif_tgt": "475"
@@ -394,7 +394,7 @@
       "mdin_tgt": "418",
       "qris_mtd": "1",
       "qris_tgt": "95",
-      "sli_mtd": "0",
+      "sli_mtd": "60",
       "sli_tgt": "171",
       "cif_mtd": "16",
       "cif_tgt": "475"
@@ -769,7 +769,7 @@
       "mdin_tgt": "418",
       "qris_mtd": "1",
       "qris_tgt": "95",
-      "sli_mtd": "20",
+      "sli_mtd": "60",
       "sli_tgt": "171",
       "cif_mtd": "47",
       "cif_tgt": "475"
