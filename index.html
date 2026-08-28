@@ -213,6 +213,9 @@
             .top5-grid-container { grid-template-columns: repeat(2, 1fr); gap: 8px; padding: 10px; }
             .breakdown-container { display: none !important; }
             .modal-capture-btn { width: 28px; height: 28px; font-size: 0.75rem; margin-bottom: 6px; }
+            
+            /* Fix untuk mobile: pastikan modal tidak punya transform saat capture */
+            .modal-content { transform: none !important; animation: none !important; }
         }
 
         [data-theme="dark"] .tab-btn { background: rgba(255, 255, 255, 0.08) !important; color: rgba(255, 255, 255, 0.5) !important; border: 1px solid rgba(255, 255, 255, 0.1) !important; }
@@ -310,7 +313,7 @@
 
     <script>
         const jsonFiles = [
-            { id: 'agust', label: 'Agust', file: 'agust.json', meta: '<i class="fas fa-calendar-alt"></i> Per: 26 Agustus 2026 | <i class="fas fa-briefcase"></i> Workdays: 19' },
+            { id: 'agust', label: 'Agust', file: 'agust.json', meta: '<i class="fas fa-calendar-alt"></i> Per: 21 Agustus 2026 | <i class="fas fa-briefcase"></i> Workdays: 19' },
             { id: 'juli', label: 'Juli', file: 'juli.json', meta: '<i class="fas fa-calendar-alt"></i> Per: 31 Juli 2026 | <i class="fas fa-briefcase"></i> Workdays: 23' },
             { id: 'juni', label: 'Juni', file: 'juni.json', meta: '<i class="fas fa-calendar-alt"></i> Per: 30 Juni 2026 | <i class="fas fa-briefcase"></i> Workdays: 20' },
             { id: 'mei', label: 'Mei', file: 'mei.json', meta: '<i class="fas fa-calendar-alt"></i> Per: 29 Mei 2026 | <i class="fas fa-briefcase"></i> Workdays: 16' }            
@@ -707,92 +710,95 @@
         }
 
         // =========================================
-        // CAPTURE RANKING MODAL (FIXED: Clean Clone Strategy)
+        // CAPTURE RANKING MODAL (ULTIMATE FIX FOR MOBILE TRANSPARENCY)
         // =========================================
         function captureRanking() {
             const btn = document.querySelector('.modal-capture-btn');
             const originalIcon = btn.innerHTML;
             const modalContent = document.getElementById('rankingModalContent');
+            const modalBody = document.getElementById('rankingModalBody');
             
             // Visual feedback
             btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i>';
             btn.disabled = true;
 
-            // 1. Buat Clone dari Modal Content
-            const clone = modalContent.cloneNode(true);
-            
-            // 2. Bersihkan Clone dari elemen yang tidak perlu (tombol close & capture)
-            const cloneCloseBtn = clone.querySelector('.close-btn');
-            const cloneCapBtn = clone.querySelector('.modal-capture-btn');
-            if(cloneCloseBtn) cloneCloseBtn.remove();
-            if(cloneCapBtn) cloneCapBtn.remove();
+            // 1. Simpan state asli
+            const originalStyles = {
+                maxHeight: modalContent.style.maxHeight,
+                height: modalContent.style.height,
+                overflow: modalBody.style.overflow,
+                transform: modalContent.style.transform,
+                animation: modalContent.style.animation
+            };
 
-            // 3. Reset Style Clone agar html2canvas bisa render sempurna (Hilangkan sticky, z-index, overflow hidden)
-            clone.style.position = 'absolute';
-            clone.style.left = '-9999px';
-            clone.style.top = '0';
-            clone.style.maxHeight = 'none';
-            clone.style.height = 'auto';
-            clone.style.overflow = 'visible';
-            clone.style.boxShadow = 'none';
-            
-            // Pastikan background solid (tidak transparan) untuk menghindari lapisan putih
-            const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
-            clone.style.backgroundColor = isDark ? '#16213e' : '#ffffff';
+            // 2. Paksa render penuh (hilangkan scroll, animasi, dan transform yang menyebabkan glitch di mobile)
+            modalContent.style.maxHeight = 'none';
+            modalContent.style.height = 'auto';
+            modalContent.style.transform = 'none';
+            modalContent.style.animation = 'none';
+            modalBody.style.overflow = 'visible';
 
-            // Reset style pada child elements yang mungkin punya sticky/transparent
-            const cloneBody = clone.querySelector('.modal-body');
-            if(cloneBody) {
-                cloneBody.style.overflow = 'visible';
-                cloneBody.style.height = 'auto';
-            }
-            
-            const cloneCards = clone.querySelectorAll('.top5-card');
-            cloneCards.forEach(card => {
-                card.style.position = 'static';
-                card.style.zIndex = 'auto';
-                card.style.backgroundColor = isDark ? '#16213e' : '#ffffff';
-            });
-
-            const cloneHeader = clone.querySelector('.modal-header');
-            if(cloneHeader) {
-                cloneHeader.style.position = 'static';
-            }
-
-            // 4. Append ke body untuk di-capture
-            document.body.appendChild(clone);
+            // 3. Sembunyikan tombol sementara
+            const closeBtn = modalContent.querySelector('.close-btn');
+            const capBtn = modalContent.querySelector('.modal-capture-btn');
+            if(closeBtn) closeBtn.style.visibility = 'hidden';
+            if(capBtn) capBtn.style.visibility = 'hidden';
 
             // Tentukan nama file
             const modeLabel = currentRankingMode === 'top5branch' ? 'Top5_Branch' : 'Top5_CoBranch';
             const dateText = currentActiveJson.label;
             const fileName = `Ranking_${modeLabel}_${dateText}.png`;
+            
+            // Dapatkan warna background solid berdasarkan tema
+            const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
+            const bgColor = isDark ? '#16213e' : '#ffffff';
 
-            // 5. Capture Clone
-            html2canvas(clone, { 
+            // 4. Capture langsung elemen asli dengan opsi ketat untuk mobile
+            html2canvas(modalContent, { 
                 scale: 2, 
                 useCORS: true, 
-                backgroundColor: isDark ? '#16213e' : '#ffffff',
+                backgroundColor: bgColor, // Paksa background solid
                 logging: false,
-                scrollY: 0,
-                windowWidth: clone.scrollWidth,
-                windowHeight: clone.scrollHeight
+                scrollY: -window.scrollY,
+                windowHeight: document.documentElement.clientHeight,
+                foreignObjectRendering: false, // Penting untuk kompatibilitas mobile
+                imageTimeout: 0,
+                removeContainer: true
             }).then(canvas => {
-                // 6. Download
+                // 5. Download
                 const link = document.createElement('a');
                 link.download = fileName;
                 link.href = canvas.toDataURL('image/png');
                 link.click();
 
-                // 7. Cleanup
-                document.body.removeChild(clone);
-                btn.innerHTML = originalIcon;
-                btn.disabled = false;
+                // 6. Restore semua style
+                modalContent.style.maxHeight = originalStyles.maxHeight;
+                modalContent.style.height = originalStyles.height;
+                modalContent.style.transform = originalStyles.transform;
+                modalContent.style.animation = originalStyles.animation;
+                modalBody.style.overflow = originalStyles.overflow;
+                if(closeBtn) closeBtn.style.visibility = 'visible';
+                if(capBtn) {
+                    capBtn.style.visibility = 'visible';
+                    capBtn.innerHTML = originalIcon;
+                    capBtn.disabled = false;
+                }
             }).catch(err => {
                 console.error("Ranking capture failed:", err);
                 alert("Gagal mengambil gambar ranking.");
-                document.body.removeChild(clone);
-                btn.innerHTML = originalIcon;
-                btn.disabled = false;
+                
+                // Rollback
+                modalContent.style.maxHeight = originalStyles.maxHeight;
+                modalContent.style.height = originalStyles.height;
+                modalContent.style.transform = originalStyles.transform;
+                modalContent.style.animation = originalStyles.animation;
+                modalBody.style.overflow = originalStyles.overflow;
+                if(closeBtn) closeBtn.style.visibility = 'visible';
+                if(capBtn) {
+                    capBtn.style.visibility = 'visible';
+                    capBtn.innerHTML = originalIcon;
+                    capBtn.disabled = false;
+                }
             });
         }
 
