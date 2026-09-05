@@ -53,18 +53,6 @@
         body.modal-open { overflow: hidden; }
         body { background-color: var(--bg); color: var(--text); min-height: 100vh; padding-top: 150px; user-select: none;}
 
-        /* LOGIN GATE STYLES */
-        .login-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: #1a2332; z-index: 99999; display: flex; justify-content: center; align-items: center; }
-        .login-card { background: #ffffff; padding: 35px 30px; border-radius: 20px; width: 90%; max-width: 440px; text-align: center; box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3); }
-        .login-icon-circle { width: 65px; height: 65px; background: #e8ebfa; color: #4f46e5; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 20px auto; font-size: 1.6rem; }
-        .login-card h2 { font-size: 1.65rem; color: #111827; margin-bottom: 6px; font-weight: 700; }
-        .login-card p { font-size: 0.9rem; color: #6b7280; margin-bottom: 25px; }
-        .password-field-container { position: relative; margin-bottom: 20px; }
-        .password-field-container input { width: 100%; padding: 14px 45px 14px 16px; border: 2px solid #6366f1; border-radius: 12px; font-size: 0.95rem; outline: none; color: #1f2937; background: #ffffff; }
-        .password-field-container i { position: absolute; right: 16px; top: 50%; transform: translateY(-50%); color: #9ca3af; cursor: pointer; font-size: 1.1rem; }
-        .login-card button { width: 100%; padding: 14px; background: #4f46e5; color: #ffffff; border: none; border-radius: 12px; font-size: 1rem; font-weight: 600; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px; transition: background 0.2s; }
-        .login-card button:hover { background: #4338ca; }
-        .login-error-msg { color: #dc3545; font-size: 0.8rem; margin-top: -12px; margin-bottom: 15px; text-align: left; padding-left: 4px; display: none; }
         .main-content { display: none; }
 
         /* HEADER FIXED & LEFT ALIGNED */
@@ -223,21 +211,76 @@
     </style>
 </head>
 <body oncontextmenu="return false;" onkeydown="return blockShortcuts(event);" ondragstart="return false;">
-    <div id="loginGate" class="login-overlay">
-        <div class="login-card">
-            <div class="login-icon-circle"><i class="fas fa-lock"></i></div>
-            <h2>Dashboard Login</h2>
-            <p>Please enter your password</p>
-            <div class="password-field-container">
-                <input type="password" id="loginPassword" placeholder="Enter password..." onkeydown="if(event.key === 'Enter') checkLoginPassword()" autofocus>
-                <i class="fas fa-eye" id="passwordToggleIcon" onclick="togglePasswordVisibility()"></i>
-            </div>
-            <div class="login-error-msg" id="loginError">Wrong Password, try again!</div>
-            <button onclick="checkLoginPassword()"><i class="fas fa-sign-in-alt"></i> Login</button>
-        </div>
-    </div>
 
-    <div id="mainContentWrapper" class="main-content">
+    <!-- ============================================ -->
+    <!-- AUTH GATE: cek login yang dikirim dari index2.html -->
+    <!-- (menggantikan login password lama) -->
+    <!-- ============================================ -->
+    <script>
+    (function () {
+        // GANTI sesuai kebutuhan:
+        var LOGIN_PAGE_URL = 'https://bmisumatera.vercel.app/index2.html';
+        var SESSION_KEY = 'mleadingind_auth_nik';
+        // Pastikan user_list.json juga ada di deployment file ini
+        // (copy file yang sama dari project index2.html), karena fetch
+        // lintas-domain akan diblokir CORS kalau filenya cuma ada di sana.
+        var USER_LIST_URL = 'user_list.json';
+
+        function goToLogin() {
+            window.location.replace(LOGIN_PAGE_URL);
+        }
+
+        function validateSession() {
+            var params = new URLSearchParams(window.location.search);
+            var nikFromUrl = params.get('auth_nik');
+            var nik = nikFromUrl || localStorage.getItem(SESSION_KEY);
+
+            if (!nik) {
+                goToLogin();
+                return;
+            }
+
+            fetch(USER_LIST_URL, { cache: 'no-store' })
+                .then(function (res) {
+                    if (!res.ok) throw new Error('Gagal memuat user_list.json');
+                    return res.json();
+                })
+                .then(function (data) {
+                    var userList = Array.isArray(data.user_list) ? data.user_list : [];
+                    var user = userList.find(function (u) {
+                        return String(u.nik).trim() === String(nik).trim();
+                    });
+
+                    if (!user) {
+                        localStorage.removeItem(SESSION_KEY);
+                        goToLogin();
+                        return;
+                    }
+
+                    localStorage.setItem(SESSION_KEY, String(user.nik));
+
+                    if (nikFromUrl) {
+                        params.delete('auth_nik');
+                        params.delete('auth_ts');
+                        var qs = params.toString();
+                        var newUrl = window.location.pathname + (qs ? '?' + qs : '');
+                        window.history.replaceState({}, document.title, newUrl);
+                    }
+
+                    document.dispatchEvent(new CustomEvent('authReady', { detail: user }));
+                })
+                .catch(function (err) {
+                    console.error('Auth check failed:', err);
+                    goToLogin();
+                });
+        }
+
+        validateSession();
+    })();
+    </script>
+    <!-- ============================================ -->
+
+    <div id="mainContentWrapper" class="main-content" style="display:none;">
         <div class="header">
             <div class="header-content-wrapper">
                 <div style="width: 100%;">
@@ -248,6 +291,13 @@
                     <p id="headerMeta"> Per: -- Juni 2026 | 💼 Workdays: --</p>
                 </div>
                 <div class="header-actions">
+                    <div id="userInfoChip" style="display:flex; align-items:center; gap:8px; margin-right:6px; padding-right:12px; border-right:1px solid rgba(255,255,255,0.25);">
+                        <div id="userAvatarCircle" style="width:30px; height:30px; border-radius:50%; background:rgba(255,255,255,0.2); display:flex; align-items:center; justify-content:center; font-size:0.75rem; font-weight:700; flex-shrink:0;">U</div>
+                        <div style="line-height:1.15; text-align:left;">
+                            <div id="userNameChip" style="font-size:0.75rem; font-weight:600; white-space:nowrap;">-</div>
+                            <div id="userPosChip" style="font-size:0.65rem; opacity:0.8; white-space:nowrap;">-</div>
+                        </div>
+                    </div>
                     <button class="capture-toggle" onclick="captureDashboard()" title="Download KPI Snapshot"><i class="fas fa-camera"></i></button>
                     <button class="filter-toggle" onclick="toggleFilterMenu()" title="Show/Hide Filter"><i class="fas fa-filter" id="filterIcon"></i></button>
                     <button class="theme-toggle" onclick="toggleTheme()" title="Toggle Dark/Light Mode"><i class="fas fa-moon" id="themeIcon"></i></button>
@@ -341,37 +391,27 @@
 
         window.onload = function() {
             initTheme();
-            if (sessionStorage.getItem('dashboard_authed') === 'true') {
-                document.getElementById('loginGate').style.display = 'none';
-                document.getElementById('mainContentWrapper').style.display = 'block';
-                renderDataTabs();
-                loadJsonData(currentActiveJson);
-            }
         };
 
-        function togglePasswordVisibility() {
-            const pwdInput = document.getElementById('loginPassword');
-            const icon = document.getElementById('passwordToggleIcon');
-            if (pwdInput.type === 'password') { pwdInput.type = 'text'; icon.className = 'fas fa-eye-slash'; } 
-            else { pwdInput.type = 'password'; icon.className = 'fas fa-eye'; }
-        }
+        // Data dashboard baru dimuat & user info diisi setelah auth gate (index2.html) memvalidasi sesi
+        document.addEventListener('authReady', function (e) {
+            var user = e.detail;
+            if (user) {
+                var nameEl = document.getElementById('userNameChip');
+                var posEl = document.getElementById('userPosChip');
+                var avatarEl = document.getElementById('userAvatarCircle');
+                var displayName = user.nama || 'User';
+                var displayPos = user.posisi || '-';
 
-        function checkLoginPassword() {
-            const inputVal = document.getElementById('loginPassword').value;
-            const errorMsg = document.getElementById('loginError');
-            if (inputVal === 'rbpm') {
-                errorMsg.style.display = 'none';
-                document.getElementById('loginGate').style.display = 'none';
-                document.getElementById('mainContentWrapper').style.display = 'block';
-                sessionStorage.setItem('dashboard_authed', 'true');
-                renderDataTabs();
-                loadJsonData(currentActiveJson);
-            } else {
-                errorMsg.style.display = 'block';
-                document.getElementById('loginPassword').value = '';
-                document.getElementById('loginPassword').focus();
+                if (nameEl) nameEl.textContent = displayName;
+                if (posEl) posEl.textContent = displayPos;
+                if (avatarEl) avatarEl.textContent = displayName.charAt(0).toUpperCase();
             }
-        }
+
+            document.getElementById('mainContentWrapper').style.display = 'block';
+            renderDataTabs();
+            loadJsonData(currentActiveJson);
+        });
 
         function renderDataTabs() {
             const container = document.getElementById('dataTabsContainer');
