@@ -378,6 +378,9 @@
             .breakdown-container { display: none !important; }
             .modal-capture-btn { width: 28px; height: 28px; font-size: 0.75rem; margin-bottom: 6px; }
             
+            /* Sembunyikan user info chip di header pada mobile */
+            #userInfoChip { display: none !important; }
+            
             /* Fix untuk mobile: pastikan modal tidak punya transform saat capture */
             .modal-content { transform: none !important; animation: none !important; }
         }
@@ -390,16 +393,11 @@
 
     <!-- ============================================ -->
     <!-- AUTH GATE: cek login yang dikirim dari index2.html -->
-    <!-- (menggantikan login password lama) -->
     <!-- ============================================ -->
     <script>
     (function () {
-        // GANTI sesuai kebutuhan:
         var LOGIN_PAGE_URL = 'https://bmisumatera.vercel.app/index.html';
         var SESSION_KEY = 'mleadingind_auth_nik';
-        // Pastikan user_list.json juga ada di deployment file ini
-        // (copy file yang sama dari project index2.html), karena fetch
-        // lintas-domain akan diblokir CORS kalau filenya cuma ada di sana.
         var USER_LIST_URL = 'user_list.json';
 
         function goToLogin() {
@@ -723,7 +721,7 @@
             closeSidebar();
         }
 
-        // Data dashboard baru dimuat & user info diisi setelah auth gate (index2.html) memvalidasi sesi
+        // Data dashboard baru dimuat & user info diisi setelah auth gate memvalidasi sesi
         document.addEventListener('authReady', function (e) {
             var user = e.detail;
             if (user) {
@@ -1090,20 +1088,15 @@
             });
         }
 
-        // =========================================
-        // CAPTURE RANKING MODAL (ULTIMATE FIX FOR MOBILE TRANSPARENCY)
-        // =========================================
         function captureRanking() {
             const btn = document.querySelector('.modal-capture-btn');
             const originalIcon = btn.innerHTML;
             const modalContent = document.getElementById('rankingModalContent');
             const modalBody = document.getElementById('rankingModalBody');
             
-            // Visual feedback
             btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i>';
             btn.disabled = true;
 
-            // 1. Simpan state asli
             const originalStyles = {
                 maxHeight: modalContent.style.maxHeight,
                 height: modalContent.style.height,
@@ -1112,47 +1105,40 @@
                 animation: modalContent.style.animation
             };
 
-            // 2. Paksa render penuh (hilangkan scroll, animasi, dan transform yang menyebabkan glitch di mobile)
             modalContent.style.maxHeight = 'none';
             modalContent.style.height = 'auto';
             modalContent.style.transform = 'none';
             modalContent.style.animation = 'none';
             modalBody.style.overflow = 'visible';
 
-            // 3. Sembunyikan tombol sementara
             const closeBtn = modalContent.querySelector('.close-btn');
             const capBtn = modalContent.querySelector('.modal-capture-btn');
             if(closeBtn) closeBtn.style.visibility = 'hidden';
             if(capBtn) capBtn.style.visibility = 'hidden';
 
-            // Tentukan nama file
             const modeLabel = currentRankingMode === 'top5branch' ? 'Top5_Branch' : 'Top5_CoBranch';
             const dateText = currentActiveJson.label;
             const fileName = `Ranking_${modeLabel}_${dateText}.png`;
             
-            // Dapatkan warna background solid berdasarkan tema
             const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
             const bgColor = isDark ? '#16213e' : '#ffffff';
 
-            // 4. Capture langsung elemen asli dengan opsi ketat untuk mobile
             html2canvas(modalContent, { 
                 scale: 2, 
                 useCORS: true, 
-                backgroundColor: bgColor, // Paksa background solid
+                backgroundColor: bgColor,
                 logging: false,
                 scrollY: -window.scrollY,
                 windowHeight: document.documentElement.clientHeight,
-                foreignObjectRendering: false, // Penting untuk kompatibilitas mobile
+                foreignObjectRendering: false,
                 imageTimeout: 0,
                 removeContainer: true
             }).then(canvas => {
-                // 5. Download
                 const link = document.createElement('a');
                 link.download = fileName;
                 link.href = canvas.toDataURL('image/png');
                 link.click();
 
-                // 6. Restore semua style
                 modalContent.style.maxHeight = originalStyles.maxHeight;
                 modalContent.style.height = originalStyles.height;
                 modalContent.style.transform = originalStyles.transform;
@@ -1168,7 +1154,6 @@
                 console.error("Ranking capture failed:", err);
                 alert("Gagal mengambil gambar ranking.");
                 
-                // Rollback
                 modalContent.style.maxHeight = originalStyles.maxHeight;
                 modalContent.style.height = originalStyles.height;
                 modalContent.style.transform = originalStyles.transform;
