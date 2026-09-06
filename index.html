@@ -522,7 +522,7 @@
     <!-- ============================================ -->
 
     <!-- SIDEBAR OVERLAY -->
-    <div class="sidebar-overlay" id="sidebarOverlay" onclick="closeSidebar()"></div>
+    <div class="sidebar-overlay" id="sidebarOverlay"></div>
     
     <!-- SIDEBAR MENU -->
     <div class="sidebar" id="sidebarMenu">
@@ -721,6 +721,16 @@
                 if (filterToggle) filterToggle.style.display = 'flex';
             }
         }
+
+        // Mencegah sidebar tertutup saat klik overlay (area gelap di luar sidebar)
+        document.getElementById('sidebarOverlay').addEventListener('click', function(e) {
+            e.stopPropagation(); // Hentikan propagasi event klik
+        });
+        
+        // Opsional: Mencegah klik di dalam konten sidebar menutup sidebar (jika ada logika lain)
+        document.getElementById('sidebarMenu').addEventListener('click', function(e) {
+            e.stopPropagation();
+        });        
 
         // Sidebar functions
         function openSidebar() {
@@ -1250,7 +1260,8 @@
         });
         setInterval(function() {
             if (window.outerWidth - window.innerWidth > 160 || window.outerHeight - window.innerHeight > 160) console.clear();
-        }, 1000);        
+        }, 1000); 
+        
     </script>
 </body>
 </html>
