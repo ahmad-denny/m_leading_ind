@@ -532,16 +532,14 @@
             <div class="sidebar-divider"></div>
             
             <div class="sidebar-section">
-                <div class="sidebar-section-title"><i class="fas fa-filter"></i> Data Filter</div>
+                <div class="sidebar-section-title"><i class="fas fa-filter"></i> Filter</div>
                 <div class="sidebar-filter-group">
-                    <label class="sidebar-filter-label">Co-Branch</label>
                     <!-- PERBAIKAN: Hanya memanggil fungsi pengisian opsi, bukan apply filter -->
                     <select id="sidebarCoBranchFilter" onchange="handleSidebarCoBranchChange()">
                         <option value="">Select Co-Branch</option>
                     </select>
                 </div>
                 <div class="sidebar-filter-group">
-                    <label class="sidebar-filter-label">Branch</label>
                     <!-- PERBAIKAN: Apply filter DAN tutup sidebar hanya saat Branch dipilih -->
                     <select id="sidebarBranchFilter">
                         <option value="">Select Branch</option>
