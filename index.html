@@ -59,7 +59,7 @@
         .header { 
             background: linear-gradient(135deg, var(--primary), #2d1b50); 
             color: white; 
-            padding: 15px 20px 0 20px; 
+            padding: 10px 20px 0 20px; /* Reduced top padding */
             position: fixed; 
             top: 0; left: 0; right: 0; 
             z-index: 100; 
@@ -68,7 +68,7 @@
             align-items: flex-start; 
             justify-content: center; 
             box-shadow: 0 4px 10px rgba(0,0,0,0.2); 
-            min-height: 125px; 
+            min-height: 110px; /* Reduced min-height */
         }
         
         .header-content-wrapper { 
@@ -76,49 +76,42 @@
             width: 100%; 
             max-width: 100%; 
             display: flex; 
-            align-items: center; 
-            justify-content: space-between; /* Changed to space-between for better mobile handling */
-            gap: 10px;
+            align-items: center; /* Center items vertically */
+            justify-content: space-between; /* Space between left group and right actions */
+            padding-right: 10px; 
         }
 
-        /* Wrapper untuk Logo + Title agar bisa diatur alignment-nya */
-        .brand-wrapper {
+        /* Group Kiri: Menu + Title */
+        .header-left-group {
             display: flex;
             align-items: center;
+            gap: 12px;
             flex: 1;
-            min-width: 0; /* Penting untuk text-overflow */
+            min-width: 0; /* Allow shrinking */
         }
 
         .header h1 { 
             font-size: 1.4rem; 
-            margin-bottom: 0; /* Reset margin for alignment */
+            margin-bottom: 0; /* Removed bottom margin for alignment */
             display: flex; 
             align-items: center; 
+            justify-content: flex-start; 
             gap: 10px; 
             text-align: left; 
-            line-height: 1.2; 
+            line-height: 1.1; 
             flex: 1; 
         }
+        .header h1 img.logo { object-fit: contain; vertical-align: middle; margin-top: -2px; }
+        .header p { font-size: 0.85rem; opacity: 0.9; margin: 4px 0 0 0; text-align: left; }
         
-        .header h1 img.logo { object-fit: contain; vertical-align: middle; }
-        
-        /* Meta info (Per: ... | Workdays: ...) */
-        .header-meta {
-            font-size: 0.85rem; 
-            opacity: 0.9; 
-            margin-top: 4px;
-            text-align: left;
-            width: 100%;
-        }
-        
-        .data-tabs-container { width: 100%; display: flex; justify-content: flex-start; margin-top: 12px; margin-bottom: 0; gap: 0; overflow-x: auto; padding-bottom: 0; }
+        .data-tabs-container { width: 100%; display: flex; justify-content: flex-start; margin-top: 10px; margin-bottom: 0; gap: 0; overflow-x: auto; padding-bottom: 0; }
         .data-tab-btn { padding: 8px 16px; background: rgba(0, 0, 0, 0.15); color: rgba(255, 255, 255, 0.8); border: 1px solid transparent; border-bottom: 1px solid transparent; border-radius: 4px 4px 0 0; cursor: pointer; font-size: 0.8rem; font-weight: 600; white-space: nowrap; transition: all 0.2s ease; margin-right: 5px; display: inline-flex; align-items: center; }
         .data-tab-btn:hover { background: rgba(255, 255, 255, 0.15); color: #ffffff; }
         .data-tab-btn.active { padding: 8px 16px; border: 1px solid var(--card-bg); border-bottom: none; background: var(--card-bg); color: var(--primary); border-radius: 4px 4px 0 0; font-weight: bold; position: relative; z-index: 2; }
         [data-theme="dark"] .data-tab-btn.active { background: #16213e !important; color: #ffffff !important; border: 1px solid #16213e !important; border-bottom: none !important; font-weight: bold; }
         
         .header-actions { display: flex; align-items: center; gap: 10px; z-index: 101; flex-shrink: 0; }
-        .theme-toggle, .filter-toggle, .capture-toggle, .menu-toggle { background: rgba(255,255,255,0.15); border: none; color: white; width: 32px; height: 32px; border-radius: 50%; cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 0.9rem; flex-shrink: 0; transition: background 0.2s; }
+        .theme-toggle, .filter-toggle, .capture-toggle, .menu-toggle { background: rgba(255,255,255,0.15); border: none; color: white; width: 32px; height: 32px; border-radius: 50%; cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 0.9em; flex-shrink: 0; transition: background 0.2s; }
         .theme-toggle:hover, .filter-toggle:hover, .capture-toggle:hover, .menu-toggle:hover { background: rgba(255,255,255,0.25); }
         .filter-toggle.active { background: var(--warning); color: #333; }
         
@@ -415,80 +408,45 @@
             margin: 20px 0;
         }
 
-        /* RESPONSIVE STYLES */
         @media (max-width: 900px) {
-            /* Perkecil padding header dan tinggi minimum */
             .header { 
-                padding: 10px 15px 0 15px; 
-                min-height: 110px; /* Lebih pendek dari desktop */
+                padding: 8px 15px 0 15px; 
+                min-height: 100px; /* Lebih pendek di mobile */
             }
-            
-            /* Atur layout wrapper agar menu toggle, logo, title sejajar */
             .header-content-wrapper {
-                flex-wrap: nowrap;
-                align-items: flex-start; /* Align ke atas */
-                padding-right: 5px;
-                gap: 8px;
+                align-items: center; /* Pastikan sejajar vertikal */
             }
-
-            /* Tombol Menu Toggle di Kiri */
-            .menu-toggle {
-                display: flex !important;
-                margin-top: 2px; /* Sedikit penyesuaian vertikal agar pas dengan logo */
-                width: 34px;
-                height: 34px;
-                font-size: 1rem;
+            .header-left-group {
+                gap: 8px; /* Jarak menu dan logo */
             }
-
-            /* Brand Wrapper (Logo + Text) */
-            .brand-wrapper {
-                flex: 1;
-                min-width: 0; /* Mencegah overflow text */
-            }
-
             .header h1 { 
                 font-size: 1.1rem; 
                 gap: 6px; 
-                margin-bottom: 2px;
-                line-height: 1.1;
+                margin-bottom: 0;
             }
-            
             .header h1 img.logo {
-                width: 24px;
-                height: 24px;
+                width: 24px !important;
+                height: 24px !important;
             }
-
-            /* Subtitle (Region) */
-            #headerSubtitle {
-                font-size: 0.8rem !important;
-                display: block;
-                white-space: nowrap;
-                overflow: hidden;
-                text-overflow: ellipsis;
-            }
-
-            /* Meta Info (Tanggal) */
-            .header-meta {
+            .header p {
                 font-size: 0.75rem;
                 margin-top: 2px;
-                white-space: nowrap;
-                overflow: hidden;
-                text-overflow: ellipsis;
             }
-
-            /* Sembunyikan user info chip di header pada mobile */
-            #userInfoChip { display: none !important; }
-            
-            /* Filter Toggle disembunyikan di mobile */
-            .filter-toggle { display: none !important; }
-
-            body { padding-top: 130px; /* Sesuaikan dengan tinggi header baru */ }
+            .theme-toggle, .filter-toggle, .capture-toggle, .menu-toggle { 
+                width: 30px; 
+                height: 30px; 
+                font-size: 0.85rem; 
+            }
+            body { padding-top: 130px; } /* Sesuaikan padding body */
             .controls { display: none !important; }
             .dashboard-grid { grid-template-columns: repeat(2, 1fr); gap: 10px; padding: 0 10px 20px 10px; }
             .card { padding: 12px; }
             .top5-grid-container { grid-template-columns: repeat(2, 1fr); gap: 8px; padding: 10px; }
             .breakdown-container { display: none !important; }
             .modal-capture-btn { width: 28px; height: 28px; font-size: 0.75rem; margin-bottom: 6px; }
+            
+            /* Sembunyikan user info chip di header pada mobile */
+            #userInfoChip { display: none !important; }
             
             /* Fix untuk mobile: pastikan modal tidak punya transform saat capture */
             .modal-content { transform: none !important; animation: none !important; }
@@ -631,21 +589,20 @@
     <div id="mainContentWrapper" class="main-content" style="display:none;">
         <div class="header">
             <div class="header-content-wrapper">
-                <!-- Menu Toggle Button (Mobile Only) -->
-                <button class="menu-toggle" onclick="openSidebar()" title="Open Menu" style="display: none;"><i class="fas fa-bars"></i></button>
-                
-                <!-- Brand Wrapper: Logo + Title -->
-                <div class="brand-wrapper">
-                    <h1>
-                        <img src="img/BMI.png" alt="Bank Muamalat Logo" class="logo" width="30" height="30"> 
-                        <span style="font-size: 15px; font-weight: bold; display: flex; flex-direction: column; justify-content: center;">
-                            LEADING INDICATOR
-                            <span id="headerSubtitle" style="font-size: 13px; font-weight: normal;">Region Sumatera</span>
-                        </span>
-                    </h1>
+                <!-- GROUP KIRI: Menu Toggle + Title -->
+                <div class="header-left-group">
+                    <button class="menu-toggle" onclick="openSidebar()" title="Open Menu" style="display: none;"><i class="fas fa-bars"></i></button>
+                    
+                    <div style="width: 100%;">
+                        <h1>
+                            <img src="img/BMI.png" alt="Bank Muamalat Logo" class="logo" width="30" height="30"> 
+                            <span style="font-size: 15px; margin-left: -5px;font-weight: bold;">LEADING INDICATOR<br><span id="headerSubtitle" style="font-size: 13px;font-weight: normal">Region Sumatera</span></span>
+                        </h1>
+                        <p id="headerMeta"> Per: -- Juni 2026 |  Workdays: --</p>
+                    </div>
                 </div>
-
-                <!-- Right Actions -->
+                
+                <!-- GROUP KANAN: Actions -->
                 <div class="header-actions">
                     <div id="userInfoChip" style="display:flex; align-items:center; gap:8px; margin-right:6px; padding-right:12px; border-right:1px solid rgba(255,255,255,0.25);">
                         <div id="userAvatarCircle" style="width:30px; height:30px; border-radius:50%; background:rgba(255,255,255,0.2); display:flex; align-items:center; justify-content:center; font-size:0.75rem; font-weight:700; flex-shrink:0;">U</div>
@@ -655,14 +612,10 @@
                         </div>
                     </div>
                     <button class="capture-toggle" onclick="captureDashboard()" title="Download KPI Snapshot"><i class="fas fa-camera"></i></button>
-                    <button class="filter-toggle" onclick="toggleFilterMenu()" title="Show/Hide Filter"><i class="fas fa-filter" id="filterIcon"></i></button>
+                    <button class="filter-toggle" onclick="toggleFilterMenu()" title="Show/Hide Filter" style="display: none;"><i class="fas fa-filter" id="filterIcon"></i></button>
                     <button class="theme-toggle" onclick="toggleTheme()" title="Toggle Dark/Light Mode"><i class="fas fa-moon" id="themeIcon"></i></button>
                 </div>
             </div>
-            
-            <!-- Meta Info Row (Date & Workdays) -->
-            <p id="headerMeta" class="header-meta"> Per: -- Juni 2026 | 💼 Workdays: --</p>
-
             <div class="data-tabs-container" id="dataTabsContainer"></div>
         </div>
         
@@ -761,11 +714,9 @@
             const filterToggle = document.querySelector('.filter-toggle');
             
             if (isMobile) {
-                // Mobile: tampilkan menu toggle di kiri, sembunyikan filter toggle
                 if (menuToggle) menuToggle.style.display = 'flex';
                 if (filterToggle) filterToggle.style.display = 'none';
             } else {
-                // Desktop: sembunyikan menu toggle, tampilkan filter toggle
                 if (menuToggle) menuToggle.style.display = 'none';
                 if (filterToggle) filterToggle.style.display = 'flex';
             }
