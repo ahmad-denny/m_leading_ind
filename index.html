@@ -1217,15 +1217,12 @@ Silakan copy-paste seluruh kode ini untuk menggantikan file Anda saat ini:
         }
         
         .sidebar select {
-            width: 100%;
-            padding: 10px;
-            border: 1px solid var(--border);
-            border-radius: 4px;
-            background: var(--card-bg);
-            color: var(--text);
-            font-size: 0.85rem;
+            position: relative;
+            z-index: 1002; /* Lebih tinggi dari sidebar (1000) dan overlay (999) */
+            -webkit-appearance: none; /* Opsional: membuat tampilan lebih konsisten */
+            appearance: none;
         }
-        
+       
         .sidebar-btn {
             width: 100%;
             padding: 10px;
@@ -2053,20 +2050,12 @@ Silakan copy-paste seluruh kode ini untuk menggantikan file Anda saat ini:
             });
         }
 
-        // PERBAIKAN UTAMA: Mengganti window.onclick global dengan event delegation yang aman
-        // Ini mencegah sidebar tertutup saat klik dropdown/filter, tapi tetap menutup modal ranking
-        document.addEventListener('click', function(e) {
-            // Logika untuk Modal Ranking (tetap sama seperti aslinya)
-            const rankingModal = document.getElementById('rankingModal');
-            if (e.target == rankingModal) {
-                closeRankingModal();
+        // HANYA gunakan ini untuk menutup Ranking Modal jika klik area gelapnya
+        window.onclick = function(e) { 
+            if (e.target == document.getElementById('rankingModal')) {
+                closeRankingModal(); 
             }
-
-            // CATATAN PENTING: Tidak ada logika penutupan sidebar di sini.
-            // Sidebar hanya ditutup oleh tombol X (.sidebar-close) yang memiliki onclick="closeSidebar()"
-            // Overlay (#sidebarOverlay) sudah tidak memiliki onclick, sehingga area gelap tidak bereaksi.
-            // Dropdown filter di dalam sidebar juga aman karena berada di dalam DOM sidebar.
-        });
+        }
 
         document.addEventListener('contextmenu', e => e.preventDefault());
         document.addEventListener('keydown', function(e) {
