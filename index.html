@@ -381,8 +381,43 @@
             /* Sembunyikan user info chip di header pada mobile */
             #userInfoChip { display: none !important; }
             
-            /* Fix untuk mobile: pastikan modal tidak punya transform saat capture */
-            .modal-content { transform: none !important; animation: none !important; }
+            /* Tampilkan menu toggle di kiri */
+            .menu-toggle { 
+                display: flex !important; 
+                position: relative;
+                z-index: 102;
+            }
+            
+            /* Sesuaikan layout header wrapper */
+            .header-content-wrapper {
+                flex-wrap: nowrap;
+                align-items: center;
+                padding-right: 10px;
+            }
+            
+            /* Pastikan title tidak overlap dengan tombol kanan */
+            .header h1 {
+                font-size: 1.1rem;
+                flex: 1;
+                min-width: 0;
+                overflow: hidden;
+                text-overflow: ellipsis;
+                white-space: nowrap;
+            }
+            
+            .header h1 span {
+                display: block;
+                overflow: hidden;
+                text-overflow: ellipsis;
+                white-space: nowrap;
+            }
+            
+            /* Perkecil ukuran tombol di mobile */
+            .header-actions button {
+                width: 30px;
+                height: 30px;
+                font-size: 0.8rem;
+            }
         }
 
         [data-theme="dark"] .tab-btn { background: rgba(255, 255, 255, 0.08) !important; color: rgba(255, 255, 255, 0.5) !important; border: 1px solid rgba(255, 255, 255, 0.1) !important; }
@@ -522,6 +557,9 @@
     <div id="mainContentWrapper" class="main-content" style="display:none;">
         <div class="header">
             <div class="header-content-wrapper">
+                <!-- Menu Toggle di Kiri (Mobile Only) -->
+                <button class="menu-toggle" onclick="openSidebar()" title="Open Menu" style="display: none; margin-right: 10px;"><i class="fas fa-bars"></i></button>
+                
                 <div style="width: 100%;">
                     <h1>
                         <img src="img/BMI.png" alt="Bank Muamalat Logo" class="logo" width="30" height="30"> 
@@ -529,6 +567,8 @@
                     </h1>
                     <p id="headerMeta"> Per: -- Juni 2026 | 💼 Workdays: --</p>
                 </div>
+                
+                <!-- Actions di Kanan -->
                 <div class="header-actions">
                     <div id="userInfoChip" style="display:flex; align-items:center; gap:8px; margin-right:6px; padding-right:12px; border-right:1px solid rgba(255,255,255,0.25);">
                         <div id="userAvatarCircle" style="width:30px; height:30px; border-radius:50%; background:rgba(255,255,255,0.2); display:flex; align-items:center; justify-content:center; font-size:0.75rem; font-weight:700; flex-shrink:0;">U</div>
@@ -538,14 +578,12 @@
                         </div>
                     </div>
                     <button class="capture-toggle" onclick="captureDashboard()" title="Download KPI Snapshot"><i class="fas fa-camera"></i></button>
-                    <button class="menu-toggle" onclick="openSidebar()" title="Open Menu" style="display: none;"><i class="fas fa-bars"></i></button>
                     <button class="filter-toggle" onclick="toggleFilterMenu()" title="Show/Hide Filter" style="display: none;"><i class="fas fa-filter" id="filterIcon"></i></button>
                     <button class="theme-toggle" onclick="toggleTheme()" title="Toggle Dark/Light Mode"><i class="fas fa-moon" id="themeIcon"></i></button>
                 </div>
             </div>
             <div class="data-tabs-container" id="dataTabsContainer"></div>
-        </div>
-        
+        </div>        
         <div class="controls" id="filterControls">
             <div class="filter-group">
                 <select id="coBranchFilter" onchange="handleCoBranchChange()"><option value="">Select Co-Branch</option></select>
@@ -641,14 +679,18 @@
             const filterToggle = document.querySelector('.filter-toggle');
             
             if (isMobile) {
-                if (menuToggle) menuToggle.style.display = 'flex';
+                // Mobile: tampilkan menu toggle di kiri, sembunyikan filter toggle
+                if (menuToggle) {
+                    menuToggle.style.display = 'flex';
+                    menuToggle.style.order = '-1'; // Pindah ke paling kiri
+                }
                 if (filterToggle) filterToggle.style.display = 'none';
             } else {
+                // Desktop: sembunyikan menu toggle, tampilkan filter toggle
                 if (menuToggle) menuToggle.style.display = 'none';
                 if (filterToggle) filterToggle.style.display = 'flex';
             }
         }
-
         // Sidebar functions
         function openSidebar() {
             document.getElementById('sidebarMenu').classList.add('active');
