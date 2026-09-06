@@ -543,7 +543,7 @@
                 <div class="sidebar-filter-group">
                     <label class="sidebar-filter-label">Branch</label>
                     <!-- PERBAIKAN: Apply filter DAN tutup sidebar hanya saat Branch dipilih -->
-                    <select id="sidebarBranchFilter" onchange="applySidebarFilters()">
+                    <select id="sidebarBranchFilter">
                         <option value="">Select Branch</option>
                     </select>
                 </div>
@@ -748,18 +748,33 @@
 
         // PERBAIKAN UTAMA: Fungsi ini dipanggil HANYA saat Branch dipilih
         function applySidebarFilters() {
-            // 1. Ambil nilai dari dropdown SIDEBAR
+            // Ambil nilai TERBARU dari dropdown sidebar saat tombol X ditekan
             const coVal = document.getElementById('sidebarCoBranchFilter').value;
             const brVal = document.getElementById('sidebarBranchFilter').value;
             
-            // 2. Kirim/Sinkronkan nilai tersebut ke dropdown UTAMA (desktop)
-            document.getElementById('coBranchFilter').value = coVal;
-            document.getElementById('branchFilter').value = brVal;
+            // Suntikkan nilai tersebut ke filter utama (desktop)
+            const mainCoSelect = document.getElementById('coBranchFilter');
+            const mainBrSelect = document.getElementById('branchFilter');
             
-            // 3. Jalankan logika filtering dan update dashboard
+            mainCoSelect.value = coVal;
+            
+            // Penting: Isi ulang opsi branch utama jika berubah, lalu set nilainya
+            if (coVal) {
+                const brSet = new Set(rawData.filter(d => d['co'] === coVal).map(d => d['br']).filter(Boolean));
+                mainBrSelect.innerHTML = '<option value="">Select Branch</option>';
+                [...brSet].sort().forEach(br => { 
+                    mainBrSelect.innerHTML += `<option value="${br}">${br}</option>`; 
+                });
+            } else {
+                mainBrSelect.innerHTML = '<option value="">Select Branch</option>';
+            }
+            
+            mainBrSelect.value = brVal;
+            
+            // Jalankan filtering dan update dashboard
             applyFilters(); 
             
-            // 4. Tutup sidebar
+            // Tutup sidebar
             closeSidebar(); 
         }
 
