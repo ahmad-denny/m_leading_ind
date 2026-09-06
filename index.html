@@ -515,7 +515,7 @@
     <div class="sidebar" id="sidebarMenu">
         <div class="sidebar-header">
             <h3><i class="fas fa-bars"></i> Menu</h3>
-            <button class="sidebar-close" onclick="closeSidebar()">&times;</button>
+            <button class="sidebar-close" onclick="applySidebarFilters(); closeSidebar();">&times;</button>
         </div>
         <div class="sidebar-content">
             <div class="sidebar-section">
@@ -748,16 +748,18 @@
 
         // PERBAIKAN UTAMA: Fungsi ini dipanggil HANYA saat Branch dipilih
         function applySidebarFilters() {
+            // 1. Ambil nilai dari dropdown SIDEBAR
             const coVal = document.getElementById('sidebarCoBranchFilter').value;
             const brVal = document.getElementById('sidebarBranchFilter').value;
             
-            // Sync dengan filter utama
+            // 2. Kirim/Sinkronkan nilai tersebut ke dropdown UTAMA (desktop)
             document.getElementById('coBranchFilter').value = coVal;
             document.getElementById('branchFilter').value = brVal;
             
-            applyFilters();
+            // 3. Jalankan logika filtering dan update dashboard
+            applyFilters(); 
             
-            // Tutup sidebar SETELAH filter diterapkan (karena proses pemilihan selesai)
+            // 4. Tutup sidebar
             closeSidebar(); 
         }
 
