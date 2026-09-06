@@ -1219,8 +1219,6 @@ Silakan copy-paste seluruh kode ini untuk menggantikan file Anda saat ini:
         .sidebar select {
             position: relative;
             z-index: 1002; /* Lebih tinggi dari sidebar (1000) dan overlay (999) */
-            -webkit-appearance: none; /* Opsional: membuat tampilan lebih konsisten */
-            appearance: none;
         }
        
         .sidebar-btn {
@@ -2050,11 +2048,15 @@ Silakan copy-paste seluruh kode ini untuk menggantikan file Anda saat ini:
             });
         }
 
-        // HANYA gunakan ini untuk menutup Ranking Modal jika klik area gelapnya
+        // PERBAIKAN FINAL: Hanya gunakan window.onclick sederhana untuk Modal Ranking
+        // Sidebar TIDAK AKAN tertutup oleh klik apapun selain tombol X
         window.onclick = function(e) { 
             if (e.target == document.getElementById('rankingModal')) {
                 closeRankingModal(); 
             }
+            // Tidak ada logika penutupan sidebar di sini sama sekali.
+            // Overlay (#sidebarOverlay) sudah tidak punya onclick, 
+            // dan dropdown select tidak akan memicu penutupan.
         }
 
         document.addEventListener('contextmenu', e => e.preventDefault());
