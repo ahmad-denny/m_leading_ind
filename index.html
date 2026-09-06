@@ -720,7 +720,7 @@
             }
         }
 
-        function handleSidebarCoBranchChange(shouldApplyFilter = true) {
+        function handleSidebarCoBranchChange(shouldApplyFilter = false) { // Default false agar tidak langsung apply/close
             const coVal = document.getElementById('sidebarCoBranchFilter').value;
             const brSelect = document.getElementById('sidebarBranchFilter');
             const currentBrVal = brSelect.value;
@@ -730,27 +730,36 @@
             if (coVal) {
                 const brSet = new Set(rawData.filter(d => d['co'] === coVal).map(d => d['br']).filter(Boolean));
                 [...brSet].sort().forEach(br => { brSelect.innerHTML += `<option value="${br}">${br}</option>`; });
+                // Jika branch yang sebelumnya dipilih masih ada di list baru, pertahankan
                 if([...brSet].includes(currentBrVal)) brSelect.value = currentBrVal;
             }
             
-            if(shouldApplyFilter) applySidebarFilters();
+            // PENTING: Jangan panggil applySidebarFilters() di sini agar sidebar tidak tertutup
+            // Biarkan user memilih Branch dulu
         }
 
         function applySidebarFilters() {
             const coVal = document.getElementById('sidebarCoBranchFilter').value;
             const brVal = document.getElementById('sidebarBranchFilter').value;
             
+            // Sync dengan filter utama
             document.getElementById('coBranchFilter').value = coVal;
             document.getElementById('branchFilter').value = brVal;
             
-            applyFilters();
-            closeSidebar();
+            applyFilters(); // Update data dashboard
+            
+            // OPSI A: Jika ingin sidebar tetap terbuka setelah pilih Branch, hapus baris di bawah ini
+            // closeSidebar(); 
+            
+            // OPSI B: Jika ingin sidebar tertutup otomatis HANYA SETELAH memilih Branch (bukan Co-Branch)
+            closeSidebar(); 
         }
 
         function resetSidebarFilters() {
             document.getElementById('sidebarCoBranchFilter').value = "";
             document.getElementById('sidebarBranchFilter').innerHTML = '<option value="">Select Branch</option>';
             
+            // Sync dengan filter utama
             document.getElementById('coBranchFilter').value = "";
             document.getElementById('branchFilter').innerHTML = '<option value="">Select Branch</option>';
             
@@ -2054,9 +2063,6 @@ Silakan copy-paste seluruh kode ini untuk menggantikan file Anda saat ini:
             if (e.target == document.getElementById('rankingModal')) {
                 closeRankingModal(); 
             }
-            // Tidak ada logika penutupan sidebar di sini sama sekali.
-            // Overlay (#sidebarOverlay) sudah tidak punya onclick, 
-            // dan dropdown select tidak akan memicu penutupan.
         }
 
         document.addEventListener('contextmenu', e => e.preventDefault());
