@@ -368,13 +368,9 @@
         }
         
         .sidebar select {
-            width: 100%;
-            padding: 10px;
-            border: 1px solid var(--border);
-            border-radius: 4px;
-            background: var(--card-bg);
-            color: var(--text);
-            font-size: 0.85rem;
+                position: relative;
+                z-index: 1001; /* Lebih tinggi dari overlay (999) dan sidebar (1000) */
+                pointer-events: auto; 
         }
         
         .sidebar-btn {
@@ -521,8 +517,11 @@
     </script>
     <!-- ============================================ -->
 
-    <!-- SIDEBAR OVERLAY -->
+    <!-- SIDEBAR OVERLAY 
+    
     <div class="sidebar-overlay" id="sidebarOverlay"></div>
+
+    -->
     
     <!-- SIDEBAR MENU -->
     <div class="sidebar" id="sidebarMenu">
@@ -745,6 +744,26 @@
             document.body.classList.remove('modal-open');
         }
 
+        document.addEventListener('click', function(e) {
+            const sidebar = document.getElementById('sidebarMenu');
+            const overlay = document.getElementById('sidebarOverlay');
+            
+            // Jika sidebar sedang terbuka...
+            if (sidebar.classList.contains('active')) {
+                // Cek apakah yang diklik BUKAN bagian dari sidebar DAN BUKAN tombol close
+                const isClickInsideSidebar = sidebar.contains(e.target);
+                const isCloseButton = e.target.closest('.sidebar-close');
+                
+                // Hanya tutup jika klik di luar sidebar ATAU klik tombol close
+                // Tapi karena overlay sudah dihapus onclick-nya, kita pastikan 
+                // klik di DALAM sidebar (termasuk select) TIDAK menutupnya
+                if (!isClickInsideSidebar && !isCloseButton) {
+                    // Opsional: Uncomment baris di bawah jika Anda ingin klik di AREA GELAP tetap menutup sidebar
+                    // closeSidebar(); 
+                }
+            }
+        });        
+        
         function populateSidebarFilters() {
             const coSelect = document.getElementById('sidebarCoBranchFilter');
             const brSelect = document.getElementById('sidebarBranchFilter');
