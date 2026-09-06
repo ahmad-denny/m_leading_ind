@@ -69,8 +69,8 @@
         [data-theme="dark"] .data-tab-btn.active { background: #16213e !important; color: #ffffff !important; border: 1px solid #16213e !important; border-bottom: none !important; font-weight: bold; }
         
         .header-actions { position: absolute; top: 15px; right: 0; transform: translateY(-50%); display: flex; align-items: center; gap: 10px; z-index: 101; }
-        .theme-toggle, .filter-toggle, .capture-toggle { background: rgba(255,255,255,0.15); border: none; color: white; width: 28px; height: 28px; border-radius: 50%; cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 0.7em; flex-shrink: 0; transition: background 0.2s; }
-        .theme-toggle:hover, .filter-toggle:hover, .capture-toggle:hover { background: rgba(255,255,255,0.25); }
+        .theme-toggle, .filter-toggle, .capture-toggle, .menu-toggle { background: rgba(255,255,255,0.15); border: none; color: white; width: 28px; height: 28px; border-radius: 50%; cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 0.7em; flex-shrink: 0; transition: background 0.2s; }
+        .theme-toggle:hover, .filter-toggle:hover, .capture-toggle:hover, .menu-toggle:hover { background: rgba(255,255,255,0.25); }
         .filter-toggle.active { background: var(--warning); color: #333; }
         
         .controls { display: none; align-items: center; padding: 15px 20px; background: var(--card-bg); margin: -1px 20px 15px 20px; border-radius: 0 0 var(--radius) var(--radius); box-shadow: var(--shadow); gap: 5px; flex-wrap: nowrap; animation: slideDown 0.3s ease; position: relative; z-index: 10; }
@@ -188,14 +188,190 @@
         .top5-name { flex: 1; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; margin-right: 5px; font-size: 0.65rem; min-width: 0; }
         .top5-val { font-weight: bold; color: var(--text); font-size: 0.65rem; flex-shrink: 0; }
 
+        /* SIDEBAR MOBILE STYLES */
+        .sidebar-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.5);
+            z-index: 999;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+        
+        .sidebar-overlay.active {
+            display: block;
+            opacity: 1;
+        }
+        
+        .sidebar {
+            position: fixed;
+            top: 0;
+            left: -100%;
+            width: 85%;
+            max-width: 320px;
+            height: 100%;
+            background: var(--card-bg);
+            z-index: 1000;
+            transition: left 0.3s ease;
+            overflow-y: auto;
+            box-shadow: 2px 0 10px rgba(0,0,0,0.2);
+        }
+        
+        .sidebar.active {
+            left: 0;
+        }
+        
+        .sidebar-header {
+            background: linear-gradient(135deg, var(--primary), #2d1b50);
+            color: white;
+            padding: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .sidebar-header h3 {
+            font-size: 1.1rem;
+            margin: 0;
+        }
+        
+        .sidebar-close {
+            background: none;
+            border: none;
+            color: white;
+            font-size: 1.5rem;
+            cursor: pointer;
+            padding: 0;
+            width: 30px;
+            height: 30px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .sidebar-content {
+            padding: 20px;
+        }
+        
+        .sidebar-section {
+            margin-bottom: 25px;
+        }
+        
+        .sidebar-section-title {
+            font-size: 0.9rem;
+            font-weight: bold;
+            color: var(--primary);
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        [data-theme="dark"] .sidebar-section-title {
+            color: var(--card-title-light);
+        }
+        
+        .sidebar-user-info {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 15px;
+            background: var(--bg);
+            border-radius: var(--radius);
+            margin-bottom: 15px;
+        }
+        
+        .sidebar-user-avatar {
+            width: 45px;
+            height: 45px;
+            border-radius: 50%;
+            background: var(--primary);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+            font-weight: bold;
+            flex-shrink: 0;
+        }
+        
+        .sidebar-user-details {
+            flex: 1;
+        }
+        
+        .sidebar-user-name {
+            font-size: 0.95rem;
+            font-weight: 600;
+            margin-bottom: 3px;
+        }
+        
+        .sidebar-user-position {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+        }
+        
+        .sidebar-filter-group {
+            margin-bottom: 12px;
+        }
+        
+        .sidebar-filter-label {
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            margin-bottom: 5px;
+            display: block;
+        }
+        
+        .sidebar select {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid var(--border);
+            border-radius: 4px;
+            background: var(--card-bg);
+            color: var(--text);
+            font-size: 0.85rem;
+        }
+        
+        .sidebar-btn {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 10px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 0.85rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+        
+        .sidebar-btn-reset {
+            background: var(--warning);
+            color: #333;
+        }
+        
+        .sidebar-btn-ranking {
+            background: var(--success);
+            color: white;
+        }
+        
+        .sidebar-divider {
+            height: 1px;
+            background: var(--border);
+            margin: 20px 0;
+        }
+
         @media (max-width: 900px) {
             .header { padding: 15px 15px 0 15px; min-height: 150px; }
             .header h1 { font-size: 1.2rem; gap: 8px; }
-            .theme-toggle, .filter-toggle, .capture-toggle { width: 32px; height: 32px; font-size: 0.9rem; }
+            .theme-toggle, .filter-toggle, .capture-toggle, .menu-toggle { width: 32px; height: 32px; font-size: 0.9rem; }
             body { padding-top: 160px; }
-            .controls { flex-wrap: wrap; flex-direction: row; align-items: stretch; padding: 10px; gap: 8px; margin: -1px 10px 15px 10px; }
-            .filter-group { flex-basis: 100%; flex-direction: row; gap: 5px; }
-            .btn { flex: 1; justify-content: center; font-size: 0.85rem; padding: 8px; }
+            .controls { display: none !important; }
             .dashboard-grid { grid-template-columns: repeat(2, 1fr); gap: 10px; padding: 0 10px 20px 10px; }
             .card { padding: 12px; }
             .top5-grid-container { grid-template-columns: repeat(2, 1fr); gap: 8px; padding: 10px; }
@@ -280,6 +456,71 @@
     </script>
     <!-- ============================================ -->
 
+    <!-- SIDEBAR OVERLAY -->
+    <div class="sidebar-overlay" id="sidebarOverlay" onclick="closeSidebar()"></div>
+    
+    <!-- SIDEBAR MENU -->
+    <div class="sidebar" id="sidebarMenu">
+        <div class="sidebar-header">
+            <h3><i class="fas fa-bars"></i> Menu</h3>
+            <button class="sidebar-close" onclick="closeSidebar()">&times;</button>
+        </div>
+        <div class="sidebar-content">
+            <!-- User Info Section -->
+            <div class="sidebar-section">
+                <div class="sidebar-section-title">
+                    <i class="fas fa-user-circle"></i> Informasi Pengguna
+                </div>
+                <div class="sidebar-user-info">
+                    <div class="sidebar-user-avatar" id="sidebarUserAvatar">U</div>
+                    <div class="sidebar-user-details">
+                        <div class="sidebar-user-name" id="sidebarUserName">-</div>
+                        <div class="sidebar-user-position" id="sidebarUserPosition">-</div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="sidebar-divider"></div>
+            
+            <!-- Filter Section -->
+            <div class="sidebar-section">
+                <div class="sidebar-section-title">
+                    <i class="fas fa-filter"></i> Filter Data
+                </div>
+                <div class="sidebar-filter-group">
+                    <label class="sidebar-filter-label">Co-Branch</label>
+                    <select id="sidebarCoBranchFilter" onchange="handleSidebarCoBranchChange()">
+                        <option value="">Select Co-Branch</option>
+                    </select>
+                </div>
+                <div class="sidebar-filter-group">
+                    <label class="sidebar-filter-label">Branch</label>
+                    <select id="sidebarBranchFilter" onchange="applySidebarFilters()">
+                        <option value="">Select Branch</option>
+                    </select>
+                </div>
+                <button class="sidebar-btn sidebar-btn-reset" onclick="resetSidebarFilters()">
+                    <i class="fas fa-sync-alt"></i> Reset Filter
+                </button>
+            </div>
+            
+            <div class="sidebar-divider"></div>
+            
+            <!-- Actions Section -->
+            <div class="sidebar-section">
+                <div class="sidebar-section-title">
+                    <i class="fas fa-cog"></i> Aksi
+                </div>
+                <button class="sidebar-btn sidebar-btn-ranking" onclick="openRankingModal(); closeSidebar();">
+                    <i class="fas fa-trophy"></i> Performance Ranking
+                </button>
+                <button class="sidebar-btn sidebar-btn-reset" onclick="captureDashboard()" style="background: var(--primary); color: white;">
+                    <i class="fas fa-camera"></i> Download KPI Snapshot
+                </button>
+            </div>
+        </div>
+    </div>
+
     <div id="mainContentWrapper" class="main-content" style="display:none;">
         <div class="header">
             <div class="header-content-wrapper">
@@ -299,7 +540,8 @@
                         </div>
                     </div>
                     <button class="capture-toggle" onclick="captureDashboard()" title="Download KPI Snapshot"><i class="fas fa-camera"></i></button>
-                    <button class="filter-toggle" onclick="toggleFilterMenu()" title="Show/Hide Filter"><i class="fas fa-filter" id="filterIcon"></i></button>
+                    <button class="menu-toggle" onclick="openSidebar()" title="Open Menu" style="display: none;"><i class="fas fa-bars"></i></button>
+                    <button class="filter-toggle" onclick="toggleFilterMenu()" title="Show/Hide Filter" style="display: none;"><i class="fas fa-filter" id="filterIcon"></i></button>
                     <button class="theme-toggle" onclick="toggleTheme()" title="Toggle Dark/Light Mode"><i class="fas fa-moon" id="themeIcon"></i></button>
                 </div>
             </div>
@@ -391,7 +633,95 @@
 
         window.onload = function() {
             initTheme();
+            checkMobileView();
+            window.addEventListener('resize', checkMobileView);
         };
+
+        function checkMobileView() {
+            const isMobile = window.innerWidth <= 900;
+            const menuToggle = document.querySelector('.menu-toggle');
+            const filterToggle = document.querySelector('.filter-toggle');
+            
+            if (isMobile) {
+                if (menuToggle) menuToggle.style.display = 'flex';
+                if (filterToggle) filterToggle.style.display = 'none';
+            } else {
+                if (menuToggle) menuToggle.style.display = 'none';
+                if (filterToggle) filterToggle.style.display = 'flex';
+            }
+        }
+
+        // Sidebar functions
+        function openSidebar() {
+            document.getElementById('sidebarMenu').classList.add('active');
+            document.getElementById('sidebarOverlay').classList.add('active');
+            document.body.classList.add('modal-open');
+        }
+
+        function closeSidebar() {
+            document.getElementById('sidebarMenu').classList.remove('active');
+            document.getElementById('sidebarOverlay').classList.remove('active');
+            document.body.classList.remove('modal-open');
+        }
+
+        function populateSidebarFilters() {
+            const coSelect = document.getElementById('sidebarCoBranchFilter');
+            const brSelect = document.getElementById('sidebarBranchFilter');
+            const currentCoVal = coSelect.value;
+            const currentBrVal = brSelect.value;
+            
+            coSelect.innerHTML = '<option value="">Select Co-Branch</option>';
+            const coSet = new Set(rawData.map(d => d['co']).filter(Boolean));
+            [...coSet].sort().forEach(co => { coSelect.innerHTML += `<option value="${co}">${co}</option>`; });
+            
+            if([...coSet].includes(currentCoVal)) coSelect.value = currentCoVal;
+            
+            handleSidebarCoBranchChange(false);
+            
+            if([...new Set(rawData.filter(d => d['co'] === currentCoVal).map(d => d['br']))].includes(currentBrVal)) {
+                brSelect.value = currentBrVal;
+            }
+        }
+
+        function handleSidebarCoBranchChange(shouldApplyFilter = true) {
+            const coVal = document.getElementById('sidebarCoBranchFilter').value;
+            const brSelect = document.getElementById('sidebarBranchFilter');
+            const currentBrVal = brSelect.value;
+            
+            brSelect.innerHTML = '<option value="">Select Branch</option>';
+            
+            if (coVal) {
+                const brSet = new Set(rawData.filter(d => d['co'] === coVal).map(d => d['br']).filter(Boolean));
+                [...brSet].sort().forEach(br => { brSelect.innerHTML += `<option value="${br}">${br}</option>`; });
+                if([...brSet].includes(currentBrVal)) brSelect.value = currentBrVal;
+            }
+            
+            if(shouldApplyFilter) applySidebarFilters();
+        }
+
+        function applySidebarFilters() {
+            const coVal = document.getElementById('sidebarCoBranchFilter').value;
+            const brVal = document.getElementById('sidebarBranchFilter').value;
+            
+            // Sync with main filters
+            document.getElementById('coBranchFilter').value = coVal;
+            document.getElementById('branchFilter').value = brVal;
+            
+            applyFilters();
+            closeSidebar();
+        }
+
+        function resetSidebarFilters() {
+            document.getElementById('sidebarCoBranchFilter').value = "";
+            document.getElementById('sidebarBranchFilter').innerHTML = '<option value="">Select Branch</option>';
+            
+            // Sync with main filters
+            document.getElementById('coBranchFilter').value = "";
+            document.getElementById('branchFilter').innerHTML = '<option value="">Select Branch</option>';
+            
+            resetFilters();
+            closeSidebar();
+        }
 
         // Data dashboard baru dimuat & user info diisi setelah auth gate (index2.html) memvalidasi sesi
         document.addEventListener('authReady', function (e) {
@@ -406,6 +736,15 @@
                 if (nameEl) nameEl.textContent = displayName;
                 if (posEl) posEl.textContent = displayPos;
                 if (avatarEl) avatarEl.textContent = displayName.charAt(0).toUpperCase();
+                
+                // Update sidebar user info
+                var sidebarNameEl = document.getElementById('sidebarUserName');
+                var sidebarPosEl = document.getElementById('sidebarUserPosition');
+                var sidebarAvatarEl = document.getElementById('sidebarUserAvatar');
+                
+                if (sidebarNameEl) sidebarNameEl.textContent = displayName;
+                if (sidebarPosEl) sidebarPosEl.textContent = displayPos;
+                if (sidebarAvatarEl) sidebarAvatarEl.textContent = displayName.charAt(0).toUpperCase();
             }
 
             document.getElementById('mainContentWrapper').style.display = 'block';
@@ -466,6 +805,7 @@
                     return clean;
                 });
                 populateCoBranchFilter();
+                populateSidebarFilters();
                 if(document.getElementById('coBranchFilter').value === "" && document.getElementById('branchFilter').value === "") renderDashboard(rawData);
             } catch (err) {
                 container.innerHTML = `<div style="color:var(--danger); text-align:center; padding:20px;">Error: ${err.message}</div>`;
